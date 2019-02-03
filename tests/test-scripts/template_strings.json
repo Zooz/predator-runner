@@ -1,0 +1,48 @@
+{
+    "name": "system-tests",
+    "description": "performance-framework-runner system tests",
+    "type": "custom",
+    "artillery_test": {
+        "config": {
+            "target": "http://localhost:3003",
+            "http": {
+                "pool": 10
+            },
+            "phases": [{
+                "duration": 5,
+                "arrivalRate": 1
+            }]
+        },
+        "scenarios": [{
+            "name": "Post pet with template strings",
+            "flow": [{
+                "post": {
+                    "url": "/pets",
+                    "json": {
+                        "petId": "{{ $uuid() }}",
+                        "name": "{{ $randomString(15) }}",
+                        "species": "Dog",
+                        "DOB": "{{ $dateNow() }}",
+                        "petNumber": "{{ $randomNumber(1, 10) }}"
+                    }
+                }
+            }]
+        },
+            {
+                "name": "Log incoming request with template strings in header",
+                "flow": [{
+                    "post": {
+                        "url": "/incomingRequest",
+                        "json": {
+                            "name": "MickeyTheDog",
+                            "species": "Dog"
+                        },
+                        "headers": {
+                            "variable-header": "{{ $randomNumber(1, 10) }}"
+                        }
+                    }
+                }]
+            }
+        ]
+    }
+}

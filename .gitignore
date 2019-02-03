@@ -1,0 +1,9 @@
+/node_modules
+/coverage
+/.vscode
+/.history
+/.idea
+*.log
+/mochawesome-report
+/.nyc_output
+.DS_Store

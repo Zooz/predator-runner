@@ -1,0 +1,82 @@
+const path = require('path'),
+    should = require('should'),
+    testsApiHelper = require('../../utils/testsApiHelper'),
+    defaults = require('../defaults'),
+    simpleServerClient = require('../../utils/simpleServerClient'),
+    runner = require('../../../app/models/runner');
+
+const runId = process.env.RUN_ID;
+
+let createTestResponse, testId;
+let customTestBody;
+let testReport;
+
+describe('Template strings', function () {
+    let duration, arrivalRate, rampTo;
+
+    before(function (done) {
+        this.timeout(10000);
+        setTimeout(async function () {
+            const customTestPath = path.resolve(__dirname, '../../test-scripts/template_strings.json');
+            customTestBody = require(customTestPath);
+
+            createTestResponse = await testsApiHelper.createTest(customTestBody);
+            testId = createTestResponse.id;
+            done();
+        }, 500);
+    });
+
+    after(async function () {
+        await simpleServerClient.deleteDB();
+    });
+
+    it('Runner should successfully run test', async function () {
+        this.timeout(100000);
+        const artilleryJson = customTestBody.artillery_schema;
+        duration = artilleryJson.config.phases[0].duration;
+        arrivalRate = artilleryJson.config.phases[0].arrivalRate;
+        rampTo = artilleryJson.config.phases[0].rampTo;
+        const httpPoolSize = artilleryJson.config.http.pool;
+
+        const jobConfig = {
+            testId,
+            duration,
+            arrivalRate,
+            rampTo,
+            httpPoolSize,
+            runId
+        };
+
+        Object.assign(jobConfig, defaults.jobConfig);
+
+        testReport = await runner.runTest(jobConfig);
+        console.log('REPORT:', testReport);
+    });
+
+    it('Template strings in headers', async function () {
+        const lastRequest = await simpleServerClient.getIncomingRequest();
+
+        const variableHeader = parseInt(lastRequest.headers['variable-header']);
+        should(Number.isInteger(variableHeader)).eql(true, 'variable-header should be a number');
+        should(variableHeader).greaterThanOrEqual(0).lessThanOrEqual(10, 'variable-header should be between 0 and 10');
+
+    });
+
+    it('Template strings in body', async function () {
+        const entries = await simpleServerClient.getPets();
+        const entry = entries[0];
+
+        const UUID4Regex = RegExp('[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}');
+        should(UUID4Regex.test(entry.id)).eql(true, 'ID should be UUID');
+
+        const name = entry.name;
+        should(name.length).greaterThanOrEqual(0).lessThanOrEqual(15, 'name length should be between 0 and 15');
+
+        const petNumber = parseInt(entry.petNumber);
+        should(Number.isInteger(petNumber)).eql(true, 'petNumber should be a number');
+        should(petNumber).greaterThanOrEqual(0).lessThanOrEqual(10, 'petNumber should be between 0 and 10');
+
+        const date = new Date(parseInt(entry.DOB));
+        should.exist(date, 'DOB should be valid timestamp');
+    });
+});

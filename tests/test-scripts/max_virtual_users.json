@@ -1,0 +1,54 @@
+{
+    "name": "system-tests",
+    "description": "performance-framework-runner system tests",
+    "type": "custom",
+    "artillery_test": {
+        "config": {
+            "target": "http://localhost:3003",
+            "http": {
+                "pool": 10
+            },
+            "phases": [{
+                "duration": 60,
+                "arrivalRate": 250,
+                "maxVusers": 10
+            }]
+        },
+        "scenarios": [
+            {
+                "name": "Post pet and get it",
+                "flow":
+                [
+                    {"post":
+                    {
+                        "url": "/pets",
+                        "json": {"name": "MickeyTheDog", "species": "Dog"},
+                        "capture": {
+                            "json": "$.id",
+                            "as": "petId"
+                        }
+                    }
+                    },
+                    {"get":
+                        {
+                            "url": "/pets/{{ petId }}"
+                        }
+                    }
+                ],
+                "weight": 5
+            },
+            {
+                "name": "Get all pets",
+                "flow":
+                [
+                    {"get":
+                        {
+                            "url": "/pets"
+                        }
+                    }
+                ],
+                "weight": 1
+            }
+        ]
+    }
+}
