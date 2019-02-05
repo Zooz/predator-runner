@@ -33,14 +33,13 @@ describe('Max virtual users', function () {
 
     it('Runner should successfully run test', async function () {
         this.timeout(100000);
-        const artilleryJson = customTestBody.artillery_schema;
-        duration = artilleryJson.config.phases[0].duration;
-        arrivalRate = artilleryJson.config.phases[0].arrivalRate;
-        const httpPoolSize = artilleryJson.config.http.pool;
+        const artilleryTest = customTestBody.artillery_test;
+        duration = artilleryTest.config.phases[0].duration;
+        arrivalRate = artilleryTest.config.phases[0].arrivalRate;
+        const httpPoolSize = artilleryTest.config.http.pool;
 
         const jobConfig = {
-            testsAPIUrl: process.env.TESTS_API_URL,
-            reporterUrl: process.env.REPORTER_URL,
+            predatorUrl: process.env.PREDATOR_URL,
             testId,
             duration,
             arrivalRate,

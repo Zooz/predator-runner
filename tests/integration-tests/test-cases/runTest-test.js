@@ -4,8 +4,7 @@ const nock = require('nock'),
     should = require('should'),
     runner = require('../../../app/models/runner');
 
-const TESTS_API_URL = process.env.TESTS_API_URL;
-const REPORTER_URL = process.env.REPORTER_URL;
+const PREDATOR_URL = process.env.PREDATOR_URL;
 const duration = 10;
 const arrivalRate = 10;
 const runId = process.env.RUN_ID;
@@ -20,16 +19,16 @@ describe('Successfully run a custom test', function () {
 
         customTestBody.artillery_test = customTestBody.artillery_test;
 
-        nock(TESTS_API_URL)
+        nock(PREDATOR_URL)
             .get(`/v1/tests/${testId}`)
             .reply(200, customTestBody);
 
-        nock(REPORTER_URL)
+        nock(PREDATOR_URL)
             .post(`/v1/tests/${testId}/reports`)
             .times(20)
             .reply(201, {message: 'OK'});
 
-        nock(REPORTER_URL)
+        nock(PREDATOR_URL)
             .post(`/v1/tests/${testId}/reports/${runId}/stats`)
             .times(20)
             .reply(201, {message: 'OK'});
@@ -38,8 +37,7 @@ describe('Successfully run a custom test', function () {
     it('Run test', async function () {
         this.timeout(100000);
         const jobConfig = {
-            performanceFrameworkAPIUrl: process.env.TESTS_API_URL,
-            reporterUrl: process.env.REPORTER_URL,
+            predatorUrl: process.env.PREDATOR_URL,
             testId,
             duration,
             arrivalRate,
@@ -62,16 +60,16 @@ describe('Fail to run a custom test - report not created', function () {
     const testId = uuid();
 
     before(async function () {
-        nock(TESTS_API_URL)
+        nock(PREDATOR_URL)
             .get(`/v1/tests/${testId}`)
             .reply(200, { });
 
-        nock(REPORTER_URL)
+        nock(PREDATOR_URL)
             .post(`/v1/tests/${testId}/reports`)
             .times(20)
             .reply(400, {error: 'ERROR'});
 
-        nock(REPORTER_URL)
+        nock(PREDATOR_URL)
             .post(`/v1/tests/${testId}/reports/${runId}/stats`)
             .times(20)
             .reply(201, {message: 'OK'});
@@ -109,16 +107,16 @@ describe('Fail to run a custom test - fail to send final report stats to reporte
 
         customTestBody.artillery_test = customTestBody.artillery_test;
 
-        nock(TESTS_API_URL)
+        nock(PREDATOR_URL)
             .get(`/v1/tests/${testId}`)
             .reply(200, customTestBody);
 
-        nock(REPORTER_URL)
+        nock(PREDATOR_URL)
             .post(`/v1/tests/${testId}/reports`)
             .times(20)
             .reply(201, {message: 'OK'});
 
-        nock(REPORTER_URL)
+        nock(PREDATOR_URL)
             .post(`/v1/tests/${testId}/reports/${runId}/stats`)
             .times(20)
             .reply(400, {error: 'ERROR'});
@@ -148,16 +146,16 @@ describe('Fail to run a custom test - test not found', function () {
     const testId = uuid();
 
     before(async function () {
-        nock(TESTS_API_URL)
+        nock(PREDATOR_URL)
             .get(`/v1/tests/${testId}`)
             .reply(404, { });
 
-        nock(REPORTER_URL)
+        nock(PREDATOR_URL)
             .post(`/v1/tests/${testId}/reports`)
             .times(20)
             .reply(201, {message: 'OK'});
 
-        nock(REPORTER_URL)
+        nock(PREDATOR_URL)
             .post(`/v1/tests/${testId}/reports/${runId}/stats`)
             .times(20)
             .reply(201, {message: 'OK'});
@@ -169,8 +167,7 @@ describe('Fail to run a custom test - test not found', function () {
         const arrivalRate = 10;
 
         const jobConfig = {
-            testsAPIUrl: process.env.TESTS_API_URL,
-            reporterUrl: process.env.REPORTER_URL,
+            predatorUrl: process.env.PREDATOR_URL,
             testId,
             duration,
             arrivalRate,
