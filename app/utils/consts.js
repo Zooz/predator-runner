@@ -1,6 +1,5 @@
 const RUNNER_MANDATORY_VARIABLES = [
     'ENVIRONMENT',
-    'CLUSTER',
     'TEST_ID',
     'TESTS_API_URL',
     'DURATION',
