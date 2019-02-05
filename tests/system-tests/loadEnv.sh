@@ -14,7 +14,6 @@ else
     export LOCAL_TEST=false
 fi
 
-export TESTS_API_URL=http://api.performance-framework.$DCOS_URL.qa-fra-apps.zooz.co
-export REPORTER_URL=http://reporter.performance-framework.$DCOS_URL.qa-fra-apps.zooz.co
+export PREDATOR_URL=http://predator.performance-framework.$DCOS_URL.qa-fra-apps.zooz.co
 
 echo Loaded successfully!

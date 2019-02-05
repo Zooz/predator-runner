@@ -83,8 +83,7 @@ describe('Fail to run a custom test - report not created', function () {
         const arrivalRate = 10;
 
         const jobConfig = {
-            testsAPIUrl: process.env.TESTS_API_URL,
-            reporterUrl: process.env.REPORTER_URL,
+            predatorUrl: process.env.PREDATOR_URL,
             testId,
             duration,
             arrivalRate,
@@ -128,8 +127,7 @@ describe('Fail to run a custom test - fail to send final report stats to reporte
     it('Run test', async function () {
         this.timeout(100000);
         const jobConfig = {
-            testsAPIUrl: process.env.TESTS_API_URL,
-            reporterUrl: process.env.REPORTER_URL,
+            predatorUrl: process.env.PREDATOR_URL,
             testId,
             duration,
             arrivalRate,

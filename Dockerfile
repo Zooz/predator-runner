@@ -6,7 +6,6 @@ WORKDIR /usr
 # Install app dependencies
 COPY package.json /usr/
 COPY package-lock.json /usr/
-COPY .npmrc /usr/
 COPY docker-entrypoint.sh /usr/
 
 RUN apk update && \
