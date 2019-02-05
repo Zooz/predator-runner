@@ -18,7 +18,7 @@ describe('Successfully run a custom test', function () {
         const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test.json');
         const customTestBody = require(customTestPath);
 
-        customTestBody.artillery_json = customTestBody.artillery_test;
+        customTestBody.artillery_test = customTestBody.artillery_test;
 
         nock(TESTS_API_URL)
             .get(`/v1/tests/${testId}`)
@@ -107,7 +107,7 @@ describe('Fail to run a custom test - fail to send final report stats to reporte
         const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test.json');
         const customTestBody = require(customTestPath);
 
-        customTestBody.artillery_json = customTestBody.artillery_test;
+        customTestBody.artillery_test = customTestBody.artillery_test;
 
         nock(TESTS_API_URL)
             .get(`/v1/tests/${testId}`)

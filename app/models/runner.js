@@ -14,11 +14,11 @@ module.exports.runTest = async (jobConfig) => {
     let test;
     test = await testFileConnector.getTest(jobConfig);
     await reporterConnector.createReport(jobConfig, test);
-    updateTestParameters(jobConfig, test.artillery_json);
+    updateTestParameters(jobConfig, test.artillery_test);
     logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
     progressCalculator.calculateTotalNumberOfScenarios(jobConfig);
 
-    const ee = await artillery.runner(test.artillery_json);
+    const ee = await artillery.runner(test.artillery_test);
     return new Promise((resolve, reject) => {
         ee.on('phaseStarted', (info) => {
             logger.info('Starting phase: %s - %j', new Date(), JSON.stringify(info));
