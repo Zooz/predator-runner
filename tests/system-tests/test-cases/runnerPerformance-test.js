@@ -33,14 +33,13 @@ describe('Runner performance validations', function () {
     //  IMPORTANT: Test can fail. Makes sure that runner performance is up to standard
     it('Should support minimum RPS when testing a local server that returns a simple response', async function () {
         this.timeout(100000);
-        const artilleryJson = customTestBody.artillery_schema;
-        const duration = artilleryJson.config.phases[0].duration;
-        const arrivalRate = artilleryJson.config.phases[0].arrivalRate;
-        const httpPoolSize = artilleryJson.config.http.pool;
+        const artilleryTest = customTestBody.artillery_test;
+        const duration = artilleryTest.config.phases[0].duration;
+        const arrivalRate = artilleryTest.config.phases[0].arrivalRate;
+        const httpPoolSize = artilleryTest.config.http.pool;
 
         const jobConfig = {
-            testsAPIUrl: process.env.TESTS_API_URL,
-            reporterUrl: process.env.REPORTER_URL,
+            predatorUrl: process.env.PREDATOR_URL,
             testId,
             duration,
             arrivalRate,
