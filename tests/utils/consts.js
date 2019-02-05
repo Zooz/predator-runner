@@ -4,7 +4,7 @@ module.exports.VALID_CUSTOM_TEST = {
     'description': 'test_description',
     'type': 'custom',
     'raw_data': null,
-    'artillery_json': {
+    'artillery_test': {
         'config': {
             'target': '',
             'http': {

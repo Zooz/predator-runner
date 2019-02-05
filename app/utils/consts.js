@@ -1,8 +1,7 @@
 const RUNNER_MANDATORY_VARIABLES = [
     'ENVIRONMENT',
-    'CLUSTER',
     'TEST_ID',
-    'TESTS_API_URL',
+    'PREDATOR_URL',
     'DURATION',
     'ARRIVAL_RATE',
     'JOB_ID'
