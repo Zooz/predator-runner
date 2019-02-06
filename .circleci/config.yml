@@ -1,0 +1,48 @@
+version: 2
+jobs:
+  setup:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+  test:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run: npm audit
+      - run: npm run lint
+      - run: npm run unit-tests
+      - store_artifacts:
+          path: ./coverage
+      - run: npm run integration-tests
+  build:
+    docker:
+      - image: docker:18
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: sh .circleci/docker-build.sh
+
+workflows:
+  version: 2
+  test_and_build:
+    jobs:
+      - setup
+      - test:
+          requires:
+            - setup
+      - build:
+          filters:
+            branches:
+              only: master

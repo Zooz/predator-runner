@@ -4,10 +4,10 @@
   "description": "Docker image that runs predator tests",
   "main": "index.js",
   "scripts": {
-    "pre-system-tests": "mocha ./tests/system-tests/preSystemTests.js --timeout 10000",
     "system-tests": "./tests/run.sh system-tests",
     "integration-tests": "./tests/run.sh integration-tests",
-    "test": "ARRIVAL_RATE=1 DURATION=1 nyc --check-coverage --lines 95 --reporter=html --reporter=text mocha ./tests/unit-tests --recursive"
+    "unit-tests": "ARRIVAL_RATE=1 DURATION=1 nyc --check-coverage --lines 95 --reporter=html --reporter=text mocha ./tests/unit-tests --recursive",
+    "lint": "node_modules/eslint/bin/eslint.js src/**"
   },
   "repository": {
     "type": "git",
