@@ -1,13 +1,16 @@
 const path = require('path'),
     should = require('should'),
-    testsApiHelper = require('../../utils/testsApiHelper'),
+    predatorApiHelper = require('../../utils/predatorApiHelper'),
     runner = require('../../../app/models/runner'),
     simpleServerClient = require('../../utils/simpleServerClient'),
     defaults = require('../defaults');
 
 const runId = process.env.RUN_ID;
 
-let createTestResponse, testId;
+let createTestResponse;
+let testId;
+let createJobResponse;
+let jobId;
 let customTestBody;
 let testReport;
 
@@ -21,8 +24,10 @@ describe('Rampto and scenario weights', function () {
             const customTestPath = path.resolve(__dirname, '../../test-scripts/rampto_with_weights.json');
             customTestBody = require(customTestPath);
 
-            createTestResponse = await testsApiHelper.createTest(customTestBody);
+            createTestResponse = await predatorApiHelper.createTest(customTestBody);
             testId = createTestResponse.id;
+            createJobResponse = await predatorApiHelper.createJob(testId);
+            jobId = createJobResponse.id;
             done();
         }, 500);
     });
@@ -46,7 +51,8 @@ describe('Rampto and scenario weights', function () {
             arrivalRate,
             rampTo,
             httpPoolSize,
-            runId
+            runId,
+            jobId
         };
 
         Object.assign(jobConfig, defaults.jobConfig);

@@ -9,9 +9,9 @@
                 "pool": 10
             },
             "phases": [{
-                "duration": 60,
-                "arrivalRate": 250,
-                "maxVusers": 10
+                "duration": 5,
+                "arrivalRate": 2500,
+                "maxVusers": 5
             }]
         },
         "scenarios": [

@@ -1,7 +1,7 @@
 const path = require('path'),
     should = require('should'),
     colors = require('colors'),
-    testsApiHelper = require('../../utils/testsApiHelper'),
+    predatorApiHelper = require('../../utils/predatorApiHelper'),
     defaults = require('../defaults'),
     simpleServerClient = require('../../utils/simpleServerClient'),
     runner = require('../../../app/models/runner');
@@ -9,8 +9,12 @@ const path = require('path'),
 const LOCAL_TEST = process.env.LOCAL_TEST || false;
 const runId = process.env.RUN_ID;
 
-let createTestResponse, testId;
+let createTestResponse;
+let testId;
+let createJobResponse;
+let jobId;
 let customTestBody;
+let testReport;
 
 describe('Runner performance validations', function () {
     before(function (done) {
@@ -20,8 +24,10 @@ describe('Runner performance validations', function () {
             const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test.json');
             customTestBody = require(customTestPath);
 
-            createTestResponse = await testsApiHelper.createTest(customTestBody);
+            createTestResponse = await predatorApiHelper.createTest(customTestBody);
             testId = createTestResponse.id;
+            createJobResponse = await predatorApiHelper.createJob(testId);
+            jobId = createJobResponse.id;
             done();
         }, 500);
     });
@@ -44,7 +50,8 @@ describe('Runner performance validations', function () {
             duration,
             arrivalRate,
             httpPoolSize,
-            runId
+            runId,
+            jobId
         };
 
         Object.assign(jobConfig, defaults.jobConfig);
