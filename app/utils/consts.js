@@ -4,7 +4,8 @@ const RUNNER_MANDATORY_VARIABLES = [
     'PREDATOR_URL',
     'DURATION',
     'ARRIVAL_RATE',
-    'JOB_ID'
+    'JOB_ID',
+    'RUN_ID'
 ];
 
 const PLUGINS_MANDATORY_VARIABLES = {

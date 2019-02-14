@@ -16,7 +16,8 @@ let config = {
     httpPoolSize: process.env.HTTP_POOL_SIZE || 250,
     notes: process.env.NOTES,
     metricsPluginName: process.env.METRICS_PLUGIN_NAME,
-    metricsExportConfig: process.env.METRICS_PLUGINS_MANDATORY_VARIABLES
+    metricsExportConfig: process.env.METRICS_PLUGINS_MANDATORY_VARIABLES,
+    runId: process.env.RUN_ID
 };
 
 module.exports = config;
