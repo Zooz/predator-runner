@@ -9,6 +9,7 @@ let createReport = async (jobConfig, test) => {
     };
     const requestBody = {
         report_id: jobConfig.runId,
+        specificPlatformRunId: jobConfig.specificPlatformRunId,
         revision_id: jobConfig.revisionId,
         job_id: jobConfig.jobId,
         test_type: test.type,

@@ -7,25 +7,18 @@ let jobConfig = require('./config/jobConfig');
 let reporterConnector = require('./connectors/reporterConnector');
 let errorHandler = require('./handler/errorHandler');
 
-const getRunId = () => {
-    let runId;
+const getSpecificPlatformRunId = () => {
+    let specificPlatformRunId;
     if (process.env.MARATHON_APP_ID) {
         let marathonAppId = process.env.MARATHON_APP_ID.split('/');
-        runId = marathonAppId[marathonAppId.length - 1];
-    } else {
-        runId = process.env.RUN_ID;
+        specificPlatformRunId = marathonAppId[marathonAppId.length - 1];
     }
-
-    if (!runId) {
-        throw new Error('Missing mandatory variable: RUN_ID');
-    }
-
-    return runId;
+    return specificPlatformRunId;
 };
 
 let start = async () => {
     try {
-        jobConfig.runId = getRunId();
+        jobConfig.specificPlatformRunId = getSpecificPlatformRunId();
         logger.info({runner_config: jobConfig}, 'Initialized test runner');
 
         process.on('SIGTERM', async function () {
