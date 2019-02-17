@@ -77,6 +77,9 @@ let updateTestParameters = (jobConfig, testFile) => {
         injectPlugins(testFile, jobConfig);
     }
 
+    if (!testFile.config.phases) {
+        testFile.config.phases = [{}];
+    }
     testFile.config.phases[0].duration = jobConfig.duration;
     testFile.config.phases[0].arrivalRate = jobConfig.arrivalRate;
 
