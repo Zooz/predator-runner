@@ -10,7 +10,8 @@ module.exports.verifyEnvironmentVars = () => {
     if (env.METRICS_PLUGIN_NAME && env.METRICS_EXPORT_CONFIG) {
         let parsedMetricsConfig;
         try {
-            parsedMetricsConfig = JSON.parse(env.METRICS_EXPORT_CONFIG);
+            let asciiMetricsExportConfig = (Buffer.from(env.METRICS_EXPORT_CONFIG, 'base64').toString('ascii'));
+            parsedMetricsConfig = JSON.parse(asciiMetricsExportConfig);
         } catch (e) {
             let invalidJsonError = new Error('Plugin configuration is not a valid JSON');
             logger.error(invalidJsonError, e);

@@ -102,7 +102,8 @@ let updateTestParameters = (jobConfig, testFile) => {
 function injectPlugins(testFile, jobConfig) {
     const metricsPluginName = jobConfig.metricsPluginName.toLowerCase();
     const metricsAdapter = require(`../adapters/${metricsPluginName}Adapter`);
-    let parsedMetricsConfig = JSON.parse(jobConfig.metricsExportConfig);
+    let asciiMetricsExportConfig = (Buffer.from(jobConfig.metricsExportConfig, 'base64').toString('ascii'));
+    let parsedMetricsConfig = JSON.parse(asciiMetricsExportConfig);
     testFile.config.plugins = metricsAdapter.buildMetricsPlugin(parsedMetricsConfig, jobConfig);
 }
 
