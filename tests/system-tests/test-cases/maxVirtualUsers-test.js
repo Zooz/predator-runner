@@ -5,8 +5,6 @@ const path = require('path'),
     simpleServerClient = require('../../utils/simpleServerClient'),
     runner = require('../../../app/models/runner');
 
-const runId = process.env.RUN_ID;
-
 let createTestResponse;
 let testId;
 let createJobResponse;
@@ -15,6 +13,7 @@ let customTestBody;
 let testReport;
 
 describe('Max virtual users', function () {
+    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
     let duration, arrivalRate, maxVusers;
 
     before(function (done) {
@@ -66,6 +65,7 @@ describe('Max virtual users', function () {
 });
 
 describe('Heavy load test without max virtual users', function () {
+    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
     let duration, arrivalRate;
 
     before(function (done) {

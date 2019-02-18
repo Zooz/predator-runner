@@ -5,8 +5,6 @@ const path = require('path'),
     simpleServerClient = require('../../utils/simpleServerClient'),
     defaults = require('../defaults');
 
-const runId = process.env.RUN_ID;
-
 let createTestResponse;
 let testId;
 let createJobResponse;
@@ -15,6 +13,7 @@ let customTestBody;
 let testReport;
 
 describe('Rampto and scenario weights', function () {
+    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
     let duration, arrivalRate, rampTo;
 
     before(function (done) {

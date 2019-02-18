@@ -5,8 +5,6 @@ const path = require('path'),
     simpleServerClient = require('../../utils/simpleServerClient'),
     runner = require('../../../app/models/runner');
 
-const runId = process.env.RUN_ID;
-
 let createTestResponse;
 let testId;
 let createJobResponse;
@@ -15,6 +13,7 @@ let customTestBody;
 let testReport;
 
 describe('Before test flow', function () {
+    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
     let duration, arrivalRate;
 
     before(function (done) {

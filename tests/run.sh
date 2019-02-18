@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/bash -e
+
 if [ -z $BASH_VERSION ];then
     BASH_SOURCE=$0:A
 fi
@@ -15,11 +16,15 @@ elif [ "system-tests" == $1 ]; then
     source $TESTS_ROOT/system-tests/loadEnv.sh
     echo Running system tests
     ./node_modules/mocha/bin/mocha $TESTS_ROOT/system-tests --recursive
+elif [ "local-system-tests" == $1 ]; then
+    export LOCAL_TEST=true
+    source $TESTS_ROOT/system-tests/loadEnv.sh
+    echo Running system tests
+    ./node_modules/mocha/bin/mocha $TESTS_ROOT/system-tests --recursive
 elif [ "integration-tests" == $1 ]; then
     source $TESTS_ROOT/integration-tests/loadEnv.sh
     echo Running integration tests
     ./node_modules/mocha/bin/mocha $TESTS_ROOT/integration-tests --recursive
-
 else
     echo "Unknown mode $1"
 fi

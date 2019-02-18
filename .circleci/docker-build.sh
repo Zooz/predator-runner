@@ -1,19 +1,15 @@
-#!/usr/bin/sh
+#!/bin/sh -e
 
-set -eu -o pipefail
-
-if [ -z ${CIRCLE_TAG:-""} ] ; then
-    exit 0
+if [ "$CIRCLE_BRANCH" != "master" ] ; then
+    export TAG=branches-$CIRCLE_BRANCH
+else
+    export TAG=latest
 fi
 
-if [ $CIRCLE_BRANCH != "master" ] ; then
-    exit 0
-fi
+echo "Building Docker image for tag: $TAG on branch: $CIRCLE_BRANCH"
 
-echo "Building Docker image for tag $CIRCLE_TAG on $CIRCLE_BRANCH"
+docker build -t zooz/predator-runner:$TAG .
 
-docker build -t nivlipetz/predator-runner:$CIRCLE_TAG .
+echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
 
-echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-
-docker push nivlipetz/predator-runner:$CIRCLE_TAG
+docker push zooz/predator-runner:$TAG

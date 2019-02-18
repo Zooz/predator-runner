@@ -7,7 +7,6 @@ const path = require('path'),
     runner = require('../../../app/models/runner');
 
 const LOCAL_TEST = process.env.LOCAL_TEST || false;
-const runId = process.env.RUN_ID;
 
 let createTestResponse;
 let testId;
@@ -17,6 +16,7 @@ let customTestBody;
 let testReport;
 
 describe('Runner performance validations', function () {
+    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
     before(function (done) {
         this.timeout(10000);
 
