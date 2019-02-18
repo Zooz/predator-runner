@@ -29,7 +29,7 @@
   "homepage": "https://github.com/Zooz/predator-runner#readme",
   "dependencies": {
     "artillery": "https://github.com/NivLipetz/artillery.git#new-concurrency-logic-v2",
-    "artillery-plugin-prometheus": "1.0.1",
+    "artillery-plugin-prometheus": "^1.0.2",
     "bunyan": "1.8.12",
     "kafka-node": "3.0.1",
     "pidusage": "2.0.6",
