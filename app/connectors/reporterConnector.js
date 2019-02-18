@@ -1,12 +1,6 @@
 let requestSender = require('../helpers/requestSender');
 
 let createReport = async (jobConfig, test) => {
-    const testConfiguration = {
-        environment: jobConfig.environment,
-        duration: jobConfig.duration,
-        arrival_rate: jobConfig.arrivalRate,
-        ramp_to: jobConfig.rampTo
-    };
     const requestBody = {
         report_id: jobConfig.runId,
         specificPlatformRunId: jobConfig.specificPlatformRunId,
@@ -19,7 +13,6 @@ let createReport = async (jobConfig, test) => {
         emails: jobConfig.emails,
         test_name: jobConfig.testName,
         test_description: jobConfig.description,
-        test_configuration: testConfiguration
     };
 
     let options = {
@@ -37,6 +30,7 @@ let createReport = async (jobConfig, test) => {
 
 let postStats = async (jobConfig, stats) => {
     let defaultBody = {
+        container_id: jobConfig.containerId,
         stats_time: Date.now().toString()
     };
 
