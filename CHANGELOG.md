@@ -1,0 +1,19 @@
+# Change Log
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+<a name="1.0.1"></a>
+## 1.0.1 (2019-02-18)
+
+
+### Bug Fixes
+
+* change all service urls to predator_url ([#2](https://github.com/Zooz/predator-runner/issues/2)) ([5172c25](https://github.com/Zooz/predator-runner/commit/5172c25))
+* **metrics:** METRICS_EXPORT_CONFIG expcted to be in base64 ([089102d](https://github.com/Zooz/predator-runner/commit/089102d))
+* **runner:** phaes in config is not mandatory anymore ([c3ba037](https://github.com/Zooz/predator-runner/commit/c3ba037))
+
+
+### Features
+
+* **jobs:** added specificPlatformRunId param ([#4](https://github.com/Zooz/predator-runner/issues/4)) ([4548626](https://github.com/Zooz/predator-runner/commit/4548626))
+* **runner:** adding runner for running Predator tests ([dfd785f](https://github.com/Zooz/predator-runner/commit/dfd785f))
