@@ -1,17 +1,21 @@
 const path = require('path'),
     should = require('should'),
-    testsApiHelper = require('../../utils/testsApiHelper'),
+    predatorApiHelper = require('../../utils/predatorApiHelper'),
     defaults = require('../defaults'),
     simpleServerClient = require('../../utils/simpleServerClient'),
     runner = require('../../../app/models/runner');
 
-const runId = process.env.RUN_ID;
+const runId = `system-tester-${Date.now()}`;
 
-let createTestResponse, testId;
+let createTestResponse;
+let testId;
+let createJobResponse;
+let jobId;
 let customTestBody;
 let testReport;
 
 describe('Template strings', function () {
+    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
     let duration, arrivalRate, rampTo;
 
     before(function (done) {
@@ -20,8 +24,10 @@ describe('Template strings', function () {
             const customTestPath = path.resolve(__dirname, '../../test-scripts/template_strings.json');
             customTestBody = require(customTestPath);
 
-            createTestResponse = await testsApiHelper.createTest(customTestBody);
+            createTestResponse = await predatorApiHelper.createTest(customTestBody);
             testId = createTestResponse.id;
+            createJobResponse = await predatorApiHelper.createJob(testId);
+            jobId = createJobResponse.id;
             done();
         }, 500);
     });
@@ -45,7 +51,8 @@ describe('Template strings', function () {
             arrivalRate,
             rampTo,
             httpPoolSize,
-            runId
+            runId,
+            jobId
         };
 
         Object.assign(jobConfig, defaults.jobConfig);

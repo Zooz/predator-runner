@@ -96,6 +96,12 @@ let updateTestParameters = (jobConfig, testFile) => {
         testFile.config.phases[0].rampTo = jobConfig.rampTo;
     }
 
+    if (!jobConfig.maxVusers) {
+        delete testFile.config.phases[0].maxVusers;
+    } else {
+        testFile.config.phases[0].maxVusers = jobConfig.maxVusers;
+    }
+
     logger.info({updated_test_config: testFile.config}, 'Test successfully updated parameters');
 };
 

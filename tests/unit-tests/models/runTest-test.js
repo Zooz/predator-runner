@@ -142,13 +142,13 @@ describe('Run test', () => {
             expectedResult: consts.EXPECTED_ARTILLERY_CUSTOM_TEST,
             test: consts.VALID_CUSTOM_TEST,
             metricsPluginName: 'prometheus',
-            metricsExportConfig: JSON.stringify(consts.PROMETHEUS_CONFIGURATION)
+            metricsExportConfig: Buffer.from(JSON.stringify(consts.PROMETHEUS_CONFIGURATION)).toString('base64')
         },
         {
             expectedResult: consts.EXPECTED_ARTILLERY_CUSTOM_TEST,
             test: consts.VALID_CUSTOM_TEST,
             metricsPluginName: 'influxdb',
-            metricsExportConfig: JSON.stringify(consts.INFLUXDB_CONFIGURATION)
+            metricsExportConfig: Buffer.from(JSON.stringify(consts.INFLUXDB_CONFIGURATION)).toString('base64')
         }
     ]
     .forEach((testConfig) => {
