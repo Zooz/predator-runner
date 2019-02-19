@@ -24,13 +24,13 @@ function waitForApp() {
 }
 
 function predator() {
-    IMAGE_NAME=zooz/predator:1.0.0
+    IMAGE_NAME=zooz/predator:latest
     APP=predator
     stop $APP
     COMMAND="docker run \
                     -d \
-                    -e JOB_PLATFORM=METRONOME \
-                    -e METRONOME_URL=http://127.0.0.1:9000 \
+                    -e JOB_PLATFORM=DOCKER \
+                    -e INTERNAL_ADDRESS=http://127.0.0.1:80/v1 \
                     --name $APP \
                     -p 80:80
                     $IMAGE_NAME"

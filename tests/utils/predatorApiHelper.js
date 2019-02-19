@@ -5,7 +5,7 @@ const PREDATOR_URL = process.env.PREDATOR_URL;
 
 module.exports.createTest = async (body) => {
     const options = {
-        url: PREDATOR_URL + '/v1/tests',
+        url: PREDATOR_URL + '/tests',
         method: 'POST',
         json: true,
         headers: {
@@ -26,7 +26,7 @@ module.exports.createTest = async (body) => {
 
 module.exports.createJob = async (testId) => {
     const options = {
-        url: PREDATOR_URL + '/v1/jobs',
+        url: PREDATOR_URL + '/jobs',
         method: 'POST',
         json: true,
         headers: {
