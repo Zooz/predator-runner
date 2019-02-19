@@ -20,16 +20,16 @@ describe('Successfully run a custom test', function () {
         customTestBody.artillery_test = customTestBody.artillery_test;
 
         nock(PREDATOR_URL)
-            .get(`/v1/tests/${testId}`)
+            .get(`/tests/${testId}`)
             .reply(200, customTestBody);
 
         nock(PREDATOR_URL)
-            .post(`/v1/tests/${testId}/reports`)
+            .post(`/tests/${testId}/reports`)
             .times(20)
             .reply(201, {message: 'OK'});
 
         nock(PREDATOR_URL)
-            .post(`/v1/tests/${testId}/reports/${runId}/stats`)
+            .post(`/tests/${testId}/reports/${runId}/stats`)
             .times(20)
             .reply(201, {message: 'OK'});
     });
@@ -61,16 +61,16 @@ describe('Fail to run a custom test - report not created', function () {
 
     before(async function () {
         nock(PREDATOR_URL)
-            .get(`/v1/tests/${testId}`)
+            .get(`/tests/${testId}`)
             .reply(200, { });
 
         nock(PREDATOR_URL)
-            .post(`/v1/tests/${testId}/reports`)
+            .post(`/tests/${testId}/reports`)
             .times(20)
             .reply(400, {error: 'ERROR'});
 
         nock(PREDATOR_URL)
-            .post(`/v1/tests/${testId}/reports/${runId}/stats`)
+            .post(`/tests/${testId}/reports/${runId}/stats`)
             .times(20)
             .reply(201, {message: 'OK'});
     });
@@ -108,16 +108,16 @@ describe('Fail to run a custom test - fail to send final report stats to reporte
         customTestBody.artillery_test = customTestBody.artillery_test;
 
         nock(PREDATOR_URL)
-            .get(`/v1/tests/${testId}`)
+            .get(`/tests/${testId}`)
             .reply(200, customTestBody);
 
         nock(PREDATOR_URL)
-            .post(`/v1/tests/${testId}/reports`)
+            .post(`/tests/${testId}/reports`)
             .times(20)
             .reply(201, {message: 'OK'});
 
         nock(PREDATOR_URL)
-            .post(`/v1/tests/${testId}/reports/${runId}/stats`)
+            .post(`/tests/${testId}/reports/${runId}/stats`)
             .times(20)
             .reply(400, {error: 'ERROR'});
     });
@@ -147,16 +147,16 @@ describe('Fail to run a custom test - test not found', function () {
 
     before(async function () {
         nock(PREDATOR_URL)
-            .get(`/v1/tests/${testId}`)
+            .get(`/tests/${testId}`)
             .reply(404, { });
 
         nock(PREDATOR_URL)
-            .post(`/v1/tests/${testId}/reports`)
+            .post(`/tests/${testId}/reports`)
             .times(20)
             .reply(201, {message: 'OK'});
 
         nock(PREDATOR_URL)
-            .post(`/v1/tests/${testId}/reports/${runId}/stats`)
+            .post(`/tests/${testId}/reports/${runId}/stats`)
             .times(20)
             .reply(201, {message: 'OK'});
     });

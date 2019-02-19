@@ -4,7 +4,7 @@ let logger = require('../utils/logger');
 let getTest = async (jobConfig) => {
     let options = {
         method: 'GET',
-        url: jobConfig.predatorUrl + `/v1/tests/${jobConfig.testId}`,
+        url: jobConfig.predatorUrl + `/tests/${jobConfig.testId}`,
         headers: {
             'x-zooz-request-id': `runner_${jobConfig.runId}`
         }

@@ -1,24 +1,25 @@
 'use strict';
 
 require('./utils/verifier').verifyEnvironmentVars();
+let uuid = require('uuid/v4');
 let runner = require('./models/runner');
 let logger = require('./utils/logger');
 let jobConfig = require('./config/jobConfig');
 let reporterConnector = require('./connectors/reporterConnector');
 let errorHandler = require('./handler/errorHandler');
 
-const getSpecificPlatformRunId = () => {
-    let specificPlatformRunId;
+const getContainerId = () => {
+    let containerId = uuid();
     if (process.env.MARATHON_APP_ID) {
         let marathonAppId = process.env.MARATHON_APP_ID.split('/');
-        specificPlatformRunId = marathonAppId[marathonAppId.length - 1];
+        containerId = marathonAppId[marathonAppId.length - 1];
     }
-    return specificPlatformRunId;
+    return containerId;
 };
 
 let start = async () => {
+    jobConfig.containerId = getContainerId();
     try {
-        jobConfig.specificPlatformRunId = getSpecificPlatformRunId();
         logger.info({runner_config: jobConfig}, 'Initialized test runner');
 
         process.on('SIGTERM', async function () {
