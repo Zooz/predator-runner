@@ -16,7 +16,7 @@ let createReport = async (jobConfig, test) => {
     };
 
     let options = {
-        url: jobConfig.predatorUrl + `/v1/tests/${jobConfig.testId}/reports`,
+        url: jobConfig.predatorUrl + `/tests/${jobConfig.testId}/reports`,
         method: 'POST',
         headers: {
             'x-zooz-request-id': `runner_${jobConfig.runId}`
@@ -37,7 +37,7 @@ let postStats = async (jobConfig, stats) => {
     const requestBody = Object.assign(defaultBody, stats);
 
     let options = {
-        url: jobConfig.predatorUrl + `/v1/tests/${jobConfig.testId}/reports/${jobConfig.runId}/stats`,
+        url: jobConfig.predatorUrl + `/tests/${jobConfig.testId}/reports/${jobConfig.runId}/stats`,
         method: 'POST',
         headers: {
             'x-zooz-request-id': `runner_${jobConfig.runId}`
