@@ -35,7 +35,7 @@ jobs:
   system-tests:
     docker:
       - image: circleci/node:10
-      - image: zooz/predator:1.0.0
+      - image: zooz/predator:latest
         environment:
           JOB_PLATFORM: METRONOME
           METRONOME_URL: http://127.0.0.1:9000
