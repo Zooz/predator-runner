@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.2"></a>
+## [1.0.2](https://github.com/Zooz/predator-runner/compare/v1.0.1...v1.0.2) (2019-02-19)
+
+
+### Bug Fixes
+
+* **api-calls:** removing v1 from predator api calls ([91f51ba](https://github.com/Zooz/predator-runner/commit/91f51ba))
+* **package.lock:** update prometheus plugin version ([ec3c786](https://github.com/Zooz/predator-runner/commit/ec3c786))
+* **package.lock:** update prometheus plugin version ([c14b79f](https://github.com/Zooz/predator-runner/commit/c14b79f))
+
+
+
 <a name="1.0.1"></a>
 ## 1.0.1 (2019-02-18)
 
