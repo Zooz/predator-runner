@@ -45,15 +45,27 @@ module.exports.createJob = async (testId) => {
     }
 };
 
+module.exports.deleteJob = async (jobId) => {
+    const options = {
+        url: PREDATOR_URL + `/v1/jobs/${jobId}`,
+        method: 'DELETE',
+        headers: {
+            'x-zooz-request-id': 'mickey'
+        }
+    };
+
+    await request(options);
+};
+
 const cronJobBody = (testId) => {
     return {
         'test_id': `${testId}`,
         'arrival_rate': 10,
         'duration': 10,
-        'notes': 'Job that will never run',
+        'notes': 'Job that will not run',
         'environment': 'test',
         'run_immediately': false,
-        'cron_expression': '0 0 * 1 *',
+        'cron_expression': '0 0 1 1 *',
         'emails': [],
         'webhooks': []
     };

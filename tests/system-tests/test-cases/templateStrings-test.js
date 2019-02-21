@@ -5,8 +5,6 @@ const path = require('path'),
     simpleServerClient = require('../../utils/simpleServerClient'),
     runner = require('../../../app/models/runner');
 
-const runId = `system-tester-${Date.now()}`;
-
 let createTestResponse;
 let testId;
 let createJobResponse;
@@ -33,6 +31,7 @@ describe('Template strings', function () {
     });
 
     after(async function () {
+        await predatorApiHelper.deleteJob(jobId);
         await simpleServerClient.deleteDB();
     });
 

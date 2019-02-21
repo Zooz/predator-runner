@@ -32,6 +32,7 @@ describe('Rampto and scenario weights', function () {
     });
 
     after(async function () {
+        await predatorApiHelper.deleteJob(jobId);
         await simpleServerClient.deleteDB();
     });
 

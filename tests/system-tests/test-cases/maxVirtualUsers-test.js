@@ -32,6 +32,7 @@ describe('Max virtual users', function () {
     });
 
     after(async function () {
+        await predatorApiHelper.deleteJob(jobId);
         await simpleServerClient.deleteDB();
     });
 
@@ -85,6 +86,7 @@ describe('Heavy load test without max virtual users', function () {
     });
 
     after(async function () {
+        await predatorApiHelper.deleteJob(jobId);
         await simpleServerClient.deleteDB();
     });
 

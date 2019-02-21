@@ -13,7 +13,6 @@ let testId;
 let createJobResponse;
 let jobId;
 let customTestBody;
-let testReport;
 
 describe('Runner performance validations', function () {
     const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
@@ -33,6 +32,7 @@ describe('Runner performance validations', function () {
     });
 
     after(async function () {
+        await predatorApiHelper.deleteJob(jobId);
         await simpleServerClient.deleteDB();
     });
 
