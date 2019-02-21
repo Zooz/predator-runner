@@ -31,6 +31,7 @@ describe('Before test flow', function () {
     });
 
     after(async function () {
+        await predatorApiHelper.deleteJob(jobId);
         await simpleServerClient.deleteDB();
     });
 
