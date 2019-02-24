@@ -47,7 +47,7 @@ module.exports.createJob = async (testId) => {
 
 module.exports.deleteJob = async (jobId) => {
     const options = {
-        url: PREDATOR_URL + `/v1/jobs/${jobId}`,
+        url: PREDATOR_URL + `/jobs/${jobId}`,
         method: 'DELETE',
         headers: {
             'x-zooz-request-id': 'mickey'
