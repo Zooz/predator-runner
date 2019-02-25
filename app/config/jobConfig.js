@@ -11,7 +11,7 @@ let config = {
     duration: parseInt(process.env.DURATION),
     arrivalRate: parseInt(process.env.ARRIVAL_RATE),
     rampTo: parseInt(process.env.RAMP_TO) || undefined,
-    maxVusers: parseInt(process.env.MAX_VUSERS) || undefined,
+    maxVusers: parseInt(process.env.MAX_VIRTUAL_USERS) || undefined,
     emails: process.env.EMAILS ? process.env.EMAILS.split(';') : [],
     webhooks: process.env.WEBHOOKS ? process.env.WEBHOOKS.split(';') : [],
     httpPoolSize: process.env.HTTP_POOL_SIZE || 250,
