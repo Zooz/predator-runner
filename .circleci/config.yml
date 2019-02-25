@@ -53,7 +53,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      - run: sh .circleci/docker-build.sh
+      - run: sh .circleci/dockerBuild.sh
   release-patch:
     docker:
       - image: circleci/node:10
@@ -66,7 +66,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "b4:24:34:b0:e9:25:4b:1e:6f:b3:06:44:4b:a9:9d:f1"
-      - run: .circleci/release-patch.sh
+      - run: .circleci/releasePatch.sh
   release-minor:
     docker:
       - image: circleci/node:10
@@ -79,7 +79,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "b4:24:34:b0:e9:25:4b:1e:6f:b3:06:44:4b:a9:9d:f1"
-      - run: .circleci/release-minor.sh
+      - run: .circleci/releaseMinor.sh
   release-major:
     docker:
       - image: circleci/node:10
@@ -92,7 +92,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "b4:24:34:b0:e9:25:4b:1e:6f:b3:06:44:4b:a9:9d:f1"
-      - run: .circleci/release-major.sh
+      - run: .circleci/releaseMajor.sh
 
 workflows:
   version: 2
@@ -111,9 +111,6 @@ workflows:
       - build:
           requires:
             - system-tests
-#          filters:
-#            branches:
-#              only: master
       - release-patch-approval:
           type: approval
           requires:
