@@ -35,19 +35,20 @@ module.exports.runTest = async (jobConfig) => {
         ee.on('stats', async (stats) => {
             statsToRecord++;
             let intermediateReport = stats.report();
-            let progress = progressCalculator.calculateProgress(stats._completedScenarios + stats._scenariosAvoided);
-            logger.info(`Completed ${progress}%`);
-            reportPrinter.print('intermediate', intermediateReport);
-            delete intermediateReport.latencies;
+            if (statsAreNotEmpty(intermediateReport)) {
+                let progress = progressCalculator.calculateProgress(stats._completedScenarios + stats._scenariosAvoided);
+                logger.info(`Completed ${progress}%`);
+                reportPrinter.print('intermediate', intermediateReport);
+                delete intermediateReport.latencies;
 
-            reporterConnector.postStats(jobConfig, {
-                phase_status: 'intermediate',
-                data: JSON.stringify(intermediateReport)
-            });
+                reporterConnector.postStats(jobConfig, {
+                    phase_status: 'intermediate',
+                    data: JSON.stringify(intermediateReport)
+                });
 
-            const runnerMetrics = await metrics.getMetrics();
-            await metrics.printMetrics(runnerMetrics);
-
+                const runnerMetrics = await metrics.getMetrics();
+                await metrics.printMetrics(runnerMetrics);
+            }
             statsToRecord--;
         });
         ee.on('done', async (report) => {
@@ -121,4 +122,8 @@ let waitForLiveStatsToFinish = async (callback) => {
     } else {
         await callback();
     }
+};
+
+const statsAreNotEmpty = (intermediateReport) => {
+    return intermediateReport.scenariosCompleted > 0 || intermediateReport.scenariosCreated > 0 || intermediateReport.requestsCompleted > 0;
 };
