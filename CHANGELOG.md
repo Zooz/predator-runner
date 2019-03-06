@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/Zooz/predator-runner/compare/v1.0.3...v1.0.4) (2019-03-06)
+
+
+### Bug Fixes
+
+* **reports:** send runner_id when creating report ([#13](https://github.com/Zooz/predator-runner/issues/13)) ([04da97e](https://github.com/Zooz/predator-runner/commit/04da97e))
+
+
+
 <a name="1.0.3"></a>
 ## [1.0.3](https://github.com/Zooz/predator-runner/compare/v1.0.2...v1.0.3) (2019-02-26)
 

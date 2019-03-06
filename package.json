@@ -1,6 +1,6 @@
 {
   "name": "predator-runner",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Docker image that runs predator tests",
   "main": "index.js",
   "scripts": {
