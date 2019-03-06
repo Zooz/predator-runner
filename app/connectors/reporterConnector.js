@@ -3,7 +3,6 @@ let requestSender = require('../helpers/requestSender');
 let createReport = async (jobConfig, test) => {
     const requestBody = {
         report_id: jobConfig.runId,
-        specificPlatformRunId: jobConfig.specificPlatformRunId,
         revision_id: jobConfig.revisionId,
         job_id: jobConfig.jobId,
         test_type: test.type,
@@ -13,6 +12,7 @@ let createReport = async (jobConfig, test) => {
         emails: jobConfig.emails,
         test_name: jobConfig.testName,
         test_description: jobConfig.description,
+        runner_id: jobConfig.containerId
     };
 
     let options = {
@@ -21,7 +21,7 @@ let createReport = async (jobConfig, test) => {
         headers: {
             'x-zooz-request-id': `runner_${jobConfig.runId}`
         },
-        body: requestBody,
+        body: requestBody
     };
 
     const report = await requestSender.sendRequest(options);
@@ -30,7 +30,7 @@ let createReport = async (jobConfig, test) => {
 
 let postStats = async (jobConfig, stats) => {
     let defaultBody = {
-        container_id: jobConfig.containerId,
+        runner_id: jobConfig.containerId,
         stats_time: Date.now().toString()
     };
 
@@ -42,7 +42,7 @@ let postStats = async (jobConfig, stats) => {
         headers: {
             'x-zooz-request-id': `runner_${jobConfig.runId}`
         },
-        body: requestBody,
+        body: requestBody
     };
 
     await requestSender.sendRequest(options);
