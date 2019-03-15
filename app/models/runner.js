@@ -9,7 +9,7 @@ let metrics = require('../helpers/runnerMetrics');
 
 let statsToRecord = 0;
 let artilleryReport;
-
+let firstIntermediate = true;
 module.exports.runTest = async (jobConfig) => {
     let test;
     test = await testFileConnector.getTest(jobConfig);
@@ -41,9 +41,10 @@ module.exports.runTest = async (jobConfig) => {
             delete intermediateReport.latencies;
 
             reporterConnector.postStats(jobConfig, {
-                phase_status: 'intermediate',
+                phase_status: firstIntermediate ? 'first_intermediate' : 'intermediate',
                 data: JSON.stringify(intermediateReport)
             });
+            firstIntermediate = false;
 
             const runnerMetrics = await metrics.getMetrics();
             await metrics.printMetrics(runnerMetrics);
