@@ -21,4 +21,4 @@ COPY /app /usr/app
 
 EXPOSE 8080
 
-ENTRYPOINT ["./docker-entrypoint.sh"]
+CMD [ "node","./app/app.js" ]
