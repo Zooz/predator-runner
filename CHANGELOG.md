@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.5"></a>
+## [1.0.5](https://github.com/Zooz/predator-runner/compare/v1.0.4...v1.0.5) (2019-03-21)
+
+
+### Bug Fixes
+
+* **dockerfile:** fixing max_old_space_size to 1536mb ([dba8674](https://github.com/Zooz/predator-runner/commit/dba8674))
+* **dockerfile:** fixing max_old_space_size to 1536mb ([6511368](https://github.com/Zooz/predator-runner/commit/6511368))
+
+
+### Features
+
+* **runner:** first_intermediate will be the phase_status of the first intermediate report ([32179ff](https://github.com/Zooz/predator-runner/commit/32179ff))
+
+
+
 <a name="1.0.4"></a>
 ## [1.0.4](https://github.com/Zooz/predator-runner/compare/v1.0.3...v1.0.4) (2019-03-06)
 
