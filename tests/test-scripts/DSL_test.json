@@ -1,7 +1,7 @@
 {
     "name": "system-tests",
     "description": "performance-framework-runner system tests",
-    "type": "custom",
+    "type": "basic",
     "artillery_test": {
         "config": {
             "target": "http://localhost:3003",
