@@ -1,5 +1,6 @@
 const path = require('path'),
     should = require('should'),
+    uuid = require('uuid/v4'),
     predatorApiHelper = require('../../utils/predatorApiHelper'),
     defaults = require('../defaults'),
     simpleServerClient = require('../../utils/simpleServerClient'),
@@ -41,6 +42,7 @@ describe('Before test flow', function () {
         duration = artilleryTest.config.phases[0].duration;
         arrivalRate = artilleryTest.config.phases[0].arrivalRate;
         const httpPoolSize = artilleryTest.config.http.pool;
+        const containerId = uuid();
 
         let jobConfig = {
             predatorUrl: process.env.PREDATOR_URL,
@@ -49,7 +51,8 @@ describe('Before test flow', function () {
             arrivalRate,
             httpPoolSize,
             runId,
-            jobId
+            jobId,
+            containerId
         };
 
         Object.assign(jobConfig, defaults.jobConfig);

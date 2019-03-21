@@ -1,6 +1,7 @@
 const path = require('path'),
     should = require('should'),
     colors = require('colors'),
+    uuid = require('uuid/v4'),
     predatorApiHelper = require('../../utils/predatorApiHelper'),
     defaults = require('../defaults'),
     simpleServerClient = require('../../utils/simpleServerClient'),
@@ -43,7 +44,7 @@ describe('Runner performance validations', function () {
         const duration = artilleryTest.config.phases[0].duration;
         const arrivalRate = artilleryTest.config.phases[0].arrivalRate;
         const httpPoolSize = artilleryTest.config.http.pool;
-
+        const containerId = uuid();
         const jobConfig = {
             predatorUrl: process.env.PREDATOR_URL,
             testId,
@@ -51,7 +52,8 @@ describe('Runner performance validations', function () {
             arrivalRate,
             httpPoolSize,
             runId,
-            jobId
+            jobId,
+            containerId
         };
 
         Object.assign(jobConfig, defaults.jobConfig);

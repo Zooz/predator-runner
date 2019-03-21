@@ -1,5 +1,6 @@
 const path = require('path'),
     should = require('should'),
+    uuid = require('uuid/v4'),
     predatorApiHelper = require('../../utils/predatorApiHelper'),
     defaults = require('../defaults'),
     simpleServerClient = require('../../utils/simpleServerClient'),
@@ -43,6 +44,7 @@ describe('Max virtual users', function () {
         arrivalRate = artilleryTest.config.phases[0].arrivalRate;
         maxVusers = artilleryTest.config.phases[0].maxVusers;
         const httpPoolSize = artilleryTest.config.http.pool;
+        const containerId = uuid();
 
         const jobConfig = {
             predatorUrl: process.env.PREDATOR_URL,
@@ -52,7 +54,8 @@ describe('Max virtual users', function () {
             maxVusers,
             httpPoolSize,
             runId,
-            jobId
+            jobId,
+            containerId
         };
         Object.assign(jobConfig, defaults.jobConfig);
 
@@ -96,6 +99,7 @@ describe('Heavy load test without max virtual users', function () {
         duration = artilleryTest.config.phases[0].duration;
         arrivalRate = artilleryTest.config.phases[0].arrivalRate;
         const httpPoolSize = artilleryTest.config.http.pool;
+        const containerId = uuid();
 
         const jobConfig = {
             predatorUrl: process.env.PREDATOR_URL,
@@ -104,7 +108,9 @@ describe('Heavy load test without max virtual users', function () {
             arrivalRate,
             httpPoolSize,
             runId,
-            jobId
+            jobId,
+            containerId
+
         };
         Object.assign(jobConfig, defaults.jobConfig);
 

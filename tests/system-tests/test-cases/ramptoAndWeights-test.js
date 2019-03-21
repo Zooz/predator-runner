@@ -1,5 +1,6 @@
 const path = require('path'),
     should = require('should'),
+    uuid = require('uuid/v4'),
     predatorApiHelper = require('../../utils/predatorApiHelper'),
     runner = require('../../../app/models/runner'),
     simpleServerClient = require('../../utils/simpleServerClient'),
@@ -14,7 +15,7 @@ let testReport;
 
 describe('Rampto and scenario weights', function () {
     const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
-    let duration, arrivalRate, rampTo;
+    let duration, arrivalRate, containerId, rampTo;
 
     before(function (done) {
         this.timeout(10000);
@@ -43,6 +44,7 @@ describe('Rampto and scenario weights', function () {
         arrivalRate = artilleryTest.config.phases[0].arrivalRate;
         rampTo = artilleryTest.config.phases[0].rampTo;
         const httpPoolSize = artilleryTest.config.http.pool;
+        const containerId = uuid();
 
         const jobConfig = {
             predatorUrl: process.env.PREDATOR_URL,
@@ -52,7 +54,8 @@ describe('Rampto and scenario weights', function () {
             rampTo,
             httpPoolSize,
             runId,
-            jobId
+            jobId,
+            containerId
         };
 
         Object.assign(jobConfig, defaults.jobConfig);
