@@ -1,20 +1,24 @@
 'use strict';
 let artillery = require('artillery/core');
 let testFileConnector = require('../connectors/testFileConnector');
+let fileConnector = require('../connectors/fileConnector');
+const fs = require('fs').promises;
 let reporterConnector = require('../connectors/reporterConnector');
 let logger = require('../utils/logger');
 let reportPrinter = require('./reportPrinter');
 let progressCalculator = require('../helpers/progressCalculator');
 let metrics = require('../helpers/runnerMetrics');
-
+const path = require('path');
 let statsToRecord = 0;
 let artilleryReport;
 let firstIntermediate = true;
 module.exports.runTest = async (jobConfig) => {
-    let test;
+    let test, fileContent;
     test = await testFileConnector.getTest(jobConfig);
+    fileContent = await fileConnector.getFile(jobConfig, test['file_id']);
+    const localProcessorPath = await writeFileToLocalFile(fileContent);
     await reporterConnector.createReport(jobConfig, test);
-    updateTestParameters(jobConfig, test.artillery_test);
+    updateTestParameters(jobConfig, test.artillery_test, localProcessorPath);
     logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
     progressCalculator.calculateTotalNumberOfScenarios(jobConfig);
 
@@ -73,11 +77,14 @@ module.exports.runTest = async (jobConfig) => {
     });
 };
 
-let updateTestParameters = (jobConfig, testFile) => {
+let updateTestParameters = (jobConfig, testFile, localProcessorPath) => {
     if (jobConfig.metricsExportConfig && jobConfig.metricsPluginName) {
         injectPlugins(testFile, jobConfig);
     }
-
+    if (localProcessorPath) {
+        let processor = require(localProcessorPath);
+        testFile.config.processor = processor;
+    }
     if (!testFile.config.phases) {
         testFile.config.phases = [{}];
     }
@@ -105,6 +112,20 @@ let updateTestParameters = (jobConfig, testFile) => {
 
     logger.info({updated_test_config: testFile.config}, 'Test successfully updated parameters');
 };
+
+async function writeFileToLocalFile(fileContent) {
+    if (fileContent) {
+        const fileName = 'processor_file.js';
+        const jsCode = Buffer.from(fileContent, 'base64').toString('utf8');
+        try {
+            await fs.writeFile(fileName, jsCode);
+            return path.resolve(__dirname, '..', '..', fileName);
+        } catch (err) {
+            console.log(err);
+            return undefined;
+        }
+    }
+}
 
 function injectPlugins(testFile, jobConfig) {
     const metricsPluginName = jobConfig.metricsPluginName.toLowerCase();
