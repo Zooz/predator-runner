@@ -31,6 +31,8 @@ function predator() {
                     -d \
                     -e JOB_PLATFORM=DOCKER \
                     -e INTERNAL_ADDRESS=http://127.0.0.1:80/v1 \
+                    -e DATABASE_NAME=predator
+                    -e DATABASE_TYPE=SQLITE
                     --name $APP \
                     -p 80:80
                     $IMAGE_NAME"
