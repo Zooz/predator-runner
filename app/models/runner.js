@@ -2,7 +2,7 @@
 let artillery = require('artillery/core');
 let testFileConnector = require('../connectors/testFileConnector');
 let fileConnector = require('../connectors/fileConnector');
-const fs = require('fs').promises;
+const fs = require('fs');
 let reporterConnector = require('../connectors/reporterConnector');
 let logger = require('../utils/logger');
 let reportPrinter = require('./reportPrinter');
@@ -118,7 +118,7 @@ async function writeFileToLocalFile(fileContent) {
         const fileName = 'processor_file.js';
         const jsCode = Buffer.from(fileContent, 'base64').toString('utf8');
         try {
-            await fs.writeFile(fileName, jsCode);
+            await fs.writeFileSync(fileName, jsCode);
             return path.resolve(__dirname, '..', '..', fileName);
         } catch (err) {
             console.log(err);
