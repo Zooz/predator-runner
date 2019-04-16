@@ -48,11 +48,8 @@ describe('Successfully run a custom test', function () {
         console.log('REPORT:', testReport);
     });
 
-    it('Test should finish successfully', function () {
+    it('Test should finish successfully', async function () {
         should.exist(testReport);
-
-        const expected200Codes = duration * arrivalRate;
-        should.equal(testReport.codes['200'], expected200Codes, 'All requests should return 200 resonse codes');
     });
 });
 
