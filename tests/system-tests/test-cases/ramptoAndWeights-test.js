@@ -61,7 +61,6 @@ describe('Rampto and scenario weights', function () {
         Object.assign(jobConfig, defaults.jobConfig);
 
         testReport = await runner.runTest(jobConfig);
-        console.log('REPORT:', testReport);
     });
 
     it('Weighted scenarios', async function () {

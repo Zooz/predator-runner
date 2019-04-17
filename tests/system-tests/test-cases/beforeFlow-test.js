@@ -58,7 +58,6 @@ describe('Before test flow', function () {
         Object.assign(jobConfig, defaults.jobConfig);
 
         testReport = await runner.runTest(jobConfig);
-        console.log('REPORT:', testReport);
     });
 
     it('All requests should return response code 200', async function () {

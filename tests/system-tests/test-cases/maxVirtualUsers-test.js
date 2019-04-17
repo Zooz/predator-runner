@@ -60,7 +60,6 @@ describe('Max virtual users', function () {
         Object.assign(jobConfig, defaults.jobConfig);
 
         testReport = await runner.runTest(jobConfig);
-        console.log('REPORT:', testReport);
     });
 
     it('Runner should avoid scenarios if arrival rate is too high for service to handle', async function () {
@@ -116,7 +115,6 @@ describe('Heavy load test without max virtual users', function () {
         Object.assign(jobConfig, defaults.jobConfig);
 
         testReport = await runner.runTest(jobConfig);
-        console.log('REPORT:', testReport);
     });
 
     it('Runner should not avoid scenarios', async function () {

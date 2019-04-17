@@ -57,7 +57,7 @@ module.exports.runTest = async (jobConfig) => {
                         phase_status: 'done',
                         data: JSON.stringify({message: 'Test Finished'})
                     });
-                    resolve(report);
+                    resolve();
                 } catch (e) {
                     logger.error({error: e, final_report: report}, 'Failed to send final report to reporter');
                     reject(e);
