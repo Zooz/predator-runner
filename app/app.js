@@ -18,7 +18,7 @@ const getContainerId = () => {
 };
 
 let start = async () => {
-    if (jobConfig.delayRunnerMs && jobConfig.delayRunnerMs !== '0') {
+    if (jobConfig.delayRunnerMs > 0) {
         await timeout(jobConfig.delayRunnerMs);
     }
     jobConfig.containerId = getContainerId();

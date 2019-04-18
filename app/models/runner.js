@@ -59,7 +59,7 @@ module.exports.runTest = async (jobConfig) => {
                     });
                     resolve();
                 } catch (e) {
-                    logger.error({error: e, final_report: report}, 'Failed to send final report to reporter');
+                    logger.error({error: e}, 'Failed to send final report to predator');
                     reject(e);
                 }
             };
