@@ -6,7 +6,7 @@ let getTest = async (jobConfig) => {
         method: 'GET',
         url: jobConfig.predatorUrl + `/tests/${jobConfig.testId}`,
         headers: {
-            'x-zooz-request-id': `runner_${jobConfig.runId}`
+            'x-runner-id': `runner_${jobConfig.runId}`
         }
     };
     logger.info(options, 'GET test file');

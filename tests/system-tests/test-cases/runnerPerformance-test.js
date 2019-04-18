@@ -59,8 +59,6 @@ describe('Runner performance validations', function () {
         Object.assign(jobConfig, defaults.jobConfig);
 
         const report = await runner.runTest(jobConfig);
-
-        console.log('REPORT:', report);
         try {
             if (LOCAL_TEST) {
                 should(report.rps.mean).aboveOrEqual(650, 'Local test should have atleast 600 RPS');

@@ -19,7 +19,7 @@ let createReport = async (jobConfig, test) => {
         url: jobConfig.predatorUrl + `/tests/${jobConfig.testId}/reports`,
         method: 'POST',
         headers: {
-            'x-zooz-request-id': `runner_${jobConfig.runId}`
+            'x-runner-id': `runner_${jobConfig.runId}`
         },
         body: requestBody
     };
@@ -40,7 +40,7 @@ let postStats = async (jobConfig, stats) => {
         url: jobConfig.predatorUrl + `/tests/${jobConfig.testId}/reports/${jobConfig.runId}/stats`,
         method: 'POST',
         headers: {
-            'x-zooz-request-id': `runner_${jobConfig.runId}`
+            'x-runner-id': `runner_${jobConfig.runId}`
         },
         body: requestBody
     };

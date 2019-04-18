@@ -18,6 +18,9 @@ const getContainerId = () => {
 };
 
 let start = async () => {
+    if (jobConfig.delayRunnerMs > 0) {
+        await timeout(jobConfig.delayRunnerMs);
+    }
     jobConfig.containerId = getContainerId();
     try {
         logger.info({runner_config: jobConfig}, 'Initialized test runner');
@@ -39,5 +42,10 @@ let start = async () => {
         process.exit(1);
     }
 };
+
+function timeout(ms) {
+    logger.info(`sleeping for ${ms} ms before strating runner`);
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 start();

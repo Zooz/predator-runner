@@ -12,25 +12,26 @@ const runId = process.env.RUN_ID;
 describe('Successfully run a custom test', function () {
     const testId = uuid();
     let testReport;
-
+    let getTest, postReport, postStats;
     before(async function () {
         const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test.json');
         const customTestBody = require(customTestPath);
 
         customTestBody.artillery_test = customTestBody.artillery_test;
 
-        nock(PREDATOR_URL)
+        getTest = nock(PREDATOR_URL)
             .get(`/tests/${testId}`)
+            .times(1)
             .reply(200, customTestBody);
 
-        nock(PREDATOR_URL)
+        postReport = nock(PREDATOR_URL)
             .post(`/tests/${testId}/reports`)
-            .times(20)
+            .times(1)
             .reply(201, {message: 'OK'});
 
-        nock(PREDATOR_URL)
+        postStats = nock(PREDATOR_URL)
             .post(`/tests/${testId}/reports/${runId}/stats`)
-            .times(20)
+            .times(4)
             .reply(201, {message: 'OK'});
     });
 
@@ -44,15 +45,12 @@ describe('Successfully run a custom test', function () {
             runId
         };
 
-        testReport = await runner.runTest(jobConfig);
-        console.log('REPORT:', testReport);
+        await runner.runTest(jobConfig);
     });
 
-    it('Test should finish successfully', function () {
-        should.exist(testReport);
-
-        const expected200Codes = duration * arrivalRate;
-        should.equal(testReport.codes['200'], expected200Codes, 'All requests should return 200 resonse codes');
+    it('Test should get test and create report in predator', async function () {
+        should.equal(getTest.isDone(), true);
+        should.equal(postReport.isDone(), true);
     });
 });
 
@@ -62,7 +60,7 @@ describe('Fail to run a custom test - report not created', function () {
     before(async function () {
         nock(PREDATOR_URL)
             .get(`/tests/${testId}`)
-            .reply(200, { });
+            .reply(200, {});
 
         nock(PREDATOR_URL)
             .post(`/tests/${testId}/reports`)
@@ -148,7 +146,7 @@ describe('Fail to run a custom test - test not found', function () {
     before(async function () {
         nock(PREDATOR_URL)
             .get(`/tests/${testId}`)
-            .reply(404, { });
+            .reply(404, {});
 
         nock(PREDATOR_URL)
             .post(`/tests/${testId}/reports`)

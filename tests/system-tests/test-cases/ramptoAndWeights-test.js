@@ -61,20 +61,22 @@ describe('Rampto and scenario weights', function () {
         Object.assign(jobConfig, defaults.jobConfig);
 
         testReport = await runner.runTest(jobConfig);
-        console.log('REPORT:', testReport);
     });
 
-    it('Weighted scenarios', function () {
-        should(testReport.codes['201']).greaterThan(testReport.codes['200'] * 4,
+    it('Weighted scenarios', async function () {
+        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, runId);
+        should(aggregatedReport.aggregate.codes['201']).greaterThan(aggregatedReport.aggregate.codes['200'] * 4,
             'There should be atleast 4 times more 201 response codes than 200 response codes');
     });
 
-    it('Rampto', function () {
+    it('Rampto', async function () {
+        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, runId);
+
         const maxNumberOfScenarios = duration * rampTo;
         const minNumberOfScenarios = duration * arrivalRate;
-        should(testReport.scenariosCreated).lessThan(maxNumberOfScenarios,
+        should(aggregatedReport.aggregate.scenariosCreated).lessThan(maxNumberOfScenarios,
             'There should be less scenarios than the max number of scenarios because use of rampto');
-        should(testReport.scenariosCreated).greaterThan(minNumberOfScenarios,
+        should(aggregatedReport.aggregate.scenariosCreated).greaterThan(minNumberOfScenarios,
             'There should be more scenarios than the min number of scenarios');
     });
 

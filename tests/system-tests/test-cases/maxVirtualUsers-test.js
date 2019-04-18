@@ -60,11 +60,11 @@ describe('Max virtual users', function () {
         Object.assign(jobConfig, defaults.jobConfig);
 
         testReport = await runner.runTest(jobConfig);
-        console.log('REPORT:', testReport);
     });
 
-    it('Runner should avoid scenarios if arrival rate is too high for service to handle', function () {
-        should(testReport.scenariosAvoided).above(0, 'Should avoid some scenarios');
+    it('Runner should avoid scenarios if arrival rate is too high for service to handle', async function () {
+        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, runId);
+        should(aggregatedReport.aggregate.scenariosAvoided).above(0, 'Should avoid some scenarios');
     });
 });
 
@@ -115,10 +115,10 @@ describe('Heavy load test without max virtual users', function () {
         Object.assign(jobConfig, defaults.jobConfig);
 
         testReport = await runner.runTest(jobConfig);
-        console.log('REPORT:', testReport);
     });
 
-    it('Runner should not avoid scenarios', function () {
-        should(testReport.scenariosAvoided).eql(0, 'Should not avoid any scenarios');
+    it('Runner should not avoid scenarios', async function () {
+        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, runId);
+        should(aggregatedReport.aggregate.scenariosAvoided).eql(0, 'Should not avoid any scenarios');
     });
 });
