@@ -1,7 +1,7 @@
 let logger = require('../utils/logger');
 let _ = require('lodash');
 
-module.exports.print = (stage ,report) => {
+module.exports.print = (stage, report) => {
     logger.info('  Printing stats for stage %s', stage);
     logger.info('  Scenarios launched:  %s', report.scenariosCreated);
     logger.info('  Scenarios completed: %s', report.scenariosCompleted);
