@@ -31,7 +31,6 @@
     "artillery": "https://github.com/NivLipetz/artillery.git#no-aggregate",
     "artillery-plugin-prometheus": "^1.1.0",
     "bunyan": "1.8.12",
-    "kafka-node": "3.0.1",
     "pidusage": "2.0.6",
     "request": "~2.87.0",
     "requestxn": "^3.1.1",
