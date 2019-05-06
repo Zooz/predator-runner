@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/Zooz/predator-runner#readme",
   "dependencies": {
-    "artillery": "https://github.com/NivLipetz/artillery.git#no-aggregate",
+    "artillery": "https://github.com/NivLipetz/artillery.git#no-aggregate-fix-vulnerabilities",
     "artillery-plugin-prometheus": "^1.1.0",
     "bunyan": "1.8.12",
     "kafka-node": "3.0.1",
