@@ -183,3 +183,40 @@ describe('Fail to run a custom test - test not found', function () {
         }
     });
 });
+
+describe('Fail to get file ,file not found', function () {
+    const fileId = uuid();
+    const testId = uuid();
+    before(async function () {
+        const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test.json');
+        const customTestBody = require(customTestPath);
+        const testBody = Object.assign({}, customTestBody);
+        testBody.file_id = fileId;
+        nock(PREDATOR_URL)
+            .get(`/tests/${testId}`)
+            .reply(200, testBody);
+        nock(PREDATOR_URL)
+            .get(`/tests/file/${fileId}`)
+            .reply(404, {});
+    });
+
+    it('Run test', async function () {
+        this.timeout(100000);
+
+        const jobConfig = {
+            predatorUrl: process.env.PREDATOR_URL,
+            testId,
+            duration,
+            arrivalRate,
+            runId
+        };
+
+        try {
+            const report = await runner.runTest(jobConfig);
+            should.not.exist(report);
+        } catch (e) {
+            should.exist(e);
+            should.equal(e.statusCode, 404, 'Error returned should be with status code 404');
+        }
+    });
+});

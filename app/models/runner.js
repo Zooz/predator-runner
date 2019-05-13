@@ -82,7 +82,7 @@ let updateTestParameters = (jobConfig, testFile, localProcessorPath) => {
         injectPlugins(testFile, jobConfig);
     }
     if (localProcessorPath) {
-        let processor = require(localProcessorPath);
+        const processor = require(localProcessorPath);
         testFile.config.processor = processor;
     }
     if (!testFile.config.phases) {
@@ -121,8 +121,9 @@ async function writeFileToLocalFile(fileContent) {
             await fs.writeFileSync(fileName, jsCode);
             return path.resolve(__dirname, '..', '..', fileName);
         } catch (err) {
-            console.log(err);
-            return undefined;
+            let error = new Error('Something went wrong. error: ' + err);
+            logger.error(error);
+            throw error;
         }
     }
 }
