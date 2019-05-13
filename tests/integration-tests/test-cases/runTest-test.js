@@ -210,8 +210,8 @@ describe('Fail to get file ,file not found', function () {
         };
 
         try {
-            const report = await runner.runTest(jobConfig);
-            should.not.exist(report);
+            await runner.runTest(jobConfig);
+            should.fail('Should throw error');
         } catch (e) {
             should.exist(e);
             should.equal(e.statusCode, 404, 'Error returned should be with status code 404');
