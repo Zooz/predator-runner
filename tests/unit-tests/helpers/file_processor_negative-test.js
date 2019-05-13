@@ -4,12 +4,15 @@ const rewire = require('rewire'),
     runner = rewire('../../../app/models/runner'),
     sinon = require('sinon');
 
-describe('Create file tests', () => {
+describe('Create file tests negative', () => {
     let writeFileSyncStub,
         sandbox;
     before(() => {
         sandbox = sinon.sandbox.create();
         writeFileSyncStub = sandbox.stub(fs, 'writeFileSync');
+    });
+    after(() => {
+        sandbox.restore();
     });
 
     it('Should write new file and fail with exception ', async () => {

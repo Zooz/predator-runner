@@ -14,6 +14,9 @@ describe('Create file tests', () => {
         sandbox = sinon.sandbox.create();
         getRequestStub = sandbox.stub(requestSender, 'sendRequest');
     });
+    after(() => {
+        sandbox.restore();
+    });
 
     it('Should write new file and success ', async () => {
         const writeFileToLocalFile = runner.__get__('writeFileToLocalFile');
