@@ -60,7 +60,6 @@ describe('Template strings', function () {
         Object.assign(jobConfig, defaults.jobConfig);
 
         testReport = await runner.runTest(jobConfig);
-        console.log('REPORT:', testReport);
     });
 
     it('Template strings in headers', async function () {

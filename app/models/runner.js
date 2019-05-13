@@ -10,7 +10,6 @@ let progressCalculator = require('../helpers/progressCalculator');
 let metrics = require('../helpers/runnerMetrics');
 const path = require('path');
 let statsToRecord = 0;
-let artilleryReport;
 let firstIntermediate = true;
 module.exports.runTest = async (jobConfig) => {
     let test, fileContent;
@@ -22,7 +21,7 @@ module.exports.runTest = async (jobConfig) => {
     logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
     progressCalculator.calculateTotalNumberOfScenarios(jobConfig);
 
-    const ee = await artillery.runner(test.artillery_test);
+    const ee = await artillery.runner(test.artillery_test, undefined, {isAggregateReport: false});
     return new Promise((resolve, reject) => {
         ee.on('phaseStarted', (info) => {
             logger.info('Starting phase: %s - %j', new Date(), JSON.stringify(info));
@@ -56,18 +55,15 @@ module.exports.runTest = async (jobConfig) => {
             statsToRecord--;
         });
         ee.on('done', async (report) => {
-            reportPrinter.print('aggregate', report);
-            delete report.latencies;
-            artilleryReport = report;
             let handleFinishedReport = async () => {
                 try {
                     await reporterConnector.postStats(jobConfig, {
                         phase_status: 'done',
-                        data: JSON.stringify(report)
+                        data: JSON.stringify({message: 'Test Finished'})
                     });
-                    resolve(artilleryReport);
+                    resolve();
                 } catch (e) {
-                    logger.error({error: e, final_report: artilleryReport}, 'Failed to send final report to reporter');
+                    logger.error({error: e}, 'Failed to send final report to predator');
                     reject(e);
                 }
             };

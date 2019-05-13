@@ -18,7 +18,9 @@ let config = {
     notes: process.env.NOTES,
     metricsPluginName: process.env.METRICS_PLUGIN_NAME,
     metricsExportConfig: process.env.METRICS_EXPORT_CONFIG,
-    runId: process.env.RUN_ID
+    runId: process.env.RUN_ID,
+    proxyUrl: process.env.PROXY_URL,
+    delayRunnerMs: parseInt(process.env.DELAY_RUNNER_MS)
 };
 
 module.exports = config;

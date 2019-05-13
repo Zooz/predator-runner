@@ -58,12 +58,12 @@ describe('Before test flow', function () {
         Object.assign(jobConfig, defaults.jobConfig);
 
         testReport = await runner.runTest(jobConfig);
-        console.log('REPORT:', testReport);
     });
 
-    it('All requests should return response code 200', function () {
+    it('All requests should return response code 200', async function () {
+        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, runId);
         const expectedAmountResponses = duration * arrivalRate;
-        should(testReport.scenariosCompleted).eql(expectedAmountResponses);
-        should(testReport.codes[200]).eql(expectedAmountResponses);
+        should(aggregatedReport.aggregate.scenariosCompleted).eql(expectedAmountResponses);
+        should(aggregatedReport.aggregate.codes[200]).eql(expectedAmountResponses);
     });
 });

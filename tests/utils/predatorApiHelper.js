@@ -9,7 +9,7 @@ module.exports.createTest = async (body) => {
         method: 'POST',
         json: true,
         headers: {
-            'x-zooz-request-id': 'mickey'
+            'x-runner-id': 'mickey'
         },
         body: body
     };
@@ -30,7 +30,7 @@ module.exports.createJob = async (testId) => {
         method: 'POST',
         json: true,
         headers: {
-            'x-zooz-request-id': 'mickey'
+            'x-runner-id': 'mickey'
         },
         body: cronJobBody(testId)
     };
@@ -45,12 +45,32 @@ module.exports.createJob = async (testId) => {
     }
 };
 
+module.exports.getAggregatedReports = async (testId, reportId) => {
+    const options = {
+        url: PREDATOR_URL + `/tests/${testId}/reports/${reportId}/aggregate`,
+        method: 'GET',
+        json: true,
+        headers: {
+            'x-runner-id': 'mickey'
+        }
+    };
+
+    try {
+        let report = await request(options);
+        should.exist(report);
+        return report;
+    } catch (e) {
+        console.log(e);
+        should.not.exist(e);
+    }
+};
+
 module.exports.deleteJob = async (jobId) => {
     const options = {
         url: PREDATOR_URL + `/jobs/${jobId}`,
         method: 'DELETE',
         headers: {
-            'x-zooz-request-id': 'mickey'
+            'x-runner-id': 'mickey'
         }
     };
 

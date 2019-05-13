@@ -77,8 +77,6 @@ describe('Report printer test', () => {
             ['    median: %s', 385.1],
             ['    p95: %s', 780.8],
             ['    p99: %s', 1060.9],
-            ['  Scenario counts:'],
-            ['    %s: %s (%s%)', 'Scenario', 96, 100],
             ['  Codes:'],
             ['    %s: %s', '201', 185],
             ['  Errors:'],
