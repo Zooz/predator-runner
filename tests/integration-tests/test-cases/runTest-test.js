@@ -11,7 +11,6 @@ const runId = process.env.RUN_ID;
 
 describe('Successfully run a custom test', function () {
     const testId = uuid();
-    let testReport;
     let getTest, postReport, postStats;
     before(async function () {
         const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test.json');
@@ -87,8 +86,8 @@ describe('Fail to run a custom test - report not created', function () {
         };
 
         try {
-            const report = await runner.runTest(jobConfig);
-            should.not.exist(report);
+            await runner.runTest(jobConfig);
+            should.fail('Should throw error');
         } catch (e) {
             should.exist(e);
             should.equal(e.statusCode, 400, 'Error returned should be with status code 400');
@@ -131,8 +130,8 @@ describe('Fail to run a custom test - fail to send final report stats to reporte
         };
 
         try {
-            const report = await runner.runTest(jobConfig);
-            should.not.exist(report);
+            await runner.runTest(jobConfig);
+            should.fail('Should throw error');
         } catch (e) {
             should.exist(e);
             should.equal(e.statusCode, 400, 'Error returned should be with status code 400');
@@ -173,8 +172,8 @@ describe('Fail to run a custom test - test not found', function () {
         };
 
         try {
-            const report = await runner.runTest(jobConfig);
-            should.not.exist(report);
+            await runner.runTest(jobConfig);
+            should.fail('Should throw error');
         } catch (e) {
             should.exist(e);
             should.equal(e.statusCode, 404, 'Error returned should be with status code 404');
