@@ -12,10 +12,13 @@ const path = require('path');
 let statsToRecord = 0;
 let firstIntermediate = true;
 module.exports.runTest = async (jobConfig) => {
-    let test, fileContent;
+    let test, fileId, localProcessorPath;
     test = await testFileConnector.getTest(jobConfig);
-    fileContent = await fileConnector.getFile(jobConfig, test['file_id']);
-    const localProcessorPath = await writeFileToLocalFile(fileContent);
+    fileId = test['file_id'];
+    if (fileId) {
+        const fileContent = await fileConnector.getFile(jobConfig, fileId);
+        localProcessorPath = await writeProcessorFile(fileContent);
+    }
     await reporterConnector.createReport(jobConfig, test);
     updateTestParameters(jobConfig, test.artillery_test, localProcessorPath);
     logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
@@ -110,17 +113,27 @@ let updateTestParameters = (jobConfig, testFile, localProcessorPath) => {
 };
 
 async function writeFileToLocalFile(fileContent) {
+    const fileName = 'processor_file.js';
+    const jsCode = Buffer.from(fileContent, 'base64').toString('utf8');
+    try {
+        await fs.writeFileSync(fileName, jsCode);
+        return path.resolve(__dirname, '..', '..', fileName);
+    } catch (err) {
+        let error = new Error('Something went wrong. error: ' + err);
+        logger.error(error);
+        throw error;
+    }
+}
+
+async function writeProcessorFile(fileContent) {
+    let error;
     if (fileContent) {
-        const fileName = 'processor_file.js';
-        const jsCode = Buffer.from(fileContent, 'base64').toString('utf8');
-        try {
-            await fs.writeFileSync(fileName, jsCode);
-            return path.resolve(__dirname, '..', '..', fileName);
-        } catch (err) {
-            let error = new Error('Something went wrong. error: ' + err);
-            logger.error(error);
-            throw error;
-        }
+        const path = writeFileToLocalFile(fileContent);
+        return path;
+    } else {
+        error = new Error('Something went wrong with file content.');
+        logger.error(error);
+        throw error;
     }
 }
 
