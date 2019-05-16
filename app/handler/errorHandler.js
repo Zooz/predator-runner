@@ -6,7 +6,7 @@ let handleError = async (jobConfig, error) => {
     try {
         await reporterConnector.postStats(jobConfig, {
             phase_status: 'error',
-            data: JSON.stringify({message: error.message}),
+            data: JSON.stringify({ message: error.message }),
             error: error
         });
     } catch (err) {

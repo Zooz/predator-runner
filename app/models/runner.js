@@ -24,7 +24,7 @@ module.exports.runTest = async (jobConfig) => {
     logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
     progressCalculator.calculateTotalNumberOfScenarios(jobConfig);
 
-    const ee = await artillery.runner(test.artillery_test, undefined, {isAggregateReport: false});
+    const ee = await artillery.runner(test.artillery_test, undefined, { isAggregateReport: false });
     return new Promise((resolve, reject) => {
         ee.on('phaseStarted', (info) => {
             logger.info('Starting phase: %s - %j', new Date(), JSON.stringify(info));
@@ -62,11 +62,11 @@ module.exports.runTest = async (jobConfig) => {
                 try {
                     await reporterConnector.postStats(jobConfig, {
                         phase_status: 'done',
-                        data: JSON.stringify({message: 'Test Finished'})
+                        data: JSON.stringify({ message: 'Test Finished' })
                     });
                     resolve();
                 } catch (e) {
-                    logger.error({error: e}, 'Failed to send final report to predator');
+                    logger.error({ error: e }, 'Failed to send final report to predator');
                     reject(e);
                 }
             };
@@ -109,7 +109,7 @@ let updateTestParameters = (jobConfig, testFile, localProcessorPath) => {
         testFile.config.phases[0].maxVusers = jobConfig.maxVusers;
     }
 
-    logger.info({updated_test_config: testFile.config}, 'Test successfully updated parameters');
+    logger.info({ updated_test_config: testFile.config }, 'Test successfully updated parameters');
 };
 
 async function writeFileToLocalFile(fileContent) {
