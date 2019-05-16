@@ -23,7 +23,7 @@ let start = async () => {
     }
     jobConfig.containerId = getContainerId();
     try {
-        logger.info({runner_config: jobConfig}, 'Initialized test runner');
+        logger.info({ runner_config: jobConfig }, 'Initialized test runner');
 
         process.on('SIGTERM', async function () {
             logger.warn('Test aborted');

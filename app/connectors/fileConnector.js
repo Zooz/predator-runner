@@ -11,7 +11,7 @@ let getFile = async (jobConfig, fileId) => {
     };
     logger.info(options, 'GET file for test');
     const file = await requestSender.sendRequest(options);
-    logger.info({test_file: file}, 'Retrieved test file successfully');
+    logger.info({ test_file: file }, 'Retrieved test file successfully');
     return file;
 };
 

@@ -11,7 +11,7 @@ let getTest = async (jobConfig) => {
     };
     logger.info(options, 'GET test file');
     const test = await requestSender.sendRequest(options);
-    logger.info({test_file: test}, 'Retrieved test file successfully');
+    logger.info({ test_file: test }, 'Retrieved test file successfully');
     jobConfig.revisionId = test.revision_id;
     jobConfig.testName = test.name;
     jobConfig.description = test.description;
