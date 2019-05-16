@@ -101,7 +101,7 @@ describe('Successfully run a custom js test', function () {
         await runner.runTest(jobConfig);
     });
 
-    it('Test should get test and create report in predator', async function () {
+    it('Test should log the right value using js func', async function () {
         should(output.includes('Sent a request to /users with name_js_script')).eql(true);
     });
 });
