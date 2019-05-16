@@ -19,7 +19,7 @@ describe('Create file tests', () => {
     });
 
     it('Should write new file and success ', async () => {
-        const writeFileToLocalFile = runner.__get__('writeFileToLocalFile');
+        const writeFileToLocalFile = runner.__get__('writeProcessorFile');
         const base64String = Buffer.from('test content', 'utf8').toString('base64');
         const res = await writeFileToLocalFile(base64String);
         should(res).eql(path.resolve(__dirname, '..', '..', '..', 'processor_file.js'));
