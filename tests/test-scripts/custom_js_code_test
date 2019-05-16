@@ -1,0 +1,17 @@
+'use strict';
+const uuid = require('uuid/v4');
+module.exports = {
+ generateRandomDataGlobal
+
+};
+
+
+function generateRandomDataGlobal(userContext, events, done) {
+userContext.vars.name = 'name_js_script';
+return done();
+}
+
+
+
+
+

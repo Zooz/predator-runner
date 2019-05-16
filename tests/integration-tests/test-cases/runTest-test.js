@@ -2,14 +2,15 @@ const nock = require('nock'),
     uuid = require('uuid/v4'),
     path = require('path'),
     should = require('should'),
+    fs = require('fs'),
     runner = require('../../../app/models/runner');
 
-const PREDATOR_URL = process.env.PREDATOR_URL;
+const PREDATOR_URL = process.env.PREDATOR_URL || 'test';
 const duration = 10;
 const arrivalRate = 10;
 const runId = process.env.RUN_ID;
 
-describe('Successfully run a custom test', function () {
+describe('Successfully run a basic test', function () {
     const testId = uuid();
     let getTest, postReport, postStats;
     before(async function () {
@@ -50,6 +51,58 @@ describe('Successfully run a custom test', function () {
     it('Test should get test and create report in predator', async function () {
         should.equal(getTest.isDone(), true);
         should.equal(postReport.isDone(), true);
+    });
+});
+describe('Successfully run a custom js test', function () {
+    const testId = uuid();
+    const fileId = uuid();
+    const write = process.stdout.write;
+    let output;
+    before(async function () {
+        process.stdout.write = function (str) {
+            output += str;
+        };
+    });
+    after(function() {
+        process.stdout.write = write;
+    });
+    const customTestPath = path.resolve(__dirname, '../../test-scripts/custom_js_processor_test_.json');
+    const customJsPath = path.resolve(__dirname, '../../test-scripts/custom_js_code_test');
+    const customJsCodeEncoding = fs.readFileSync(customJsPath, 'base64');
+    const customTestBody = require(customTestPath);
+    customTestBody.file_id = fileId;
+    nock(PREDATOR_URL)
+        .get(`/tests/${testId}`)
+        .times(1)
+        .reply(200, customTestBody);
+    nock(PREDATOR_URL)
+        .post(`/tests/${testId}/reports`)
+        .times(1)
+        .reply(201, {message: 'OK'});
+
+    nock(PREDATOR_URL)
+        .post(`/tests/${testId}/reports/${runId}/stats`)
+        .times(4)
+        .reply(201, {message: 'OK'});
+    nock(PREDATOR_URL)
+        .get(`/tests/file/${fileId}`)
+        .reply(200, customJsCodeEncoding);
+
+    it('Run test', async function () {
+        this.timeout(100000);
+        const jobConfig = {
+            predatorUrl: process.env.PREDATOR_URL,
+            testId,
+            duration: 1,
+            arrivalRate: 1,
+            runId
+        };
+
+        await runner.runTest(jobConfig);
+    });
+
+    it('Test should get test and create report in predator', async function () {
+        should(output.includes('Sent a request to /users with name_js_script')).eql(true);
     });
 });
 
