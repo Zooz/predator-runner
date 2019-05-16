@@ -1,0 +1,31 @@
+{
+    "name": "Test_js_custom",
+    "description": "Test_js_custom",
+    "type": "basic",
+    "artillery_test": {
+        "config": {
+            "target": "http:www.google.com",
+            "http": {
+                "pool": 1
+            }
+        },
+        "scenarios": [
+            {
+                "name": "Processor exmaple",
+                "flow": [
+                    {
+                        "function": "generateRandomDataGlobal"
+                    },
+                    {
+                        "get": {
+                            "url": "http://www.google.com"
+                        }
+                    },
+                    {
+                        "log": "Sent a request to /users with {{ name }}"
+                    }
+                ]
+            }
+        ]
+    }
+}

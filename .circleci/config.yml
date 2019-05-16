@@ -39,6 +39,8 @@ jobs:
         environment:
           JOB_PLATFORM: DOCKER
           INTERNAL_ADDRESS: http://127.0.0.1:80/v1
+          DATABASE_NAME: predator
+          DATABASE_TYPE: SQLITE
     steps:
       - checkout
       - setup_remote_docker:

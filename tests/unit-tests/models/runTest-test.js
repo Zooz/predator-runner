@@ -151,7 +151,7 @@ describe('Run test', () => {
             metricsExportConfig: Buffer.from(JSON.stringify(consts.INFLUXDB_CONFIGURATION)).toString('base64')
         }
     ]
-    .forEach((testConfig) => {
+    .forEach((testConfig ) => {
         it(`successfully run test with metrics plugin: ${testConfig.metricsPluginName}`, async () => {
             if (testConfig.metricsPluginName === 'influxdb') {
                 influxdbAdapterStub.returns(consts.INFLUXDB_CONFIGURATION);
