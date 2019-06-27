@@ -1,11 +1,17 @@
 const should = require('should'),
-    request = require('requestxn');
+    request = require('requestxn'),
+ URL = require('url').URL;
 
-const PREDATOR_URL = process.env.PREDATOR_URL;
+let predatorUrlObject = new URL(process.env.PREDATOR_URL);
 
+if (predatorUrlObject.pathname === '/' || predatorUrlObject.pathname === '' || predatorUrlObject.pathname === undefined) {
+    predatorUrlObject.pathname = '/v1';
+}
+
+const predatorUrlWithApiVersion = predatorUrlObject.toString();
 module.exports.createTest = async (body) => {
     const options = {
-        url: PREDATOR_URL + '/tests',
+        url: predatorUrlWithApiVersion + '/tests',
         method: 'POST',
         json: true,
         headers: {
@@ -26,7 +32,7 @@ module.exports.createTest = async (body) => {
 
 module.exports.createJob = async (testId) => {
     const options = {
-        url: PREDATOR_URL + '/jobs',
+        url: predatorUrlWithApiVersion + '/jobs',
         method: 'POST',
         json: true,
         headers: {
@@ -47,7 +53,7 @@ module.exports.createJob = async (testId) => {
 
 module.exports.getAggregatedReports = async (testId, reportId) => {
     const options = {
-        url: PREDATOR_URL + `/tests/${testId}/reports/${reportId}/aggregate`,
+        url: predatorUrlWithApiVersion + `/tests/${testId}/reports/${reportId}/aggregate`,
         method: 'GET',
         json: true,
         headers: {
@@ -67,7 +73,7 @@ module.exports.getAggregatedReports = async (testId, reportId) => {
 
 module.exports.deleteJob = async (jobId) => {
     const options = {
-        url: PREDATOR_URL + `/jobs/${jobId}`,
+        url: predatorUrlWithApiVersion + `/jobs/${jobId}`,
         method: 'DELETE',
         headers: {
             'x-runner-id': 'mickey'
