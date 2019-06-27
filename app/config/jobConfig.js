@@ -1,5 +1,15 @@
 'use strict';
 
+let getPredatorUrlWithApiVersion = (predatorUrl) => {
+    let predatorUrlObject = new URL(predatorUrl);
+
+    if (predatorUrlObject.pathname === '/' || predatorUrlObject.pathname === '' || predatorUrlObject.pathname === undefined) {
+        predatorUrlObject.pathname = '/v1';
+    }
+
+    return predatorUrlObject.toString();
+};
+
 let config = {
     environment: process.env.ENVIRONMENT,
     cluster: process.env.CLUSTER || 'default',
@@ -7,7 +17,7 @@ let config = {
     statsInterval: process.env.STATS_INTERVAL || 30,
     testId: process.env.TEST_ID,
     jobId: process.env.JOB_ID,
-    predatorUrl: process.env.PREDATOR_URL,
+    predatorUrl: getPredatorUrlWithApiVersion(process.env.PREDATOR_URL),
     duration: parseInt(process.env.DURATION),
     arrivalRate: parseInt(process.env.ARRIVAL_RATE),
     rampTo: parseInt(process.env.RAMP_TO) || undefined,
