@@ -9,7 +9,6 @@ if (predatorUrlObject.pathname === '/' || predatorUrlObject.pathname === '' || p
 }
 
 const predatorUrlWithApiVersion = predatorUrlObject.toString();
-console.log(predatorUrlWithApiVersion);
 module.exports.createTest = async (body) => {
     const options = {
         url: predatorUrlWithApiVersion + '/tests',
