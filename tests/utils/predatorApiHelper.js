@@ -1,6 +1,6 @@
 const should = require('should'),
     request = require('requestxn'),
- URL = require('url').URL;
+    URL = require('url').URL;
 
 let predatorUrlObject = new URL(process.env.PREDATOR_URL);
 

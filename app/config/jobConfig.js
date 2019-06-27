@@ -1,4 +1,5 @@
 'use strict';
+const URL = require('url').URL;
 
 let getPredatorUrlWithApiVersion = (predatorUrl) => {
     let predatorUrlObject = new URL(predatorUrl);
