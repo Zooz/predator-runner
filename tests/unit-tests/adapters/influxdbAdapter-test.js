@@ -1,5 +1,5 @@
 const should = require('should');
-const influxdbAdapter = require('../../../app/adapters/influxdbAdapter');
+const influxdbAdapter = require('../../../app/adapters/influxAdapter');
 
 const jobConfig = {
     runId: '123',

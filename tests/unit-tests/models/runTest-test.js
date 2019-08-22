@@ -9,7 +9,7 @@ let testFileConnector = require('../../../app/connectors/testFileConnector');
 let runner = require('../../../app/models/runner');
 let metrics = require('../../../app/helpers/runnerMetrics');
 let prometheusAdapter = require('../../../app/adapters/prometheusAdapter');
-let influxdbAdapter = require('../../../app/adapters/influxdbAdapter');
+let influxdbAdapter = require('../../../app/adapters/influxAdapter');
 
 let ee;
 let stats = {

@@ -9,7 +9,7 @@ const RUNNER_MANDATORY_VARIABLES = [
 ];
 
 const PLUGINS_MANDATORY_VARIABLES = {
-    influxdb: ['influx_host', 'influx_database', 'influx_username', 'influx_password'],
+    influx: ['host', 'database', 'username', 'password'],
     prometheus: ['push_gateway_url']
 };
 
