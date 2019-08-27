@@ -9,7 +9,7 @@ let testFileConnector = require('../../../app/connectors/testFileConnector');
 let runner = require('../../../app/models/runner');
 let metrics = require('../../../app/helpers/runnerMetrics');
 let prometheusAdapter = require('../../../app/adapters/prometheusAdapter');
-let influxdbAdapter = require('../../../app/adapters/influxdbAdapter');
+let influxdbAdapter = require('../../../app/adapters/influxAdapter');
 
 let ee;
 let stats = {
@@ -147,15 +147,15 @@ describe('Run test', () => {
         {
             expectedResult: consts.EXPECTED_ARTILLERY_CUSTOM_TEST,
             test: consts.VALID_CUSTOM_TEST,
-            metricsPluginName: 'influxdb',
-            metricsExportConfig: Buffer.from(JSON.stringify(consts.INFLUXDB_CONFIGURATION)).toString('base64')
+            metricsPluginName: 'influx',
+            metricsExportConfig: Buffer.from(JSON.stringify(consts.INFLUX_CONFIGURATION)).toString('base64')
         }
     ]
     .forEach((testConfig ) => {
         it(`successfully run test with metrics plugin: ${testConfig.metricsPluginName}`, async () => {
-            if (testConfig.metricsPluginName === 'influxdb') {
-                influxdbAdapterStub.returns(consts.INFLUXDB_CONFIGURATION);
-                testConfig.expectedResult.config.plugins = consts.INFLUXDB_CONFIGURATION;
+            if (testConfig.metricsPluginName === 'influx') {
+                influxdbAdapterStub.returns(consts.INFLUX_CONFIGURATION);
+                testConfig.expectedResult.config.plugins = consts.INFLUX_CONFIGURATION;
             } else if (testConfig.metricsPluginName === 'prometheus') {
                 prometheusAdapterStub.returns(consts.PROMETHEUS_CONFIGURATION);
                 testConfig.expectedResult.config.plugins = consts.PROMETHEUS_CONFIGURATION;
@@ -183,7 +183,7 @@ describe('Run test', () => {
             }
 
             should.not.exist(exception);
-            artilleryStub.args[0][0].should.eql(testConfig.expectedResult);
+            JSON.stringify(artilleryStub.args[0][0]).should.eql(JSON.stringify(testConfig.expectedResult));
             testFileConnectorStub.calledOnce.should.eql(true);
 
             loggerInfoStub.called.should.eql(true);

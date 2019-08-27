@@ -1,5 +1,5 @@
 const should = require('should');
-const influxdbAdapter = require('../../../app/adapters/influxdbAdapter');
+const influxdbAdapter = require('../../../app/adapters/influxAdapter');
 
 const jobConfig = {
     runId: '123',
@@ -8,10 +8,10 @@ const jobConfig = {
 };
 
 const metricsConfig = {
-    influx_host: 'host',
-    influx_username: 'username',
-    influx_password: 'pw',
-    influx_database: 'db'
+    host: 'host',
+    username: 'username',
+    password: 'pw',
+    database: 'db'
 };
 
 const expectedPluginConfiguartion = {

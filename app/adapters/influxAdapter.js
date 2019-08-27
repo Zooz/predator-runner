@@ -9,10 +9,10 @@ module.exports.buildMetricsPlugin = (metricsConfig, jobConfig) => {
                 'environment': jobConfig.cluster
             },
             'influx': {
-                'host': metricsConfig.influx_host,
-                'username': metricsConfig.influx_username,
-                'password': metricsConfig.influx_password,
-                'database': metricsConfig.influx_database
+                'host': metricsConfig.host,
+                'username': metricsConfig.username,
+                'password': metricsConfig.password,
+                'database': metricsConfig.database
             }
         }
     };

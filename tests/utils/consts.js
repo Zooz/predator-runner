@@ -147,9 +147,9 @@ module.exports.PROMETHEUS_CONFIGURATION = {
     bucket_sizes: [0.5, 1, 2, 5, 10]
 };
 
-module.exports.INFLUXDB_CONFIGURATION = {
-    influx_host: 'host',
-    influx_username: 'mickey',
-    influx_password: 'password',
-    influx_database: 'database'
+module.exports.INFLUX_CONFIGURATION = {
+    host: 'host',
+    username: 'mickey',
+    password: 'password',
+    database: 'database'
 };
