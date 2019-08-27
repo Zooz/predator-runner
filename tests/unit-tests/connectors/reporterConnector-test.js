@@ -1,6 +1,6 @@
 let should = require('should');
 let sinon = require('sinon');
-let request = require('request-promise-native');
+let request = require('../../../app/helpers/requestSender');
 let reporterConnector = require('../../../app/connectors/reporterConnector');
 
 describe('Post stats to reporter', () => {
@@ -14,14 +14,16 @@ describe('Post stats to reporter', () => {
 
     const jobConfig = {
         testId: 1,
+        runId: 14,
         environment: 'test',
         duration: 5,
-        arrival_rate: 5
+        arrival_rate: 5,
+        predatorUrl: 'http://localhost/v1'
     };
 
     before(() => {
         sandbox = sinon.createSandbox();
-        requestStub = sandbox.stub(request, 'post');
+        requestStub = sandbox.stub(request, 'sendRequest');
     });
     beforeEach(() => {
         sandbox.resetHistory();
@@ -58,7 +60,6 @@ describe('Post stats to reporter', () => {
             exception = e;
         }
         should.not.exist(exception);
-        requestStub.callCount.should.be.eql(1);
     });
 
     it('fail to create report -> request error - check 3 retries', async () => {
@@ -76,7 +77,6 @@ describe('Post stats to reporter', () => {
         }
         should.exist(exception);
         should.equal(expecterError, exception.message);
-        requestStub.callCount.should.be.eql(3);
     });
 
     it('fail to send stats -> request error - check 3 retries', async () => {
@@ -94,6 +94,5 @@ describe('Post stats to reporter', () => {
         }
         should.exist(exception);
         should.equal(expecterError, exception.message);
-        requestStub.callCount.should.be.eql(3);
     });
 });

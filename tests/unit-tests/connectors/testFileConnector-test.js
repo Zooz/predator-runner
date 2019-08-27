@@ -1,18 +1,24 @@
 let should = require('should');
 let sinon = require('sinon');
-let request = require('request-promise-native');
-let logger = require('../../../app/utils/logger');
+let request = require('../../../app/helpers/requestSender');
 let testFileConnector = require('../../../app/connectors/testFileConnector');
 let testUtils = require('../../utils/consts');
-let testId = 14;
 
 describe('Get test file', () => {
-    let sandbox, loggerInfoStub, requestStub;
+    let sandbox, requestStub;
+
+    const jobConfig = {
+        testId: 1,
+        runId: 14,
+        environment: 'test',
+        duration: 5,
+        arrival_rate: 5,
+        predatorUrl: 'http://localhost/v1'
+    };
 
     before(() => {
         sandbox = sinon.createSandbox();
-        loggerInfoStub = sandbox.stub(logger, 'info');
-        requestStub = sandbox.stub(request, 'Request');
+        requestStub = sandbox.stub(request, 'sendRequest');
     });
     beforeEach(() => {
         sandbox.resetHistory();
@@ -29,14 +35,12 @@ describe('Get test file', () => {
 
         let exception;
         try {
-            await testFileConnector.getTest(testId);
+            await testFileConnector.getTest(jobConfig);
         } catch (e) {
             exception = e;
         }
         should.not.exist(exception);
         requestStub.calledOnce.should.eql(true);
-
-        loggerInfoStub.args[2][0].should.eql({test_file: testUtils.VALID_CUSTOM_TEST});
     });
 
     it('fail to get test file -> request error', async () => {
@@ -45,12 +49,11 @@ describe('Get test file', () => {
 
         let exception;
         try {
-            await testFileConnector.getTest(testId);
+            await testFileConnector.getTest(jobConfig);
         } catch (e) {
             exception = e;
         }
         should.exist(exception);
         exception.should.eql(expecterError);
-        requestStub.callCount.should.be.eql(3);
     });
 });
