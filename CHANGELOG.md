@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.7](https://github.com/Zooz/predator-runner/compare/v1.1.6...v1.1.7) (2019-08-27)
+
+
+### Bug Fixes
+
+* **influx:** fix influx plugin name ([#22](https://github.com/Zooz/predator-runner/issues/22)) ([1f74783](https://github.com/Zooz/predator-runner/commit/1f74783))
+
+
+
 ### [1.1.6](https://github.com/Zooz/predator-runner/compare/v1.1.5...v1.1.6) (2019-07-21)
 
 
