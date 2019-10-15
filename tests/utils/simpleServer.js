@@ -1,4 +1,4 @@
-const Hapi = require('hapi');
+const Hapi = require('@hapi/hapi');
 const uuid = require('uuid/v4');
 
 const PORT = process.env.PORT || 3003;
