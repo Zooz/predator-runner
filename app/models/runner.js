@@ -11,14 +11,11 @@ let metrics = require('../helpers/runnerMetrics');
 const path = require('path');
 let statsToRecord = 0;
 let firstIntermediate = true;
+
 module.exports.runTest = async (jobConfig) => {
-    let test, fileId, localProcessorPath;
+    let test, localProcessorPath;
     test = await testFileConnector.getTest(jobConfig);
-    fileId = test['file_id'];
-    if (fileId) {
-        const fileContent = await fileConnector.getFile(jobConfig, fileId);
-        localProcessorPath = await writeProcessorFile(fileContent);
-    }
+    localProcessorPath = getProcessorPathIfExists(jobConfig, test);
     await reporterConnector.createReport(jobConfig, test);
     updateTestParameters(jobConfig, test.artillery_test, localProcessorPath);
     logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
@@ -112,6 +109,14 @@ let updateTestParameters = (jobConfig, testFile, localProcessorPath) => {
     logger.info({ updated_test_config: testFile.config }, 'Test successfully updated parameters');
 };
 
+function injectPlugins(testFile, jobConfig) {
+    const metricsPluginName = jobConfig.metricsPluginName.toLowerCase();
+    const metricsAdapter = require(`../adapters/${metricsPluginName}Adapter`);
+    let asciiMetricsExportConfig = (Buffer.from(jobConfig.metricsExportConfig, 'base64').toString('ascii'));
+    let parsedMetricsConfig = JSON.parse(asciiMetricsExportConfig);
+    testFile.config.plugins = metricsAdapter.buildMetricsPlugin(parsedMetricsConfig, jobConfig);
+}
+
 async function writeFileToLocalFile(fileContent) {
     const fileName = 'processor_file.js';
     const jsCode = Buffer.from(fileContent, 'base64').toString('utf8');
@@ -137,12 +142,16 @@ async function writeProcessorFile(fileContent) {
     }
 }
 
-function injectPlugins(testFile, jobConfig) {
-    const metricsPluginName = jobConfig.metricsPluginName.toLowerCase();
-    const metricsAdapter = require(`../adapters/${metricsPluginName}Adapter`);
-    let asciiMetricsExportConfig = (Buffer.from(jobConfig.metricsExportConfig, 'base64').toString('ascii'));
-    let parsedMetricsConfig = JSON.parse(asciiMetricsExportConfig);
-    testFile.config.plugins = metricsAdapter.buildMetricsPlugin(parsedMetricsConfig, jobConfig);
+async function getProcessorPathIfExists(jobConfig, test) {
+    let localProcessorPath;
+    if (test['file_id']) {
+        const fileContent = await fileConnector.getFile(jobConfig, test['file_id']);
+        localProcessorPath = await writeProcessorFile(fileContent);
+    } else if (test['processor_id']) {
+        const processor = await fileConnector.getProcessor(jobConfig, test['processor_id']);
+        localProcessorPath = await writeProcessorFile(processor.javascript);
+    }
+    return localProcessorPath;
 }
 
 let waitForLiveStatsToFinish = async (callback) => {
