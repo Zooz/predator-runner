@@ -5,7 +5,7 @@ const artillery = require('artillery/core'),
     fs = require('fs');
 
 const testFileConnector = require('../connectors/testFileConnector'),
-    fileConnector = require('../connectors/fileConnector'),
+    customJSConnector = require('../connectors/customJSConnector'),
     reporterConnector = require('../connectors/reporterConnector'),
     logger = require('../utils/logger'),
     reportPrinter = require('./reportPrinter'),
@@ -154,10 +154,10 @@ async function writeProcessorFile(fileContent, isBase64) {
 async function getProcessorPathIfExists(jobConfig, test) {
     let localProcessorPath;
     if (test['file_id']) {
-        const fileContent = await fileConnector.getFile(jobConfig, test['file_id']);
+        const fileContent = await customJSConnector.getFile(jobConfig, test['file_id']);
         localProcessorPath = await writeProcessorFile(fileContent, true);
     } else if (test['processor_id']) {
-        const processor = await fileConnector.getProcessor(jobConfig, test['processor_id']);
+        const processor = await customJSConnector.getProcessor(jobConfig, test['processor_id']);
         localProcessorPath = await writeProcessorFile(processor.javascript, false);
     }
     return localProcessorPath;

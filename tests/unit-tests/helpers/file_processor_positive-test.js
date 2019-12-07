@@ -3,7 +3,7 @@ const rewire = require('rewire'),
     fs = require('fs'),
     runner = rewire('../../../app/models/runner'),
     path = require('path'),
-    fileConector = require('../../../app/connectors/fileConnector'),
+    fileConector = require('../../../app/connectors/customJSConnector'),
     requestSender = require('../../../app/helpers/requestSender'),
     sinon = require('sinon');
 
