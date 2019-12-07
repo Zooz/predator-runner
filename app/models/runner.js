@@ -1,14 +1,17 @@
 'use strict';
-let artillery = require('artillery/core');
-let testFileConnector = require('../connectors/testFileConnector');
-let fileConnector = require('../connectors/fileConnector');
-const fs = require('fs');
-let reporterConnector = require('../connectors/reporterConnector');
-let logger = require('../utils/logger');
-let reportPrinter = require('./reportPrinter');
-let progressCalculator = require('../helpers/progressCalculator');
-let metrics = require('../helpers/runnerMetrics');
-const path = require('path');
+
+const artillery = require('artillery/core'),
+    path = require('path'),
+    fs = require('fs');
+
+const testFileConnector = require('../connectors/testFileConnector'),
+    fileConnector = require('../connectors/fileConnector'),
+    reporterConnector = require('../connectors/reporterConnector'),
+    logger = require('../utils/logger'),
+    reportPrinter = require('./reportPrinter'),
+    progressCalculator = require('../helpers/progressCalculator'),
+    metrics = require('../helpers/runnerMetrics');
+
 let statsToRecord = 0;
 let firstIntermediate = true;
 
