@@ -18,14 +18,24 @@ describe('Create file tests', () => {
         sandbox.restore();
     });
 
-    it('Should write new file and success ', async () => {
+    it('Should write new file and succeed for base64 content (file_url)', async () => {
         const writeFileToLocalFile = runner.__get__('writeProcessorFile');
         const base64String = Buffer.from('test content', 'utf8').toString('base64');
-        const res = await writeFileToLocalFile(base64String);
+        const res = await writeFileToLocalFile(base64String, true);
         should(res).eql(path.resolve(__dirname, '..', '..', '..', 'processor_file.js'));
         const content = fs.readFileSync(path.resolve(__dirname, '..', '..', '..', 'processor_file.js'), 'utf8');
         should(content).eql('test content');
     });
+
+    it('Should write new file and succeed for non base64 (processor)', async () => {
+        const writeFileToLocalFile = runner.__get__('writeProcessorFile');
+        const jsContent = 'test content';
+        const res = await writeFileToLocalFile(jsContent, false);
+        should(res).eql(path.resolve(__dirname, '..', '..', '..', 'processor_file.js'));
+        const content = fs.readFileSync(path.resolve(__dirname, '..', '..', '..', 'processor_file.js'), 'utf8');
+        should(content).eql('test content');
+    });
+
     it('Should get file from predator ', async () => {
         getRequestStub.resolves('File content');
         let res = await fileConector.getFile({runId: 'runId', predatorUrl: 'predatorUrl'}, 'file_id');

@@ -1,11 +1,13 @@
 let should = require('should');
 let sinon = require('sinon');
+let uuid = require('uuid/v4');
 var EventEmitter = require('events').EventEmitter;
 let artillery = require('artillery/core');
 let consts = require('../../utils/consts');
 let logger = require('../../../app/utils/logger');
 let reporterConnector = require('../../../app/connectors/reporterConnector');
 let testFileConnector = require('../../../app/connectors/testFileConnector');
+let customJSConnector = require('../../../app/connectors/fileConnector');
 let runner = require('../../../app/models/runner');
 let metrics = require('../../../app/helpers/runnerMetrics');
 let prometheusAdapter = require('../../../app/adapters/prometheusAdapter');
@@ -92,8 +94,8 @@ let report = {
 };
 let info = {info: 'mickey'};
 describe('Run test', () => {
-    let sandbox, artilleryStub,
-        testFileConnectorStub, loggerInfoStub, reporterConnectorPostStatsStub, reporterConnectorCreateReportStub, eeOnStub, loggerErrorStub, getMetricsSpy, printMetricsSpy, prometheusAdapterStub, influxdbAdapterStub;
+    let sandbox, artilleryStub, customJSProcessorStub,
+        testFileConnectorStub, loggerInfoStub, reporterConnectorPostStatsStub, reporterConnectorCreateReportStub, eeOnStub, getMetricsSpy, printMetricsSpy, prometheusAdapterStub, influxdbAdapterStub;
 
     let jobConfig = {
         jobId: 'some_job_id',
@@ -101,14 +103,15 @@ describe('Run test', () => {
         httpPoolSize: 100,
         statsInterval: 30
     };
+
     before(() => {
         sandbox = sinon.createSandbox();
         artilleryStub = sandbox.stub(artillery, 'runner');
-        loggerErrorStub = sandbox.stub(logger, 'error');
         loggerInfoStub = sandbox.stub(logger, 'info');
         reporterConnectorPostStatsStub = sandbox.stub(reporterConnector, 'postStats');
         reporterConnectorCreateReportStub = sandbox.stub(reporterConnector, 'createReport');
         testFileConnectorStub = sandbox.stub(testFileConnector, 'getTest');
+        customJSProcessorStub = sandbox.stub(customJSConnector, 'getProcessor');
         getMetricsSpy = sandbox.spy(metrics, 'getMetrics');
         printMetricsSpy = sandbox.spy(metrics, 'printMetrics');
         prometheusAdapterStub = sandbox.stub(prometheusAdapter, 'buildMetricsPlugin');
@@ -179,9 +182,7 @@ describe('Run test', () => {
                 await runner.runTest(tempJobConfig);
             } catch (e) {
                 exception = e;
-                should.not.exist(e);
             }
-
             should.not.exist(exception);
             JSON.stringify(artilleryStub.args[0][0]).should.eql(JSON.stringify(testConfig.expectedResult));
             testFileConnectorStub.calledOnce.should.eql(true);
@@ -196,6 +197,38 @@ describe('Run test', () => {
             getMetricsSpy.called.should.eql(true);
             printMetricsSpy.called.should.eql(true);
         });
+    });
+
+
+    it('successfully run test with custom js (processor)', async () => {
+        const processorId = uuid();
+
+        let tempJobConfig = Object.assign({}, jobConfig);
+        tempJobConfig.arrivalRate = 10;
+        tempJobConfig.duration = 5;
+        tempJobConfig.notes = 'Test using processor_id for custom-js';
+
+        let testWithProcessorId = Object.assign({}, consts.VALID_CUSTOM_TEST);
+        testWithProcessorId.processor_id = processorId;
+
+        testFileConnectorStub.resolves(testWithProcessorId);
+        artilleryStub.resolves(ee);
+        reporterConnectorCreateReportStub.resolves();
+        reporterConnectorPostStatsStub.resolves();
+        customJSProcessorStub.resolves({
+            name: 'add_processor',
+            javascript: `let addFunction = (a, b) => {
+                            return a + b;
+                        }`
+        });
+
+        let exception;
+        try {
+            await runner.runTest(tempJobConfig);
+        } catch (e) {
+            exception = e;
+        }
+        should.not.exist(exception);
     });
 
     it('fail to run test -> test file error', async () => {

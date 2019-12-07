@@ -18,7 +18,7 @@ let firstIntermediate = true;
 module.exports.runTest = async (jobConfig) => {
     let test, localProcessorPath;
     test = await testFileConnector.getTest(jobConfig);
-    localProcessorPath = getProcessorPathIfExists(jobConfig, test);
+    localProcessorPath = await getProcessorPathIfExists(jobConfig, test);
     await reporterConnector.createReport(jobConfig, test);
     updateTestParameters(jobConfig, test.artillery_test, localProcessorPath);
     logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
@@ -80,6 +80,7 @@ let updateTestParameters = (jobConfig, testFile, localProcessorPath) => {
     if (jobConfig.metricsExportConfig && jobConfig.metricsPluginName) {
         injectPlugins(testFile, jobConfig);
     }
+
     if (localProcessorPath) {
         const processor = require(localProcessorPath);
         testFile.config.processor = processor;
@@ -120,11 +121,16 @@ function injectPlugins(testFile, jobConfig) {
     testFile.config.plugins = metricsAdapter.buildMetricsPlugin(parsedMetricsConfig, jobConfig);
 }
 
-async function writeFileToLocalFile(fileContent) {
+async function writeFileToLocalFile(fileContent, isBase64) {
     const fileName = 'processor_file.js';
-    const jsCode = Buffer.from(fileContent, 'base64').toString('utf8');
+    let jsCode;
+    if (isBase64) {
+        jsCode = Buffer.from(fileContent, 'base64').toString('utf8');
+    } else {
+        jsCode = fileContent;
+    }
     try {
-        await fs.writeFileSync(fileName, jsCode);
+        fs.writeFileSync(fileName, jsCode);
         return path.resolve(__dirname, '..', '..', fileName);
     } catch (err) {
         let error = new Error('Something went wrong. error: ' + err);
@@ -133,10 +139,10 @@ async function writeFileToLocalFile(fileContent) {
     }
 }
 
-async function writeProcessorFile(fileContent) {
+async function writeProcessorFile(fileContent, isBase64) {
     let error;
     if (fileContent) {
-        const path = writeFileToLocalFile(fileContent);
+        const path = writeFileToLocalFile(fileContent, isBase64);
         return path;
     } else {
         error = new Error('Something went wrong with file content.');
@@ -149,10 +155,10 @@ async function getProcessorPathIfExists(jobConfig, test) {
     let localProcessorPath;
     if (test['file_id']) {
         const fileContent = await fileConnector.getFile(jobConfig, test['file_id']);
-        localProcessorPath = await writeProcessorFile(fileContent);
+        localProcessorPath = await writeProcessorFile(fileContent, true);
     } else if (test['processor_id']) {
         const processor = await fileConnector.getProcessor(jobConfig, test['processor_id']);
-        localProcessorPath = await writeProcessorFile(processor.javascript);
+        localProcessorPath = await writeProcessorFile(processor.javascript, false);
     }
     return localProcessorPath;
 }
