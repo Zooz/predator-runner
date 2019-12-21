@@ -4,14 +4,14 @@
     "type": "basic",
     "artillery_test": {
         "config": {
-            "target": "http:www.google.com",
+            "target": "",
             "http": {
                 "pool": 1
             }
         },
         "scenarios": [
             {
-                "name": "Processor exmaple",
+                "name": "Processor example",
                 "flow": [
                     {
                         "function": "generateRandomDataGlobal"
@@ -22,7 +22,7 @@
                         }
                     },
                     {
-                        "log": "Sent a request to /users with {{ name }}"
+                        "log": "Sent a request to /users with {{ name }}."
                     }
                 ]
             }

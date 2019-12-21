@@ -66,7 +66,7 @@ describe('Successfully run a custom js test', function () {
     after(function() {
         process.stdout.write = write;
     });
-    const customTestPath = path.resolve(__dirname, '../../test-scripts/custom_js_processor_test_.json');
+    const customTestPath = path.resolve(__dirname, '../../test-scripts/custom_js_processor_test_with_log.json');
     const customJsPath = path.resolve(__dirname, '../../test-scripts/custom_js_code_test');
     const customJsCodeEncoding = fs.readFileSync(customJsPath, 'base64');
     const customTestBody = require(customTestPath);
@@ -234,7 +234,56 @@ describe('Fail to run a custom test - test not found', function () {
     });
 });
 
-describe('Fail to get file ,file not found', function () {
+describe('Fail to run a custom test with processor custom javascript - processor not found', function () {
+    const testId = uuid();
+    const processorId = uuid();
+
+    before(async function () {
+        nock(PREDATOR_URL)
+            .get(`/tests/${testId}`)
+            .reply(200, {
+                processor_id: processorId
+            });
+
+        nock(PREDATOR_URL)
+            .get(`/processors/${processorId}`)
+            .reply(404, {});
+
+        nock(PREDATOR_URL)
+            .post(`/tests/${testId}/reports`)
+            .times(20)
+            .reply(201, {message: 'OK'});
+
+        nock(PREDATOR_URL)
+            .post(`/tests/${testId}/reports/${runId}/stats`)
+            .times(20)
+            .reply(201, {message: 'OK'});
+    });
+
+    it('Run test', async function () {
+        this.timeout(100000);
+        const duration = 10;
+        const arrivalRate = 10;
+
+        const jobConfig = {
+            predatorUrl: process.env.PREDATOR_URL,
+            testId,
+            duration,
+            arrivalRate,
+            runId
+        };
+
+        try {
+            await runner.runTest(jobConfig);
+            should.fail('Should throw error');
+        } catch (e) {
+            should.exist(e);
+            should.equal(e.statusCode, 404, 'Error returned should be with status code 404');
+        }
+    });
+});
+
+describe('Fail to get file, file not found', function () {
     const fileId = uuid();
     const testId = uuid();
     before(async function () {

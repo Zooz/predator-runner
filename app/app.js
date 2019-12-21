@@ -44,7 +44,7 @@ let start = async () => {
 };
 
 function timeout(ms) {
-    logger.info(`sleeping for ${ms} ms before strating runner`);
+    logger.info(`sleeping for ${ms} ms before starting runner`);
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
