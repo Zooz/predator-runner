@@ -1,5 +1,5 @@
-let logger = require('../utils/logger');
-let reporterConnector = require('../connectors/reporterConnector');
+const logger = require('../utils/logger'),
+    reporterConnector = require('../connectors/reporterConnector');
 
 let handleError = async (jobConfig, error) => {
     logger.error(error, 'Test failed');

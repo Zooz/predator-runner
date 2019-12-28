@@ -1,8 +1,9 @@
 const should = require('should'),
-    sinon = require('sinon');
+    sinon = require('sinon'),
+    uuid = require('uuid');
 
 const request = require('../../../app/helpers/requestSender'),
-    testFileConnector = require('../../../app/connectors/testFileConnector'),
+    customJSConnector = require('../../../app/connectors/customJSConnector'),
     testUtils = require('../../utils/consts');
 
 describe('Get test file', () => {
@@ -28,15 +29,21 @@ describe('Get test file', () => {
         sandbox.restore();
     });
 
-    it('successfully get test file', async () => {
+    it('successfully get processor', async () => {
+        const processor = {
+            id: uuid(),
+            javascript: 'module.exports.mickey = 1',
+            description: 'this is a test',
+            name: 'test1'
+        };
         requestStub.resolves({
-            body: testUtils.VALID_CUSTOM_TEST,
+            body: processor,
             statsCude: 200
         });
 
         let exception;
         try {
-            await testFileConnector.getTest(jobConfig);
+            await customJSConnector.getProcessor(jobConfig, processor.id);
         } catch (e) {
             exception = e;
         }
@@ -44,13 +51,13 @@ describe('Get test file', () => {
         requestStub.calledOnce.should.eql(true);
     });
 
-    it('fail to get test file -> request error', async () => {
-        let expecterError = new Error('Failed to retrieve test file');
+    it('fail to get test processor -> request error', async () => {
+        let expecterError = new Error('Failed to retrieve processor');
         requestStub.rejects(expecterError);
 
         let exception;
         try {
-            await testFileConnector.getTest(jobConfig);
+            await customJSConnector.getProcessor(jobConfig, uuid());
         } catch (e) {
             exception = e;
         }

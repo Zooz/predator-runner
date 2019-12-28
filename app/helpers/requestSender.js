@@ -1,5 +1,6 @@
-let request = require('requestxn');
-let logger = require('../utils/logger');
+const request = require('requestxn');
+
+const logger = require('../utils/logger');
 
 const DEFAULT_OPTIONS = {
     json: true,

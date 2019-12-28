@@ -231,6 +231,28 @@ describe('Run test', () => {
         should.not.exist(exception);
     });
 
+    it('fail to run test with processor ->  GET processor error', async () => {
+        let expectedError = new Error('Failed to retrieve processor');
+        const processorId = uuid();
+        let testWithProcessorId = Object.assign({}, consts.VALID_CUSTOM_TEST);
+        testWithProcessorId.processor_id = processorId;
+
+        testFileConnectorStub.resolves(testWithProcessorId);
+        artilleryStub.resolves(ee);
+        reporterConnectorCreateReportStub.resolves();
+        reporterConnectorPostStatsStub.resolves();
+        customJSProcessorStub.rejects(expectedError);
+
+        let exception;
+        try {
+            await runner.runTest(jobConfig);
+        } catch (e) {
+            exception = e;
+        }
+        should.exist(exception);
+        exception.should.be.eql(expectedError);
+    });
+
     it('fail to run test -> test file error', async () => {
         let expectedError = new Error('Failed to retrieve test file');
         testFileConnectorStub.rejects(expectedError);
