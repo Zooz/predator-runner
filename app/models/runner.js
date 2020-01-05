@@ -1,24 +1,24 @@
 'use strict';
-let artillery = require('artillery/core');
-let testFileConnector = require('../connectors/testFileConnector');
-let fileConnector = require('../connectors/fileConnector');
-const fs = require('fs');
-let reporterConnector = require('../connectors/reporterConnector');
-let logger = require('../utils/logger');
-let reportPrinter = require('./reportPrinter');
-let progressCalculator = require('../helpers/progressCalculator');
-let metrics = require('../helpers/runnerMetrics');
-const path = require('path');
+
+const artillery = require('artillery/core'),
+    path = require('path'),
+    fs = require('fs');
+
+const testFileConnector = require('../connectors/testFileConnector'),
+    customJSConnector = require('../connectors/customJSConnector'),
+    reporterConnector = require('../connectors/reporterConnector'),
+    logger = require('../utils/logger'),
+    reportPrinter = require('./reportPrinter'),
+    progressCalculator = require('../helpers/progressCalculator'),
+    metrics = require('../helpers/runnerMetrics');
+
 let statsToRecord = 0;
 let firstIntermediate = true;
+
 module.exports.runTest = async (jobConfig) => {
-    let test, fileId, localProcessorPath;
+    let test, localProcessorPath;
     test = await testFileConnector.getTest(jobConfig);
-    fileId = test['file_id'];
-    if (fileId) {
-        const fileContent = await fileConnector.getFile(jobConfig, fileId);
-        localProcessorPath = await writeProcessorFile(fileContent);
-    }
+    localProcessorPath = await getProcessorPathIfExists(jobConfig, test);
     await reporterConnector.createReport(jobConfig, test);
     updateTestParameters(jobConfig, test.artillery_test, localProcessorPath);
     logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
@@ -80,6 +80,7 @@ let updateTestParameters = (jobConfig, testFile, localProcessorPath) => {
     if (jobConfig.metricsExportConfig && jobConfig.metricsPluginName) {
         injectPlugins(testFile, jobConfig);
     }
+
     if (localProcessorPath) {
         const processor = require(localProcessorPath);
         testFile.config.processor = processor;
@@ -112,37 +113,37 @@ let updateTestParameters = (jobConfig, testFile, localProcessorPath) => {
     logger.info({ updated_test_config: testFile.config }, 'Test successfully updated parameters');
 };
 
-async function writeFileToLocalFile(fileContent) {
-    const fileName = 'processor_file.js';
-    const jsCode = Buffer.from(fileContent, 'base64').toString('utf8');
-    try {
-        await fs.writeFileSync(fileName, jsCode);
-        return path.resolve(__dirname, '..', '..', fileName);
-    } catch (err) {
-        let error = new Error('Something went wrong. error: ' + err);
-        logger.error(error);
-        throw error;
-    }
-}
-
-async function writeProcessorFile(fileContent) {
-    let error;
-    if (fileContent) {
-        const path = writeFileToLocalFile(fileContent);
-        return path;
-    } else {
-        error = new Error('Something went wrong with file content.');
-        logger.error(error);
-        throw error;
-    }
-}
-
 function injectPlugins(testFile, jobConfig) {
     const metricsPluginName = jobConfig.metricsPluginName.toLowerCase();
     const metricsAdapter = require(`../adapters/${metricsPluginName}Adapter`);
     let asciiMetricsExportConfig = (Buffer.from(jobConfig.metricsExportConfig, 'base64').toString('ascii'));
     let parsedMetricsConfig = JSON.parse(asciiMetricsExportConfig);
     testFile.config.plugins = metricsAdapter.buildMetricsPlugin(parsedMetricsConfig, jobConfig);
+}
+
+async function writeFileToLocalFile(jsCode) {
+    const fileName = 'processor_file.js';
+    try {
+        fs.writeFileSync(fileName, jsCode);
+        return path.resolve(__dirname, '..', '..', fileName);
+    } catch (err) {
+        let error = new Error('Something went wrong writing to local processor file. error: ' + err);
+        throw error;
+    }
+}
+
+async function getProcessorPathIfExists(jobConfig, test) {
+    let localProcessorPath;
+    if (test['file_id']) {
+        logger.warn('DEPRECATED: Using file_id in tests is deprecated and will soon be no longer supported. Please use the Processors API in order to use custom javascript in your tests.\n Link to API documentation: https://zooz.github.io/predator/indexapiref.html#tag/Processors');
+        const fileContentBase64 = await customJSConnector.getFile(jobConfig, test['file_id']);
+        const fileContent = Buffer.from(fileContentBase64, 'base64').toString('utf8');
+        localProcessorPath = writeFileToLocalFile(fileContent);
+    } else if (test['processor_id']) {
+        const processor = await customJSConnector.getProcessor(jobConfig, test['processor_id']);
+        localProcessorPath = writeFileToLocalFile(processor.javascript);
+    }
+    return localProcessorPath;
 }
 
 let waitForLiveStatsToFinish = async (callback) => {

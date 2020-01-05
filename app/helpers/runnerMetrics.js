@@ -1,7 +1,7 @@
 'use strict';
-let pidusage = require('pidusage');
+const pidusage = require('pidusage');
 
-let logger = require('../utils/logger');
+const logger = require('../utils/logger');
 
 module.exports.getMetrics = async () => {
     let stats = await pidusage(process.pid);

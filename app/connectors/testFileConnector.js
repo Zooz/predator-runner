@@ -1,5 +1,5 @@
-let requestSender = require('../helpers/requestSender');
-let logger = require('../utils/logger');
+const requestSender = require('../helpers/requestSender'),
+    logger = require('../utils/logger');
 
 let getTest = async (jobConfig) => {
     let options = {

@@ -1,5 +1,6 @@
-let logger = require('../utils/logger');
-let _ = require('lodash');
+const _ = require('lodash');
+
+const logger = require('../utils/logger');
 
 module.exports.print = (stage, report) => {
     logger.info('  Printing stats for stage %s', stage);

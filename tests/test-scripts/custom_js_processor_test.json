@@ -1,0 +1,29 @@
+{
+    "name": "Test_js_custom",
+    "description": "Test_js_custom",
+    "type": "basic",
+    "artillery_test": {
+        "config": {
+            "target": "http://localhost:3003",
+            "http": {
+                "pool": 1
+            }
+        },
+        "scenarios": [
+            {
+                "name": "Processor example",
+                "flow": [
+                    {
+                        "function": "generateRandomDataGlobal"
+                    },
+                    {
+                        "post": {
+                            "url": "/pets",
+                            "json": {"name": "{{ name }}", "species": "Dog"}
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

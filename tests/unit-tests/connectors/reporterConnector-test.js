@@ -1,7 +1,8 @@
-let should = require('should');
-let sinon = require('sinon');
-let request = require('../../../app/helpers/requestSender');
-let reporterConnector = require('../../../app/connectors/reporterConnector');
+const should = require('should'),
+    sinon = require('sinon');
+
+const request = require('../../../app/helpers/requestSender'),
+    reporterConnector = require('../../../app/connectors/reporterConnector');
 
 describe('Post stats to reporter', () => {
     let sandbox, requestStub;

@@ -1,12 +1,13 @@
 'use strict';
-
 require('./utils/verifier').verifyEnvironmentVars();
-let uuid = require('uuid/v4');
-let runner = require('./models/runner');
-let logger = require('./utils/logger');
-let jobConfig = require('./config/jobConfig');
-let reporterConnector = require('./connectors/reporterConnector');
-let errorHandler = require('./handler/errorHandler');
+
+const uuid = require('uuid/v4');
+
+const runner = require('./models/runner'),
+    logger = require('./utils/logger'),
+    jobConfig = require('./config/jobConfig'),
+    reporterConnector = require('./connectors/reporterConnector'),
+    errorHandler = require('./handler/errorHandler');
 
 const getContainerId = () => {
     let containerId = uuid();
@@ -44,7 +45,7 @@ let start = async () => {
 };
 
 function timeout(ms) {
-    logger.info(`sleeping for ${ms} ms before strating runner`);
+    logger.info(`sleeping for ${ms} ms before starting runner`);
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 

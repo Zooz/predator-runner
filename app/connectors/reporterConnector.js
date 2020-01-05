@@ -1,4 +1,4 @@
-let requestSender = require('../helpers/requestSender');
+const requestSender = require('../helpers/requestSender');
 
 let createReport = async (jobConfig, test) => {
     const requestBody = {

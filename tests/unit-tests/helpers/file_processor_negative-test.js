@@ -23,16 +23,7 @@ describe('Create file tests negative', () => {
             await writeFileToLocalFile(base64String);
             should.fail('Should throw error');
         } catch (err) {
-            should(err.message).eql('Something went wrong. error: Fail to write file');
-        }
-    });
-    it('Should write new file and fail with exception ', async () => {
-        const writeFileToLocalFile = runner.__get__('writeProcessorFile');
-        try {
-            await writeFileToLocalFile(undefined);
-            should.fail('Should throw error');
-        } catch (err) {
-            should(err.message).eql('Something went wrong with file content.');
+            should(err.message).eql('Something went wrong writing to local processor file. error: Fail to write file');
         }
     });
 });

@@ -30,6 +30,27 @@ module.exports.createTest = async (body) => {
     }
 };
 
+module.exports.createProcessor = async (body) => {
+    const options = {
+        url: predatorUrlWithApiVersion + '/processors',
+        method: 'POST',
+        json: true,
+        headers: {
+            'x-runner-id': 'mickey'
+        },
+        body: body
+    };
+
+    try {
+        let processor = await request(options);
+        should.exist(processor);
+        return processor;
+    } catch (e) {
+        console.log(e);
+        should.not.exist(e);
+    }
+};
+
 module.exports.createJob = async (testId) => {
     const options = {
         url: predatorUrlWithApiVersion + '/jobs',

@@ -7,7 +7,7 @@
     "system-tests": "./tests/run.sh system-tests",
     "local-system-tests": "./tests/run.sh local-system-tests",
     "integration-tests": "./tests/run.sh integration-tests",
-    "unit-tests": "ARRIVAL_RATE=1 DURATION=1 nyc --check-coverage --lines 94 --reporter=html --reporter=text mocha ./tests/unit-tests --recursive",
+    "unit-tests": "ARRIVAL_RATE=1 DURATION=1 nyc --check-coverage --lines 95 --reporter=html --reporter=text mocha ./tests/unit-tests --recursive",
     "lint": "node_modules/eslint/bin/eslint.js app/**",
     "release": "standard-version"
   },

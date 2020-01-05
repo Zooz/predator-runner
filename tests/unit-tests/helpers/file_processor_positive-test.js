@@ -3,7 +3,7 @@ const rewire = require('rewire'),
     fs = require('fs'),
     runner = rewire('../../../app/models/runner'),
     path = require('path'),
-    fileConector = require('../../../app/connectors/fileConnector'),
+    fileConector = require('../../../app/connectors/customJSConnector'),
     requestSender = require('../../../app/helpers/requestSender'),
     sinon = require('sinon');
 
@@ -18,14 +18,15 @@ describe('Create file tests', () => {
         sandbox.restore();
     });
 
-    it('Should write new file and success ', async () => {
-        const writeFileToLocalFile = runner.__get__('writeProcessorFile');
-        const base64String = Buffer.from('test content', 'utf8').toString('base64');
-        const res = await writeFileToLocalFile(base64String);
+    it('Should write new file and succeed', async () => {
+        const writeFileToLocalFile = runner.__get__('writeFileToLocalFile');
+        const jsContent = 'test content';
+        const res = await writeFileToLocalFile(jsContent);
         should(res).eql(path.resolve(__dirname, '..', '..', '..', 'processor_file.js'));
         const content = fs.readFileSync(path.resolve(__dirname, '..', '..', '..', 'processor_file.js'), 'utf8');
         should(content).eql('test content');
     });
+
     it('Should get file from predator ', async () => {
         getRequestStub.resolves('File content');
         let res = await fileConector.getFile({runId: 'runId', predatorUrl: 'predatorUrl'}, 'file_id');
