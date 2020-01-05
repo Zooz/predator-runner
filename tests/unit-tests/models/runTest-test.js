@@ -206,6 +206,8 @@ describe('Run test', () => {
         let tempJobConfig = Object.assign({}, jobConfig);
         tempJobConfig.arrivalRate = 10;
         tempJobConfig.duration = 5;
+        tempJobConfig.rampTo = 20;
+        tempJobConfig.maxVusers = 20;
         tempJobConfig.notes = 'Test using processor_id for custom-js';
 
         let testWithProcessorId = Object.assign({}, consts.VALID_CUSTOM_TEST);

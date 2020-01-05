@@ -2,31 +2,30 @@ const requestSender = require('../helpers/requestSender'),
     logger = require('../utils/logger');
 
 let getFile = async (jobConfig, fileId) => {
-    let options = {
-        method: 'GET',
-        url: jobConfig.predatorUrl + `/tests/file/${fileId}`,
-        headers: {
-            'x-zooz-request-id': `runner_${jobConfig.runId}`
-        }
-    };
-    logger.info(options, 'GET file for test');
-    const file = await requestSender.sendRequest(options);
-    logger.info({ test_file: file }, 'Retrieved test file successfully');
+    const url = jobConfig.predatorUrl + `/tests/file/${fileId}`;
+    const file = await getCustomJavascriptResource(url, 'GET', jobConfig.runId);
     return file;
 };
 
 let getProcessor = async (jobConfig, processorId) => {
-    let options = {
-        method: 'GET',
-        url: jobConfig.predatorUrl + `/processors/${processorId}`,
+    const url = jobConfig.predatorUrl + `/processors/${processorId}`;
+    const processor = await getCustomJavascriptResource(url, 'GET', jobConfig.runId);
+    return processor;
+};
+
+const getCustomJavascriptResource = async (url, method, runId) => {
+    const options = {
+        method,
+        url,
         headers: {
-            'x-zooz-request-id': `runner_${jobConfig.runId}`
+            'x-zooz-request-id': `runner_${runId}`
         }
     };
-    logger.info(options, 'GET processor for test');
-    const processor = await requestSender.sendRequest(options);
-    logger.info({ processor: processor }, 'Retrieved processor successfully');
-    return processor;
+
+    logger.info(options, 'GET custom javascript resource for test');
+    const customJavascriptResource = await requestSender.sendRequest(options);
+    logger.info({ custom_javascript_resource: customJavascriptResource }, 'Retrieved custom javascript resource successfully');
+    return customJavascriptResource;
 };
 
 module.exports = {

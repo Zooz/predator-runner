@@ -121,32 +121,13 @@ function injectPlugins(testFile, jobConfig) {
     testFile.config.plugins = metricsAdapter.buildMetricsPlugin(parsedMetricsConfig, jobConfig);
 }
 
-async function writeFileToLocalFile(fileContent, isBase64) {
+async function writeFileToLocalFile(jsCode) {
     const fileName = 'processor_file.js';
-    let jsCode;
-    if (isBase64) {
-        jsCode = Buffer.from(fileContent, 'base64').toString('utf8');
-    } else {
-        jsCode = fileContent;
-    }
     try {
         fs.writeFileSync(fileName, jsCode);
         return path.resolve(__dirname, '..', '..', fileName);
     } catch (err) {
-        let error = new Error('Something went wrong. error: ' + err);
-        logger.error(error);
-        throw error;
-    }
-}
-
-async function writeProcessorFile(fileContent, isBase64) {
-    let error;
-    if (fileContent) {
-        const path = writeFileToLocalFile(fileContent, isBase64);
-        return path;
-    } else {
-        error = new Error('Something went wrong with file content.');
-        logger.error(error);
+        let error = new Error('Something went wrong writing to local processor file. error: ' + err);
         throw error;
     }
 }
@@ -154,11 +135,13 @@ async function writeProcessorFile(fileContent, isBase64) {
 async function getProcessorPathIfExists(jobConfig, test) {
     let localProcessorPath;
     if (test['file_id']) {
-        const fileContent = await customJSConnector.getFile(jobConfig, test['file_id']);
-        localProcessorPath = await writeProcessorFile(fileContent, true);
+        logger.warn('DEPRECATED: Using file_id in tests is deprecated and will soon be no longer supported. Please use the Processors API in order to use custom javascript in your tests.\n Link to API documentation: https://zooz.github.io/predator/indexapiref.html#tag/Processors');
+        const fileContentBase64 = await customJSConnector.getFile(jobConfig, test['file_id']);
+        const fileContent = Buffer.from(fileContentBase64, 'base64').toString('utf8');
+        localProcessorPath = writeFileToLocalFile(fileContent);
     } else if (test['processor_id']) {
         const processor = await customJSConnector.getProcessor(jobConfig, test['processor_id']);
-        localProcessorPath = await writeProcessorFile(processor.javascript, false);
+        localProcessorPath = writeFileToLocalFile(processor.javascript);
     }
     return localProcessorPath;
 }
