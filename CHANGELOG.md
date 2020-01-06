@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/Zooz/predator-runner/compare/v1.1.7...v1.2.0) (2020-01-06)
+
+
+### Bug Fixes
+
+* **vulnerabilities:** update hapi to v18.4.0 ([#23](https://github.com/Zooz/predator-runner/issues/23)) ([4fd7a59](https://github.com/Zooz/predator-runner/commit/4fd7a59))
+
+
+
 ### [1.1.7](https://github.com/Zooz/predator-runner/compare/v1.1.6...v1.1.7) (2019-08-27)
 
 
