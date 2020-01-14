@@ -5,6 +5,7 @@ const logger = require('../utils/logger');
 const DEFAULT_OPTIONS = {
     json: true,
     retryOn5xx: true,
+    backoffBase: 1000,
     max: 3,
     onError: function(options, error, attempts) {
         logger.error(`Request to ${options.url} failed on the ${attempts} attempt with error ${error.message}`);
