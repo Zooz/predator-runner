@@ -1,10 +1,7 @@
 'use strict';
 
 const artillery = require('artillery/core'),
-    path = require('path'),
-    fs = require('fs');
-
-const testFileConnector = require('../connectors/testFileConnector'),
+    testFileConnector = require('../connectors/testFileConnector'),
     customJSConnector = require('../connectors/customJSConnector'),
     reporterConnector = require('../connectors/reporterConnector'),
     logger = require('../utils/logger'),
@@ -16,11 +13,10 @@ let statsToRecord = 0;
 let firstIntermediate = true;
 
 module.exports.runTest = async (jobConfig) => {
-    let test, localProcessorPath;
-    test = await testFileConnector.getTest(jobConfig);
-    localProcessorPath = await getProcessorPathIfExists(jobConfig, test);
+    const test = await testFileConnector.getTest(jobConfig);
+    let processorJavascript = await getProcessorJavascript(jobConfig, test);
     await reporterConnector.createReport(jobConfig, test);
-    updateTestParameters(jobConfig, test.artillery_test, localProcessorPath);
+    updateTestParameters(jobConfig, test.artillery_test, processorJavascript);
     logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
     progressCalculator.calculateTotalNumberOfScenarios(jobConfig);
 
@@ -76,14 +72,15 @@ module.exports.runTest = async (jobConfig) => {
     });
 };
 
-let updateTestParameters = (jobConfig, testFile, localProcessorPath) => {
+let updateTestParameters = (jobConfig, testFile, processorJavascript) => {
     if (jobConfig.metricsExportConfig && jobConfig.metricsPluginName) {
         injectPlugins(testFile, jobConfig);
     }
-
-    if (localProcessorPath) {
-        const processor = require(localProcessorPath);
-        testFile.config.processor = processor;
+    if (processorJavascript) {
+        let m = new module.constructor();
+        m.paths = module.paths;
+        m._compile(processorJavascript, 'none');
+        testFile.config.processor = m.exports;
     }
     if (!testFile.config.phases) {
         testFile.config.phases = [{}];
@@ -121,29 +118,17 @@ function injectPlugins(testFile, jobConfig) {
     testFile.config.plugins = metricsAdapter.buildMetricsPlugin(parsedMetricsConfig, jobConfig);
 }
 
-async function writeFileToLocalFile(jsCode) {
-    const fileName = 'processor_file.js';
-    try {
-        fs.writeFileSync(fileName, jsCode);
-        return path.resolve(__dirname, '..', '..', fileName);
-    } catch (err) {
-        let error = new Error('Something went wrong writing to local processor file. error: ' + err);
-        throw error;
-    }
-}
-
-async function getProcessorPathIfExists(jobConfig, test) {
-    let localProcessorPath;
+async function getProcessorJavascript(jobConfig, test) {
+    let javascript;
     if (test['file_id']) {
         logger.warn('DEPRECATED: Using file_id in tests is deprecated and will soon be no longer supported. Please use the Processors API in order to use custom javascript in your tests.\n Link to API documentation: https://zooz.github.io/predator/indexapiref.html#tag/Processors');
         const fileContentBase64 = await customJSConnector.getFile(jobConfig, test['file_id']);
-        const fileContent = Buffer.from(fileContentBase64, 'base64').toString('utf8');
-        localProcessorPath = writeFileToLocalFile(fileContent);
+        javascript = Buffer.from(fileContentBase64, 'base64').toString('utf8');
     } else if (test['processor_id']) {
         const processor = await customJSConnector.getProcessor(jobConfig, test['processor_id']);
-        localProcessorPath = writeFileToLocalFile(processor.javascript);
+        javascript = processor.javascript;
     }
-    return localProcessorPath;
+    return javascript;
 }
 
 let waitForLiveStatsToFinish = async (callback) => {

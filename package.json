@@ -37,7 +37,7 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "@hapi/hapi": "^18.4.0",
+    "@hapi/hapi": "^18.4.1",
     "chai": "^4.1.2",
     "colors": "^1.3.3",
     "eslint": "^6.2.2",
@@ -53,7 +53,7 @@
     "nyc": "^14.1.1",
     "proxyquire": "^2.0.1",
     "request-promise-native": "^1.0.5",
-    "rewire": "^4.0.1",
+    "rewire": "^5.0.0",
     "should": "^13.2.1",
     "sinon": "4.1.3",
     "standard-version": "^6.0.1"
