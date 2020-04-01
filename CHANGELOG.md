@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/Zooz/predator-runner/compare/v1.2.0...v1.3.0) (2020-04-01)
+
+
+### Bug Fixes
+
+* **http:** setting backoffBase to 1000ms ([#28](https://github.com/Zooz/predator-runner/issues/28)) ([7fce6e4](https://github.com/Zooz/predator-runner/commit/7fce6e4))
+
+
+### Features
+
+* **processor:** in memory processor file ([#29](https://github.com/Zooz/predator-runner/issues/29)) ([2c44767](https://github.com/Zooz/predator-runner/commit/2c44767))
+
+
+
 ## [1.2.0](https://github.com/Zooz/predator-runner/compare/v1.1.7...v1.2.0) (2020-01-06)
 
 
