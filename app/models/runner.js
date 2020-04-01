@@ -1,10 +1,7 @@
 'use strict';
 
 const artillery = require('artillery/core'),
-    path = require('path'),
-    fs = require('fs');
-
-const testFileConnector = require('../connectors/testFileConnector'),
+    testFileConnector = require('../connectors/testFileConnector'),
     customJSConnector = require('../connectors/customJSConnector'),
     reporterConnector = require('../connectors/reporterConnector'),
     logger = require('../utils/logger'),
