@@ -8,7 +8,7 @@ const jobConfig = {
 };
 
 const metricsConfig = {
-    push_gateway_url: 'url',
+    push_gateway_url: 'url'
 };
 
 const expectedPluginConfiguartion = {
@@ -23,16 +23,24 @@ const expectedPluginConfiguartion = {
         }
 };
 
-describe('Influxdb adapter test', () => {
-    it('Should retrieve prometheus plugin configuration without bucket_sizes', () => {
+describe('Prometheus adapter test', () => {
+    it('Should retrieve prometheus plugin configuration without bucket_sizes or labels', () => {
         const pluginConfiguration = prometheusAdapter.buildMetricsPlugin(metricsConfig, jobConfig);
         should(pluginConfiguration).eql(expectedPluginConfiguartion);
     });
 
-    it('Should retrieve prometheus plugin configuration with bucket_sizes', () => {
+    it('Should retrieve prometheus plugin configuration with bucket_sizes and labels', () => {
         metricsConfig.bucket_sizes = [0.5, 1, 5, 10, 100];
+        metricsConfig.labels = { key1: 'value2', key2: 'value2' };
         const pluginConfiguration = prometheusAdapter.buildMetricsPlugin(metricsConfig, jobConfig);
         expectedPluginConfiguartion.prometheus.bucketSizes = [0.5, 1, 5, 10, 100];
+        expectedPluginConfiguartion.prometheus.labels = {
+            'cluster': 'Dev',
+            'key1': 'value2',
+            'key2': 'value2',
+            'testName': 'MickeysTest',
+            'testRunId': '123'
+        };
         should(pluginConfiguration).eql(expectedPluginConfiguartion);
     });
 });
