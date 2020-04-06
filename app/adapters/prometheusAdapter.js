@@ -1,12 +1,14 @@
 module.exports.buildMetricsPlugin = (metricsConfig, jobConfig) => {
+    const labels = Object.assign({
+        'testName': jobConfig.testName,
+        'testRunId': jobConfig.runId,
+        'cluster': jobConfig.cluster
+
+    }, metricsConfig.labels);
     let prometheusPlugin = {
         'prometheus': {
             'pushGatewayUrl': metricsConfig.push_gateway_url,
-            'labels': {
-                'testName': jobConfig.testName,
-                'testRunId': jobConfig.runId,
-                'cluster': jobConfig.cluster
-            }
+            labels
         }
     };
 
