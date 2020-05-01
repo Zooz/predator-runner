@@ -9,7 +9,9 @@
     "integration-tests": "./tests/run.sh integration-tests",
     "unit-tests": "ARRIVAL_RATE=1 DURATION=1 nyc --check-coverage --lines 95 --reporter=html --reporter=text mocha ./tests/unit-tests --recursive",
     "lint": "node_modules/eslint/bin/eslint.js app/**",
-    "release": "standard-version"
+    "release": "standard-version",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -34,7 +36,8 @@
     "pidusage": "^2.0.17",
     "request": "~2.87.0",
     "requestxn": "^3.1.4",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "@hapi/hapi": "^18.4.1",
@@ -62,5 +65,6 @@
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
-  }
+  },
+  "snyk": true
 }
