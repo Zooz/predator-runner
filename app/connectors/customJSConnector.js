@@ -2,7 +2,7 @@ const requestSender = require('../helpers/requestSender'),
     logger = require('../utils/logger');
 
 let getFile = async (jobConfig, fileId) => {
-    const url = jobConfig.predatorUrl + `/tests/file/${fileId}`;
+    const url = jobConfig.predatorUrl + `/files/${fileId}`;
     const file = await getCustomJavascriptResource(url, 'GET', jobConfig.runId);
     return file;
 };

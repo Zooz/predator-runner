@@ -1,6 +1,7 @@
 'use strict';
 
 const artillery = require('artillery/core'),
+    csv = require('csv-parse/lib/sync'),
     testFileConnector = require('../connectors/testFileConnector'),
     customJSConnector = require('../connectors/customJSConnector'),
     reporterConnector = require('../connectors/reporterConnector'),
@@ -15,12 +16,13 @@ let firstIntermediate = true;
 module.exports.runTest = async (jobConfig) => {
     const test = await testFileConnector.getTest(jobConfig);
     let processorJavascript = await getProcessorJavascript(jobConfig, test);
+    const csvData = await getCSVData(jobConfig, test);
     await reporterConnector.createReport(jobConfig, test);
-    updateTestParameters(jobConfig, test.artillery_test, processorJavascript);
+    updateTestParameters(jobConfig, test.artillery_test, processorJavascript, csvData);
     logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
     progressCalculator.calculateTotalNumberOfScenarios(jobConfig);
 
-    const ee = await artillery.runner(test.artillery_test, undefined, { isAggregateReport: false });
+    const ee = await artillery.runner(test.artillery_test, csvData.data, { isAggregateReport: false });
     return new Promise((resolve, reject) => {
         ee.on('phaseStarted', (info) => {
             logger.info('Starting phase: %s - %j', new Date(), JSON.stringify(info));
@@ -72,7 +74,7 @@ module.exports.runTest = async (jobConfig) => {
     });
 };
 
-let updateTestParameters = (jobConfig, testFile, processorJavascript) => {
+let updateTestParameters = (jobConfig, testFile, processorJavascript, csvData) => {
     if (jobConfig.metricsExportConfig && jobConfig.metricsPluginName) {
         injectPlugins(testFile, jobConfig);
     }
@@ -82,6 +84,11 @@ let updateTestParameters = (jobConfig, testFile, processorJavascript) => {
         m._compile(processorJavascript, 'none');
         testFile.config.processor = m.exports;
     }
+
+    if (csvData) {
+        testFile.config.payload = { fields: csvData.fields };
+    }
+
     if (!testFile.config.phases) {
         testFile.config.phases = [{}];
     }
@@ -129,6 +136,16 @@ async function getProcessorJavascript(jobConfig, test) {
         javascript = processor.javascript;
     }
     return javascript;
+}
+
+async function getCSVData(jobConfig, test) {
+    if (!test['csv_file_id']) {
+        return;
+    }
+    const payload = await customJSConnector.getFile(jobConfig, test['csv_file_id']);
+    const csvData = csv(payload);
+    const fields = csvData.shift();
+    return { fields, data: csvData };
 }
 
 let waitForLiveStatsToFinish = async (callback) => {
