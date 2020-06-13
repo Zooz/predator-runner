@@ -7,7 +7,7 @@ let consts = require('../../utils/consts');
 let logger = require('../../../app/utils/logger');
 let reporterConnector = require('../../../app/connectors/reporterConnector');
 let testFileConnector = require('../../../app/connectors/testFileConnector');
-let customJSConnector = require('../../../app/connectors/customJSConnector');
+let customJSConnector = require('../../../app/connectors/fileDownloadConnector');
 let runner = require('../../../app/models/runner');
 let metrics = require('../../../app/helpers/runnerMetrics');
 let prometheusAdapter = require('../../../app/adapters/prometheusAdapter');
@@ -92,9 +92,9 @@ let report = {
     'concurrency': 4,
     'pendingRequests': 4
 };
-let info = {info: 'mickey'};
+let info = { info: 'mickey' };
 describe('Run test', () => {
-    let sandbox, artilleryStub, customJSProcessorStub,
+    let sandbox, artilleryStub, customJSProcessorStub, getFileStub,
         testFileConnectorStub, loggerInfoStub, reporterConnectorPostStatsStub, reporterConnectorCreateReportStub, eeOnStub, getMetricsSpy, printMetricsSpy, prometheusAdapterStub, influxdbAdapterStub;
 
     let jobConfig = {
@@ -112,6 +112,7 @@ describe('Run test', () => {
         reporterConnectorCreateReportStub = sandbox.stub(reporterConnector, 'createReport');
         testFileConnectorStub = sandbox.stub(testFileConnector, 'getTest');
         customJSProcessorStub = sandbox.stub(customJSConnector, 'getProcessor');
+        getFileStub = sandbox.stub(customJSConnector, 'getFile');
         getMetricsSpy = sandbox.spy(metrics, 'getMetrics');
         printMetricsSpy = sandbox.spy(metrics, 'printMetrics');
         prometheusAdapterStub = sandbox.stub(prometheusAdapter, 'buildMetricsPlugin');
@@ -154,51 +155,50 @@ describe('Run test', () => {
             metricsExportConfig: Buffer.from(JSON.stringify(consts.INFLUX_CONFIGURATION)).toString('base64')
         }
     ]
-    .forEach((testConfig ) => {
-        it(`successfully run test with metrics plugin: ${testConfig.metricsPluginName}`, async () => {
-            if (testConfig.metricsPluginName === 'influx') {
-                influxdbAdapterStub.returns(consts.INFLUX_CONFIGURATION);
-                testConfig.expectedResult.config.plugins = consts.INFLUX_CONFIGURATION;
-            } else if (testConfig.metricsPluginName === 'prometheus') {
-                prometheusAdapterStub.returns(consts.PROMETHEUS_CONFIGURATION);
-                testConfig.expectedResult.config.plugins = consts.PROMETHEUS_CONFIGURATION;
-            } else {
-                delete testConfig.expectedResult.config.plugins;
-            }
+        .forEach((testConfig) => {
+            it(`successfully run test with metrics plugin: ${testConfig.metricsPluginName}`, async () => {
+                if (testConfig.metricsPluginName === 'influx') {
+                    influxdbAdapterStub.returns(consts.INFLUX_CONFIGURATION);
+                    testConfig.expectedResult.config.plugins = consts.INFLUX_CONFIGURATION;
+                } else if (testConfig.metricsPluginName === 'prometheus') {
+                    prometheusAdapterStub.returns(consts.PROMETHEUS_CONFIGURATION);
+                    testConfig.expectedResult.config.plugins = consts.PROMETHEUS_CONFIGURATION;
+                } else {
+                    delete testConfig.expectedResult.config.plugins;
+                }
 
-            let tempJobConfig = Object.assign({}, jobConfig);
-            tempJobConfig.arrivalRate = 10;
-            tempJobConfig.duration = 5;
-            tempJobConfig.notes = 'Best Test Ever';
-            tempJobConfig.metricsExportConfig = testConfig.metricsExportConfig;
-            tempJobConfig.metricsPluginName = testConfig.metricsPluginName;
+                let tempJobConfig = Object.assign({}, jobConfig);
+                tempJobConfig.arrivalRate = 10;
+                tempJobConfig.duration = 5;
+                tempJobConfig.notes = 'Best Test Ever';
+                tempJobConfig.metricsExportConfig = testConfig.metricsExportConfig;
+                tempJobConfig.metricsPluginName = testConfig.metricsPluginName;
 
-            testFileConnectorStub.resolves(testConfig.test);
-            artilleryStub.resolves(ee);
-            reporterConnectorCreateReportStub.resolves();
-            reporterConnectorPostStatsStub.resolves();
-            let exception;
-            try {
-                await runner.runTest(tempJobConfig);
-            } catch (e) {
-                exception = e;
-            }
-            should.not.exist(exception);
-            JSON.stringify(artilleryStub.args[0][0]).should.eql(JSON.stringify(testConfig.expectedResult));
-            testFileConnectorStub.calledOnce.should.eql(true);
+                testFileConnectorStub.resolves(testConfig.test);
+                artilleryStub.resolves(ee);
+                reporterConnectorCreateReportStub.resolves();
+                reporterConnectorPostStatsStub.resolves();
+                let exception;
+                try {
+                    await runner.runTest(tempJobConfig);
+                } catch (e) {
+                    exception = e;
+                }
+                should.not.exist(exception);
+                JSON.stringify(artilleryStub.args[0][0]).should.eql(JSON.stringify(testConfig.expectedResult));
+                testFileConnectorStub.calledOnce.should.eql(true);
 
-            loggerInfoStub.called.should.eql(true);
-            let loggerIndex = 1;
-            loggerInfoStub.args[loggerIndex][0].should.eql('Starting test: test_name, testId: test_id');
-            loggerInfoStub.args[++loggerIndex][0].should.eql('Starting phase: %s - %j');
-            loggerInfoStub.args[loggerIndex][2].should.eql(JSON.stringify(info));
-            loggerInfoStub.args[++loggerIndex][0].should.eql('Phase completed - %s');
-            loggerInfoStub.args[++loggerIndex][0].indexOf('Completed').should.be.greaterThan(-1);
-            getMetricsSpy.called.should.eql(true);
-            printMetricsSpy.called.should.eql(true);
+                loggerInfoStub.called.should.eql(true);
+                let loggerIndex = 1;
+                loggerInfoStub.args[loggerIndex][0].should.eql('Starting test: test_name, testId: test_id');
+                loggerInfoStub.args[++loggerIndex][0].should.eql('Starting phase: %s - %j');
+                loggerInfoStub.args[loggerIndex][2].should.eql(JSON.stringify(info));
+                loggerInfoStub.args[++loggerIndex][0].should.eql('Phase completed - %s');
+                loggerInfoStub.args[++loggerIndex][0].indexOf('Completed').should.be.greaterThan(-1);
+                getMetricsSpy.called.should.eql(true);
+                printMetricsSpy.called.should.eql(true);
+            });
         });
-    });
-
 
     it('successfully run test with custom js (processor)', async () => {
         const processorId = uuid();
@@ -231,6 +231,62 @@ describe('Run test', () => {
             exception = e;
         }
         should.not.exist(exception);
+    });
+
+    it('successfully run with csv file', async () => {
+        const csvFileId = uuid();
+
+        let tempJobConfig = Object.assign({}, jobConfig);
+        tempJobConfig.arrivalRate = 10;
+        tempJobConfig.duration = 5;
+        tempJobConfig.rampTo = 20;
+        tempJobConfig.maxVusers = 20;
+        tempJobConfig.notes = 'Test using csv file';
+
+        let testWithCSV = Object.assign({}, consts.VALID_CUSTOM_TEST);
+        testWithCSV.csv_file_id = csvFileId;
+
+        testFileConnectorStub.resolves(testWithCSV);
+        artilleryStub.resolves(ee);
+        reporterConnectorCreateReportStub.resolves();
+        reporterConnectorPostStatsStub.resolves();
+        getFileStub.resolves('id,name\n' +
+            '1,eli\n' +
+            '2,mikcey\n' +
+            '3,niv\n' +
+            '4,manor');
+
+        let exception;
+        try {
+            await runner.runTest(tempJobConfig);
+        } catch (e) {
+            exception = e;
+        }
+        should.not.exist(exception);
+
+        let artilleryArgs = artilleryStub.args[0];
+        artilleryArgs[0].config.payload.fields.should.eql([
+            'id',
+            'name'
+        ]);
+        artilleryArgs[1].should.eql([
+            [
+                '1',
+                'eli'
+            ],
+            [
+                '2',
+                'mikcey'
+            ],
+            [
+                '3',
+                'niv'
+            ],
+            [
+                '4',
+                'manor'
+            ]
+        ]);
     });
 
     it('fail to run test with processor ->  GET processor error', async () => {
@@ -295,5 +351,48 @@ describe('Run test', () => {
 
         should.exist(exception);
         should(exception).eql(expectedError);
+    });
+
+    it('fail to run test with csv -> GET file throws exception', async () => {
+        let expectedError = new Error('socket timeout');
+        let tempJobConfig = Object.assign({}, jobConfig);
+        let testWithCSV = Object.assign({}, consts.VALID_CUSTOM_TEST);
+        testWithCSV.csv_file_id = uuid();
+        testFileConnectorStub.resolves(testWithCSV);
+        getFileStub.rejects(new Error('socket timeout'));
+
+        let exception;
+        try {
+            await runner.runTest(tempJobConfig);
+        } catch (e) {
+            exception = e;
+        }
+        should.exist(exception);
+        exception.should.be.eql(expectedError);
+
+        testFileConnectorStub.calledOnce.should.eql(true);
+        loggerInfoStub.called.should.eql(false);
+    });
+
+    it('fail to run test with csv -> failure to parse csv', async () => {
+        const csvFileId = uuid();
+        let expectedError = new Error(`Failure to parse csv file with id: ${csvFileId}\nTypeError: buf.slice is not a function`);
+        let tempJobConfig = Object.assign({}, jobConfig);
+        let testWithCSV = Object.assign({}, consts.VALID_CUSTOM_TEST);
+        testWithCSV.csv_file_id = csvFileId;
+        testFileConnectorStub.resolves(testWithCSV);
+        getFileStub.resolves({ key: 'value' });
+
+        let exception;
+        try {
+            await runner.runTest(tempJobConfig);
+        } catch (e) {
+            exception = e;
+        }
+        should.exist(exception);
+        exception.should.be.eql(expectedError);
+
+        testFileConnectorStub.calledOnce.should.eql(true);
+        loggerInfoStub.called.should.eql(false);
     });
 });

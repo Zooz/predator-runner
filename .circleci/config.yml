@@ -26,7 +26,7 @@ jobs:
           path: ./coverage
   integration-tests:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:12
     steps:
       - checkout
       - restore_cache:
@@ -34,7 +34,7 @@ jobs:
       - run: npm run integration-tests
   system-tests:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:12
       - image: zooz/predator:latest
         environment:
           JOB_PLATFORM: DOCKER

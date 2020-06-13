@@ -1,0 +1,738 @@
+Index: app/connectors/customJSConnector.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/connectors/customJSConnector.js	(revision 5f1ecb5357dd438888fe13196a89cc5ba0ed7c8b)
++++ app/connectors/customJSConnector.js	(revision 3e8cfa200f08dc14e66200538616c76e5be8a3f9)
+@@ -2,7 +2,7 @@
+logger = require('../utils/logger');
+
+let getFile = async (jobConfig, fileId) => {
+-    const url = jobConfig.predatorUrl + `/tests/file/${fileId}`;
++    const url = jobConfig.predatorUrl + `/files/${fileId}`;
+const file = await getCustomJavascriptResource(url, 'GET', jobConfig.runId);
+return file;
+};
+@@ -31,4 +31,4 @@
+module.exports = {
+getFile,
+getProcessor
+-};
+\ No newline at end of file
++};
+Index: app/connectors/reporterConnector.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/connectors/reporterConnector.js	(revision 5f1ecb5357dd438888fe13196a89cc5ba0ed7c8b)
++++ app/connectors/reporterConnector.js	(revision 3e8cfa200f08dc14e66200538616c76e5be8a3f9)
+@@ -1,6 +1,7 @@
+const requestSender = require('../helpers/requestSender');
+
+let createReport = async (jobConfig, test) => {
++    return;
+const requestBody = {
+report_id: jobConfig.runId,
+revision_id: jobConfig.revisionId,
+@@ -29,6 +30,7 @@
+};
+
+let postStats = async (jobConfig, stats) => {
++    return;
+let defaultBody = {
+runner_id: jobConfig.containerId,
+stats_time: Date.now().toString()
+@@ -51,4 +53,4 @@
+module.exports = {
+postStats,
+createReport
+-};
+\ No newline at end of file
++};
+Index: app/csv.csv
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/csv.csv	(revision 3e8cfa200f08dc14e66200538616c76e5be8a3f9)
++++ app/csv.csv	(revision 3e8cfa200f08dc14e66200538616c76e5be8a3f9)
+@@ -0,0 +1,475 @@
++psp_reference
++147619290
++147437303
++147298254
++147626321
++147754568
++147750849
++148212617
++148305679
++147189192
++147343479
++147837374
++147682542
++148116393
++147214907
++147917641
++147488134
++147735756
++147782025
++148098040
++148359761
++148471324
++148465199
++148339678
++147152002
++148014666
++147580014
++148398959
++147339859
++147934145
++148378450
++148155414
++148035233
++148254477
++141643816
++147830729
++147267325
++148162731
++147476948
++147582721
++147875738
++148474620
++148239530
++147286688
++147741613
++147853090
++147311493
++147705321
++147916309
++147841704
++147397713
++147313225
++148340650
++147950282
++148371786
++147480153
++147918276
++147830523
++147614500
++147443284
++147344670
++148447692
++147264248
++147460283
++148055969
++148384818
++147736637
++147238721
++147690735
++147456321
++147734899
++147944230
++148040939
++148432392
++147427534
++148241157
++147368341
++141219395
++147273815
++147908773
++148175358
++147549933
++147712783
++147218650
++147117352
++148344019
++147447624
++148023635
++147417387
++147266004
++148265161
++147102625
++147507806
++147116690
++147505128
++148402935
++147746113
++147715918
++147543408
++147655750
++147373862
++147901629
++148426070
++147249250
++147320997
++147625182
++148521722
++147871653
++147923297
++147523104
++147966447
++147478078
++147629341
++147530231
++147936515
++147817318
++146199126
++148505138
++148103709
++148470865
++148191650
++148187530
++148004344
++147261368
++147713111
++147271919
++147298015
++147948494
++147173965
++147142897
++148332851
++148459215
++148083188
++147882790
++148237116
++147236811
++147859955
++147947602
++148516322
++147199617
++147157418
++148205459
++148052704
++147375274
++148339678
++147708653
++148473092
++147979645
++147409826
++147616711
++148267572
++148143326
++148033256
++147992980
++147820092
++147442571
++147552709
++148475078
++147903179
++148255272
++147395155
++147568075
++147679503
++147726374
++148066563
++147272619
++148375466
++147747089
++147527865
++148167573
++148486728
++147680029
++148120830
++148222857
++147120810
++147580210
++147221729
++148237440
++148260292
++147107225
++147119623
++148005429
++147404699
++148381684
++147915086
++146002111
++147954014
++147851517
++147622620
++148276333
++148235088
++148459924
++147660270
++147315046
++147133279
++148002832
++148003847
++148243894
++148317111
++148095144
++148153340
++147551811
++147907901
++147455848
++148017564
++147161794
++148447987
++147981179
++147395366
++147840827
++147700429
++147114346
++148358938
++147316986
++147546683
++147632567
++147212159
++147987549
++147760180
++147299986
++147921724
++147729752
++147410753
++147197247
++147268549
++148517175
++147133503
++148192341
++147620907
++147342286
++147464696
++147575424
++148009863
++147812738
++147438378
++147730530
++147878433
++148063506
++148118305
++147108449
++147115214
++147799205
++147271383
++147529268
++147612897
++147345208
++147269302
++147192556
++148192961
++147282761
++148354058
++148132640
++148383330
++147986551
++148252229
++147966824
++147352867
++139180201
++146447537
++147935645
++147125924
++148518758
++142362229
++146726101
++146064659
++144629088
++142720236
++143341278
++146838151
++145246011
++141906630
++142944834
++147603929
++148428165
++147631044
++147445734
++146433747
++141863520
++147108751
++147497324
++147975236
++135836300
++146193110
++147482563
++148158482
++135379174
++147259089
++148196880
++147898729
++147479635
++148103709
++147130416
++147335598
++147959645
++147190589
++148222903
++148037190
++148469898
++148518758
++147944466
++147115869
++147144265
++147247331
++148015414
++147209263
++148155741
++147611565
++147924965
++147988342
++147859738
++148392109
++148189705
++147685955
++147900080
++147259089
++147660911
++147435850
++147645042
++148252255
++148155313
++147881091
++147135359
++148089432
++147928583
++147425849
++148061933
++147502167
++148141962
++147225092
++147406482
++148339429
++147621322
++147967888
++147994037
++147881206
++147347647
++147643226
++147278411
++147486311
++147971441
++148015475
++147759575
++148376358
++148336547
++148434427
++147539353
++147760481
++147684429
++147250395
++148268815
++147284178
++147251685
++147453506
++148355577
++148295760
++147784788
++147991578
++147295415
++147898729
++148304938
++148463600
++147336190
++147209648
++147457480
++132143894
++148345815
++147163611
++147369733
++148219492
++144581374
++133790343
++142525951
++139290825
++116226801
++142549983
++148313211
++142195500
++148068041
++142376845
++122909950
++146016015
++139243748
++148074459
++134999619
++137714885
++142564620
++148109346
++147897602
++135878157
++131913119
++116996847
++148288660
++148240317
++147709946
++139618768
++148408859
++143058297
++137270540
++146904680
++147473564
++147813698
++145893500
++147287831
++148093297
++141876522
++137609445
++137100864
++144647228
++140152658
++146379051
++142912082
++145405082
++145373841
++137402402
++147928934
++147554875
++147236285
++145893272
++147502921
++140337424
++147871213
++147339827
++147908257
++137872108
++137872108
++147108751
++147669302
++147631044
++148133947
++140750236
++147865729
++147419347
++147558033
++148399979
++145810089
++134329508
++147098141
++138208835
++143540237
++148350855
++147668650
++148107997
++147529308
++142120082
++147957989
++148335713
++148313504
++147594671
++143114381
++142445943
++147497324
++148114493
++147222480
++147878840
++138217849
++143261952
++148400453
++108977764
++147591487
++116576823
++146681399
++142751632
++142328559
++148315942
++142360028
++147436110
++147854698
++147205534
++148067988
++147208347
++147820799
++148489893
++147419102
++148381231
++147473358
+\ No newline at end of file
+Index: app/models/runner.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/models/runner.js	(revision 5f1ecb5357dd438888fe13196a89cc5ba0ed7c8b)
++++ app/models/runner.js	(revision 3e8cfa200f08dc14e66200538616c76e5be8a3f9)
+@@ -1,6 +1,7 @@
+'use strict';
+
+const artillery = require('artillery/core'),
++    csv = require('csv-parse/lib/sync'),
+testFileConnector = require('../connectors/testFileConnector'),
+customJSConnector = require('../connectors/customJSConnector'),
+reporterConnector = require('../connectors/reporterConnector'),
+@@ -15,12 +16,13 @@
+module.exports.runTest = async (jobConfig) => {
+const test = await testFileConnector.getTest(jobConfig);
+let processorJavascript = await getProcessorJavascript(jobConfig, test);
++    const payload = await getCsvAsArray(jobConfig, test);
+await reporterConnector.createReport(jobConfig, test);
+-    updateTestParameters(jobConfig, test.artillery_test, processorJavascript);
++    updateTestParameters(jobConfig, test.artillery_test, processorJavascript, test['csv_file_id']);
+logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
+progressCalculator.calculateTotalNumberOfScenarios(jobConfig);
+
+-    const ee = await artillery.runner(test.artillery_test, undefined, { isAggregateReport: false });
++    const ee = await artillery.runner(test.artillery_test, payload, {isAggregateReport: false});
+return new Promise((resolve, reject) => {
+ee.on('phaseStarted', (info) => {
+logger.info('Starting phase: %s - %j', new Date(), JSON.stringify(info));
+@@ -58,11 +60,11 @@
+try {
+await reporterConnector.postStats(jobConfig, {
+phase_status: 'done',
+-                        data: JSON.stringify({ message: 'Test Finished' })
++                        data: JSON.stringify({message: 'Test Finished'})
+});
+resolve();
+} catch (e) {
+-                    logger.error({ error: e }, 'Failed to send final report to predator');
++                    logger.error({error: e}, 'Failed to send final report to predator');
+reject(e);
+}
+};
+@@ -82,6 +84,7 @@
+m._compile(processorJavascript, 'none');
+testFile.config.processor = m.exports;
+}
++
+if (!testFile.config.phases) {
+testFile.config.phases = [{}];
+}
+@@ -107,7 +110,7 @@
+testFile.config.phases[0].maxVusers = jobConfig.maxVusers;
+}
+
+-    logger.info({ updated_test_config: testFile.config }, 'Test successfully updated parameters');
++    logger.info({updated_test_config: testFile.config}, 'Test successfully updated parameters');
+};
+
+function injectPlugins(testFile, jobConfig) {
+@@ -131,6 +134,15 @@
+return javascript;
+}
+
++async function getCsvAsArray(jobConfig, test) {
++    if (!test['csv_file_id']) {
++        return;
++    }
++    const payload = await customJSConnector.getFile(jobConfig, test['csv_file_id']);
++    const csvAsArray = csv(payload);
++    return csvAsArray;
++}
++
+let waitForLiveStatsToFinish = async (callback) => {
+if (statsToRecord) {
+setTimeout(() => {
+Index: package-lock.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- package-lock.json	(revision 5f1ecb5357dd438888fe13196a89cc5ba0ed7c8b)
++++ package-lock.json	(revision 3e8cfa200f08dc14e66200538616c76e5be8a3f9)
+@@ -1198,11 +1198,6 @@
+}
+}
+},
+-    "clone": {
+-      "version": "1.0.4",
+-      "resolved": "https://registry.npmjs.org/clone/-/clone-1.0.4.tgz",
+-      "integrity": "sha1-2jCcwmPfFZlMaIypAheco8fNfH4="
+-    },
+"co": {
+"version": "4.6.0",
+"resolved": "https://registry.npmjs.org/co/-/co-4.6.0.tgz",
+@@ -1578,6 +1573,14 @@
+}
+}
+},
++    "convert-csv-to-array": {
++      "version": "1.0.3",
++      "resolved": "https://registry.npmjs.org/convert-csv-to-array/-/convert-csv-to-array-1.0.3.tgz",
++      "integrity": "sha512-F2o7RgfkegFwbxJN+mryqPPJHQaUzRej5JU3dzaXMPk7hVJKnsHu/Mm/y8rku/oflNyEILAbOKe8FcEAQkpxwg==",
++      "requires": {
++        "convert-string-to-number": "^1.0.3"
++      }
++    },
+"convert-source-map": {
+"version": "1.6.0",
+"resolved": "https://registry.npmjs.org/convert-source-map/-/convert-source-map-1.6.0.tgz",
+@@ -1587,6 +1590,11 @@
+"safe-buffer": "~5.1.1"
+}
+},
++    "convert-string-to-number": {
++      "version": "1.0.3",
++      "resolved": "https://registry.npmjs.org/convert-string-to-number/-/convert-string-to-number-1.0.3.tgz",
++      "integrity": "sha512-ZvP2/ob7UvvC6s7euMDU2JXYz1dTdBXS8QvOgCPOiGHHYNsKcJ/WZUui3wL0vngXRfM7/3QSFF2PZWlPjgKeUA=="
++    },
+"core-util-is": {
+"version": "1.0.2",
+"resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz",
+@@ -1663,12 +1671,9 @@
+"integrity": "sha512-a+EPoD+uZiNfh+5fxw2nO9QwFa6nJe2Or35fGY6Ipw1R3R4AGz1d1TEZrCegvw2YTmZ0jXirGYlzxxpYSHwpEg=="
+},
+"csv-parse": {
+-      "version": "4.6.5",
+-      "resolved": "https://registry.npmjs.org/csv-parse/-/csv-parse-4.6.5.tgz",
+-      "integrity": "sha512-tUohmlM5X1Wtn7aRA4FsJMmnvGo+GUknK/Dp+//ms7pvpXADda5HIi5vFYOvAs/WSn5JUM1bt2AT3TxtDFV3Cw==",
+-      "requires": {
+-        "pad": "^3.2.0"
+-      }
++      "version": "4.8.8",
++      "resolved": "https://registry.npmjs.org/csv-parse/-/csv-parse-4.8.8.tgz",
++      "integrity": "sha512-Kv3Ilz2GV58dOoHBXRCTF8ijxlLjl80bG3d67XPI6DNqffb3AnbPbKr/WvCUMJq5V0AZYi6sukOaOQAVpfuVbg=="
+},
+"currently-unhandled": {
+"version": "0.4.1",
+@@ -1774,14 +1779,6 @@
+"strip-bom": "^3.0.0"
+}
+},
+-    "defaults": {
+-      "version": "1.0.3",
+-      "resolved": "https://registry.npmjs.org/defaults/-/defaults-1.0.3.tgz",
+-      "integrity": "sha1-xlYFHpgX2f8I7YgUd/P+QBnz730=",
+-      "requires": {
+-        "clone": "^1.0.2"
+-      }
+-    },
+"define-properties": {
+"version": "1.1.3",
+"resolved": "http://npm.zooz.co:8083/define-properties/-/define-properties-1.1.3.tgz",
+@@ -5320,14 +5317,6 @@
+"semver": "^5.1.0"
+}
+},
+-    "pad": {
+-      "version": "3.2.0",
+-      "resolved": "https://registry.npmjs.org/pad/-/pad-3.2.0.tgz",
+-      "integrity": "sha512-2u0TrjcGbOjBTJpyewEl4hBO3OeX5wWue7eIFPzQTg6wFSvoaHcBTTUY5m+n0hd04gmTCPuY0kCpVIVuw5etwg==",
+-      "requires": {
+-        "wcwidth": "^1.0.1"
+-      }
+-    },
+"parent-module": {
+"version": "1.0.1",
+"resolved": "https://registry.npmjs.org/parent-module/-/parent-module-1.0.1.tgz",
+@@ -7443,14 +7432,6 @@
+"extsprintf": "^1.2.0"
+}
+},
+-    "wcwidth": {
+-      "version": "1.0.1",
+-      "resolved": "https://registry.npmjs.org/wcwidth/-/wcwidth-1.0.1.tgz",
+-      "integrity": "sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=",
+-      "requires": {
+-        "defaults": "^1.0.3"
+-      }
+-    },
+"which": {
+"version": "1.3.1",
+"resolved": "https://registry.npmjs.org/which/-/which-1.3.1.tgz",
+Index: package.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- package.json	(revision 5f1ecb5357dd438888fe13196a89cc5ba0ed7c8b)
++++ package.json	(revision 3e8cfa200f08dc14e66200538616c76e5be8a3f9)
+@@ -31,6 +31,8 @@
+"artillery": "https://github.com/Zooz/artillery.git#v2.0.2",
+"artillery-plugin-prometheus": "^1.1.0",
+"bunyan": "^1.8.12",
++    "convert-csv-to-array": "^1.0.3",
++    "csv-parse": "^4.8.8",
+"pidusage": "^2.0.17",
+"request": "~2.87.0",
+"requestxn": "^3.1.4",

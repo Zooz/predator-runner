@@ -2,15 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [1.3.1](https://github.com/Zooz/predator-runner/compare/v1.3.0...v1.3.1) (2020-04-16)
-
-
-### Features
-
-* **metrics:** support custom prometheus labels ([#30](https://github.com/Zooz/predator-runner/issues/30)) ([9f2565b](https://github.com/Zooz/predator-runner/commit/9f2565b))
-
-
-
 ## [1.3.0](https://github.com/Zooz/predator-runner/compare/v1.2.0...v1.3.0) (2020-04-01)
 
 

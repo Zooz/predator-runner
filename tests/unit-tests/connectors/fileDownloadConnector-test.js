@@ -3,9 +3,7 @@ const should = require('should'),
     uuid = require('uuid');
 
 const request = require('../../../app/helpers/requestSender'),
-    customJSConnector = require('../../../app/connectors/customJSConnector'),
-    testUtils = require('../../utils/consts');
-
+    customJSConnector = require('../../../app/connectors/fileDownloadConnector');
 describe('Get test file', () => {
     let sandbox, requestStub;
 
@@ -52,8 +50,8 @@ describe('Get test file', () => {
     });
 
     it('fail to get test processor -> request error', async () => {
-        let expecterError = new Error('Failed to retrieve processor');
-        requestStub.rejects(expecterError);
+        let expectedError = new Error('Failed to retrieve processor');
+        requestStub.rejects(expectedError);
 
         let exception;
         try {
@@ -62,6 +60,6 @@ describe('Get test file', () => {
             exception = e;
         }
         should.exist(exception);
-        exception.should.eql(expecterError);
+        exception.should.eql(expectedError);
     });
 });
