@@ -93,7 +93,8 @@ let updateTestParameters = (jobConfig, testFile, processorJavascript, csvData) =
         testFile.config.phases = [{}];
     }
     testFile.config.phases[0].duration = jobConfig.duration;
-    testFile.config.phases[0].arrivalRate = jobConfig.arrivalRate;
+    testFile.config.phases[0].arrivalRate = 0;
+    testFile.config.phases[0].arrivalCount = jobConfig.arrivalCount || testFile.config.phases[0].arrivalCount;
 
     if (!testFile.config.http) {
         testFile.config.http = {};
