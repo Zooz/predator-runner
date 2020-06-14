@@ -252,7 +252,7 @@ describe('Run test', () => {
         reporterConnectorPostStatsStub.resolves();
         getFileStub.resolves('id,name\n' +
             '1,eli\n' +
-            '2,mikcey\n' +
+            '2,mickey\n' +
             '3,niv\n' +
             '4,manor');
 
