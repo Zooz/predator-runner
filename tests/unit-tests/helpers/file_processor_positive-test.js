@@ -1,5 +1,5 @@
 const should = require('should'),
-    fileConector = require('../../../app/connectors/fileDownloadConnector'),
+    fileDownloadConnector = require('../../../app/connectors/fileDownloadConnector'),
     requestSender = require('../../../app/helpers/requestSender'),
     sinon = require('sinon');
 
