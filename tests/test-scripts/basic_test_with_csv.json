@@ -1,0 +1,25 @@
+{
+    "name": "Test_js_custom",
+    "description": "Test_js_custom",
+    "type": "basic",
+    "artillery_test": {
+        "config": {
+            "target": "",
+            "http": {
+                "pool": 1
+            }
+        },
+        "scenarios": [
+            {
+                "name": "Processor example",
+                "flow": [
+                    {
+                        "get": {
+                            "url": "http://www.predator.dev/{{ name }}"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

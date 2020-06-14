@@ -1,8 +1,9 @@
 'use strict';
 
 const artillery = require('artillery/core'),
+    csv = require('csv-parse/lib/sync'),
     testFileConnector = require('../connectors/testFileConnector'),
-    customJSConnector = require('../connectors/customJSConnector'),
+    fileDownloadConnector = require('../connectors/fileDownloadConnector'),
     reporterConnector = require('../connectors/reporterConnector'),
     logger = require('../utils/logger'),
     reportPrinter = require('./reportPrinter'),
@@ -15,12 +16,13 @@ let firstIntermediate = true;
 module.exports.runTest = async (jobConfig) => {
     const test = await testFileConnector.getTest(jobConfig);
     let processorJavascript = await getProcessorJavascript(jobConfig, test);
+    const csvData = await getCSVData(jobConfig, test);
     await reporterConnector.createReport(jobConfig, test);
-    updateTestParameters(jobConfig, test.artillery_test, processorJavascript);
+    updateTestParameters(jobConfig, test.artillery_test, processorJavascript, csvData);
     logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
     progressCalculator.calculateTotalNumberOfScenarios(jobConfig);
 
-    const ee = await artillery.runner(test.artillery_test, undefined, { isAggregateReport: false });
+    const ee = await artillery.runner(test.artillery_test, csvData ? csvData.data : undefined, { isAggregateReport: false });
     return new Promise((resolve, reject) => {
         ee.on('phaseStarted', (info) => {
             logger.info('Starting phase: %s - %j', new Date(), JSON.stringify(info));
@@ -72,7 +74,7 @@ module.exports.runTest = async (jobConfig) => {
     });
 };
 
-let updateTestParameters = (jobConfig, testFile, processorJavascript) => {
+let updateTestParameters = (jobConfig, testFile, processorJavascript, csvData) => {
     if (jobConfig.metricsExportConfig && jobConfig.metricsPluginName) {
         injectPlugins(testFile, jobConfig);
     }
@@ -82,6 +84,11 @@ let updateTestParameters = (jobConfig, testFile, processorJavascript) => {
         m._compile(processorJavascript, 'none');
         testFile.config.processor = m.exports;
     }
+
+    if (csvData) {
+        testFile.config.payload = { fields: csvData.fields };
+    }
+
     if (!testFile.config.phases) {
         testFile.config.phases = [{}];
     }
@@ -122,13 +129,31 @@ async function getProcessorJavascript(jobConfig, test) {
     let javascript;
     if (test['file_id']) {
         logger.warn('DEPRECATED: Using file_id in tests is deprecated and will soon be no longer supported. Please use the Processors API in order to use custom javascript in your tests.\n Link to API documentation: https://zooz.github.io/predator/indexapiref.html#tag/Processors');
-        const fileContentBase64 = await customJSConnector.getFile(jobConfig, test['file_id']);
+        const fileContentBase64 = await fileDownloadConnector.getFile(jobConfig, test['file_id']);
         javascript = Buffer.from(fileContentBase64, 'base64').toString('utf8');
     } else if (test['processor_id']) {
-        const processor = await customJSConnector.getProcessor(jobConfig, test['processor_id']);
+        const processor = await fileDownloadConnector.getProcessor(jobConfig, test['processor_id']);
         javascript = processor.javascript;
     }
     return javascript;
+}
+
+async function getCSVData(jobConfig, test) {
+    const csvFileId = test['csv_file_id'];
+    if (!csvFileId) {
+        return;
+    }
+    const payload = await fileDownloadConnector.getFile(jobConfig, csvFileId);
+    let csvData;
+    try {
+        csvData = csv(payload);
+    } catch (error) {
+        throw new Error(`Failure to parse csv file with id: ${csvFileId}\n${error}`);
+    }
+    const fields = csvData.shift();
+
+    logger.info({ csv_file_id: csvFileId, headers: fields, number_of_rows: csvData.length, first_row: csvData[0] }, 'Parsed CSV successfully');
+    return { fields, data: csvData };
 }
 
 let waitForLiveStatsToFinish = async (callback) => {
