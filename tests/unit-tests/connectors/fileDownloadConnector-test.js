@@ -41,7 +41,7 @@ describe('Get test file', () => {
 
         let exception;
         try {
-            await customJSConnector.getProcessor(jobConfig, processor.id);
+            await fileDownloadConnector.getProcessor(jobConfig, processor.id);
         } catch (e) {
             exception = e;
         }
@@ -55,7 +55,7 @@ describe('Get test file', () => {
 
         let exception;
         try {
-            await customJSConnector.getProcessor(jobConfig, uuid());
+            await fileDownloadConnector.getProcessor(jobConfig, uuid());
         } catch (e) {
             exception = e;
         }

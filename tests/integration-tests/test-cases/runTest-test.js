@@ -168,7 +168,7 @@ describe('integration tests', () => {
             should(uriList.length).greaterThan(30);
             should(uriList.length).lessThan(50);
             const uniqueUri = [...new Set(uriList)];
-            should(uniqueUri).containDeep(['/mikcey', '/niv', '/manor', '/eli']);
+            should(uniqueUri).containDeep(['/mickey', '/niv', '/manor', '/eli']);
             should(uniqueUri.length).eql(4, JSON.stringify(uniqueUri));
         });
     });

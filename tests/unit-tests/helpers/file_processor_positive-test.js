@@ -17,7 +17,7 @@ describe('Create file tests', () => {
 
     it('Should get file from predator ', async () => {
         getRequestStub.resolves('File content');
-        let res = await fileConector.getFile({ runId: 'runId', predatorUrl: 'predatorUrl' }, 'file_id');
+        let res = await fileDownloadConnector.getFile({ runId: 'runId', predatorUrl: 'predatorUrl' }, 'file_id');
         should(getRequestStub.getCall(0).args[0].url).eql('predatorUrl/files/file_id');
         should(res).eql('File content');
     });
