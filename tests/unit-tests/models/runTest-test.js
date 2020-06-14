@@ -276,7 +276,7 @@ describe('Run test', () => {
             ],
             [
                 '2',
-                'mikcey'
+                'mickey'
             ],
             [
                 '3',
