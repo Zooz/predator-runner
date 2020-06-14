@@ -3,7 +3,7 @@ const should = require('should'),
     uuid = require('uuid');
 
 const request = require('../../../app/helpers/requestSender'),
-    customJSConnector = require('../../../app/connectors/fileDownloadConnector');
+    fileDownloadConnector = require('../../../app/connectors/fileDownloadConnector');
 describe('Get test file', () => {
     let sandbox, requestStub;
 
