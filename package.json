@@ -30,7 +30,7 @@
   "dependencies": {
     "artillery": "https://github.com/Zooz/artillery.git#v2.0.2",
     "artillery-plugin-prometheus": "^1.1.0",
-    "bunyan": "^1.8.12",
+    "bunyan": "^1.8.13",
     "csv-parse": "^4.8.8",
     "pidusage": "^2.0.17",
     "request": "~2.87.0",
