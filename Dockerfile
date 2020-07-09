@@ -20,4 +20,6 @@ COPY /app /usr/app
 
 EXPOSE 8080
 
+USER nobody
+
 CMD [ "node","--max_old_space_size=192","./app/app.js" ]
