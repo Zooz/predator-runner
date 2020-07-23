@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/Zooz/predator-runner/compare/v1.3.1...v1.4.0) (2020-07-23)
+
+
+### Bug Fixes
+
+* **dockerfile:** add user nobody to dockerfile ([#37](https://github.com/Zooz/predator-runner/issues/37)) ([0d9e577](https://github.com/Zooz/predator-runner/commit/0d9e577c01569645109ee89ab73142789922d1ac))
+* package.json & package-lock.json to reduce vulnerabilities ([#40](https://github.com/Zooz/predator-runner/issues/40)) ([e1a00eb](https://github.com/Zooz/predator-runner/commit/e1a00eb15f2c7381b3a16006d5f6adace2da11a4))
+
 ### [1.3.1](https://github.com/Zooz/predator-runner/compare/v1.3.0...v1.3.1) (2020-04-16)
 
 
