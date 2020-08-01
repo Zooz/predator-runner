@@ -1,11 +1,23 @@
 'use strict';
 const env = process.env;
 const logger = require('./logger');
-const RUNNER_MANDATORY_VARIABLES = require('../utils/consts').RUNNER_MANDATORY_VARIABLES;
-const PLUGINS_MANDATORY_VARIABLES = require('../utils/consts').PLUGINS_MANDATORY_VARIABLES;
+const {
+    FUNCTIONAL_TEST,
+    FUNCTIONAL_TEST_MANDATORY_VARIABLES,
+    LOAD_TEST_MANDATORY_VARIABLES,
+    RUNNER_MANDATORY_VARIABLES,
+    PLUGINS_MANDATORY_VARIABLES } = require('../utils/consts');
 
 module.exports.verifyEnvironmentVars = () => {
     let missingVars = getMissingVariables(env, RUNNER_MANDATORY_VARIABLES);
+
+    if (env.JOB_TYPE === FUNCTIONAL_TEST) {
+        const runnerMissingVars = getMissingVariables(env, FUNCTIONAL_TEST_MANDATORY_VARIABLES);
+        missingVars = missingVars.concat(runnerMissingVars);
+    } else {
+        const runnerMissingVars = getMissingVariables(env, LOAD_TEST_MANDATORY_VARIABLES);
+        missingVars = missingVars.concat(runnerMissingVars);
+    }
 
     if (env.METRICS_PLUGIN_NAME && env.METRICS_EXPORT_CONFIG) {
         let parsedMetricsConfig;

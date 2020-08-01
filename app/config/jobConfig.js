@@ -1,6 +1,8 @@
 'use strict';
 const URL = require('url').URL;
 
+const constants = require('../utils/consts');
+
 let getPredatorUrlWithApiVersion = (predatorUrl) => {
     let predatorUrlObject = new URL(predatorUrl);
 
@@ -18,9 +20,11 @@ let config = {
     statsInterval: process.env.STATS_INTERVAL || 30,
     testId: process.env.TEST_ID,
     jobId: process.env.JOB_ID,
+    jobType: process.env.JOB_TYPE || constants.LOAD_TEST,
     predatorUrl: getPredatorUrlWithApiVersion(process.env.PREDATOR_URL),
     duration: parseInt(process.env.DURATION),
-    arrivalRate: parseInt(process.env.ARRIVAL_RATE),
+    arrivalRate: parseInt(process.env.ARRIVAL_RATE) || undefined,
+    arrivalCount: parseInt(process.env.ARRIVAL_COUNT) || undefined,
     rampTo: parseInt(process.env.RAMP_TO) || undefined,
     maxVusers: parseInt(process.env.MAX_VIRTUAL_USERS) || undefined,
     emails: process.env.EMAILS ? process.env.EMAILS.split(';') : [],
