@@ -19,7 +19,7 @@ jobs:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
-#      - run: npm audit --only=prod --audit-level=moderate
+      - run: npm audit --only=prod --audit-level=moderate
       - run: npm run lint
       - run: npm run unit-tests
       - store_artifacts:
