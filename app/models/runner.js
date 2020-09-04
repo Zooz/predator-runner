@@ -85,14 +85,14 @@ function updateRunningParameters(testFile, jobConfig) {
         } else {
             testFile.config.phases[0].rampTo = jobConfig.rampTo;
         }
-
-        if (!jobConfig.maxVusers) {
-            delete testFile.config.phases[0].maxVusers;
-        } else {
-            testFile.config.phases[0].maxVusers = jobConfig.maxVusers;
-        }
     } else {
         testFile.config.phases[0].arrivalCount = jobConfig.arrivalCount;
+    }
+
+    if (!jobConfig.maxVusers) {
+        delete testFile.config.phases[0].maxVusers;
+    } else {
+        testFile.config.phases[0].maxVusers = jobConfig.maxVusers;
     }
 }
 
