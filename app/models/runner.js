@@ -78,17 +78,17 @@ module.exports.runTest = async (jobConfig) => {
 function updateRunningParameters(testFile, jobConfig) {
     testFile.config.phases[0].duration = jobConfig.duration;
 
-    if (jobConfig.type === constants.LOAD_TEST) {
+    if (jobConfig.type === constants.FUNCTIONAL_TEST) {
+        testFile.config.phases[0].arrivalCount = jobConfig.arrivalCount;
+        delete testFile.config.phases[0].arrivalRate;
+        delete testFile.config.phases[0].rampTo;
+    } else {
         testFile.config.phases[0].arrivalRate = jobConfig.arrivalRate;
         if (!jobConfig.rampTo) {
             delete testFile.config.phases[0].rampTo;
         } else {
             testFile.config.phases[0].rampTo = jobConfig.rampTo;
         }
-    } else {
-        testFile.config.phases[0].arrivalCount = jobConfig.arrivalCount;
-        delete testFile.config.phases[0].arrivalRate;
-        delete testFile.config.phases[0].rampTo;
     }
 
     if (!jobConfig.maxVusers) {
