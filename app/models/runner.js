@@ -8,7 +8,8 @@ const artillery = require('artillery/core'),
     logger = require('../utils/logger'),
     reportPrinter = require('./reportPrinter'),
     progressCalculator = require('../helpers/progressCalculator'),
-    metrics = require('../helpers/runnerMetrics');
+    metrics = require('../helpers/runnerMetrics'),
+    constants = require('../utils/consts');
 
 let statsToRecord = 0;
 let firstIntermediate = true;
@@ -74,6 +75,29 @@ module.exports.runTest = async (jobConfig) => {
     });
 };
 
+function updateRunningParameters(testFile, jobConfig) {
+    testFile.config.phases[0].duration = jobConfig.duration;
+
+    if (jobConfig.type === constants.FUNCTIONAL_TEST) {
+        testFile.config.phases[0].arrivalCount = jobConfig.arrivalCount;
+        delete testFile.config.phases[0].arrivalRate;
+        delete testFile.config.phases[0].rampTo;
+    } else {
+        testFile.config.phases[0].arrivalRate = jobConfig.arrivalRate;
+        if (!jobConfig.rampTo) {
+            delete testFile.config.phases[0].rampTo;
+        } else {
+            testFile.config.phases[0].rampTo = jobConfig.rampTo;
+        }
+    }
+
+    if (!jobConfig.maxVusers) {
+        delete testFile.config.phases[0].maxVusers;
+    } else {
+        testFile.config.phases[0].maxVusers = jobConfig.maxVusers;
+    }
+}
+
 let updateTestParameters = (jobConfig, testFile, processorJavascript, csvData) => {
     if (jobConfig.metricsExportConfig && jobConfig.metricsPluginName) {
         injectPlugins(testFile, jobConfig);
@@ -92,9 +116,6 @@ let updateTestParameters = (jobConfig, testFile, processorJavascript, csvData) =
     if (!testFile.config.phases) {
         testFile.config.phases = [{}];
     }
-    testFile.config.phases[0].duration = jobConfig.duration;
-    testFile.config.phases[0].arrivalRate = jobConfig.arrivalRate;
-
     if (!testFile.config.http) {
         testFile.config.http = {};
     }
@@ -102,18 +123,7 @@ let updateTestParameters = (jobConfig, testFile, processorJavascript, csvData) =
 
     testFile.config.statsInterval = jobConfig.statsInterval;
 
-    if (!jobConfig.rampTo) {
-        delete testFile.config.phases[0].rampTo;
-    } else {
-        testFile.config.phases[0].rampTo = jobConfig.rampTo;
-    }
-
-    if (!jobConfig.maxVusers) {
-        delete testFile.config.phases[0].maxVusers;
-    } else {
-        testFile.config.phases[0].maxVusers = jobConfig.maxVusers;
-    }
-
+    updateRunningParameters(testFile, jobConfig);
     logger.info({ updated_test_config: testFile.config }, 'Test successfully updated parameters');
 };
 

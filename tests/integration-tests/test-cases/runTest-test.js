@@ -16,7 +16,7 @@ describe('integration tests', () => {
         let getTest, postReport, postStats;
 
         before(async function () {
-            const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test.json');
+            const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test_load.json');
             const customTestBody = require(customTestPath);
 
             customTestBody.artillery_test = customTestBody.artillery_test;
@@ -219,7 +219,7 @@ describe('integration tests', () => {
         const testId = uuid();
 
         before(async function () {
-            const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test.json');
+            const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test_load.json');
             const customTestBody = require(customTestPath);
 
             customTestBody.artillery_test = customTestBody.artillery_test;
@@ -354,7 +354,7 @@ describe('integration tests', () => {
         const fileId = uuid();
         const testId = uuid();
         before(async function () {
-            const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test.json');
+            const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test_load.json');
             const customTestBody = require(customTestPath);
             const testBody = Object.assign({}, customTestBody);
             testBody.file_id = fileId;

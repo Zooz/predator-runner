@@ -100,6 +100,7 @@ describe('Run test', () => {
     let jobConfig = {
         jobId: 'some_job_id',
         testId: 'mickeys-test',
+        type: 'load_test',
         httpPoolSize: 100,
         statsInterval: 30
     };
@@ -287,6 +288,38 @@ describe('Run test', () => {
                 'manor'
             ]
         ]);
+    });
+
+    it('successfully run functional_test', async () => {
+        let tempJobConfig = Object.assign({}, jobConfig);
+        tempJobConfig.arrivalCount = 10;
+        tempJobConfig.duration = 5;
+        tempJobConfig.maxVusers = 20;
+        tempJobConfig.notes = 'Functional test';
+        tempJobConfig.type = 'functional_test';
+
+        let functionalTest = Object.assign({}, consts.VALID_CUSTOM_TEST);
+        testFileConnectorStub.resolves(functionalTest);
+        artilleryStub.resolves(ee);
+        reporterConnectorCreateReportStub.resolves();
+        reporterConnectorPostStatsStub.resolves();
+
+        let exception;
+        try {
+            await runner.runTest(tempJobConfig);
+        } catch (e) {
+            exception = e;
+        }
+        should.not.exist(exception);
+
+        let artilleryArgs = artilleryStub.args[0];
+        artilleryArgs[0].config.phases[0].should.eql(
+            {
+                duration: 5,
+                arrivalCount: 10,
+                maxVusers: 20
+            }
+        );
     });
 
     it('fail to run test with processor ->  GET processor error', async () => {

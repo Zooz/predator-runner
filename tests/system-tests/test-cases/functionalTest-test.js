@@ -1,13 +1,10 @@
 const path = require('path'),
     should = require('should'),
-    colors = require('colors'),
     uuid = require('uuid/v4'),
     predatorApiHelper = require('../../utils/predatorApiHelper'),
     defaults = require('../defaults'),
     simpleServerClient = require('../../utils/simpleServerClient'),
     runner = require('../../../app/models/runner');
-
-const LOCAL_TEST = process.env.LOCAL_TEST || false;
 
 let createTestResponse;
 let testId;
@@ -15,13 +12,15 @@ let createJobResponse;
 let jobId;
 let customTestBody;
 
-describe('Runner performance validations', function () {
+describe('Functional test', function () {
     const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
+    let duration, arrivalCount, maxVusers;
+
     before(function (done) {
         this.timeout(10000);
 
         setTimeout(async function () {
-            const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test_load.json');
+            const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test_functional.json');
             customTestBody = require(customTestPath);
 
             createTestResponse = await predatorApiHelper.createTest(customTestBody);
@@ -37,40 +36,33 @@ describe('Runner performance validations', function () {
         await simpleServerClient.deleteDB();
     });
 
-    //  IMPORTANT: Test can fail. Makes sure that runner performance is up to standard
-    it('Should support minimum RPS when testing a local server that returns a simple response', async function () {
+    it('Runner should successfully run test', async function () {
         this.timeout(100000);
         const artilleryTest = customTestBody.artillery_test;
-        const duration = artilleryTest.config.phases[0].duration;
-        const arrivalRate = artilleryTest.config.phases[0].arrivalRate;
+        duration = artilleryTest.config.phases[0].duration;
+        arrivalCount = artilleryTest.config.phases[0].arrivalCount;
+        maxVusers = artilleryTest.config.phases[0].maxVusers;
         const httpPoolSize = artilleryTest.config.http.pool;
         const containerId = uuid();
+
         const jobConfig = {
             predatorUrl: process.env.PREDATOR_URL,
             testId,
             duration,
-            arrivalRate,
+            arrivalCount,
+            maxVusers,
             httpPoolSize,
             runId,
             jobId,
             containerId
         };
-
         Object.assign(jobConfig, defaults.jobConfig);
 
-        const report = await runner.runTest(jobConfig);
-        try {
-            if (LOCAL_TEST) {
-                should(report.rps.mean).aboveOrEqual(650, 'Local test should have atleast 600 RPS');
-            } else {
-                should(report.rps.mean).aboveOrEqual(900, 'Remote test should have atleast 900 RPS');
-            }
+        await runner.runTest(jobConfig);
+    });
 
-            const expected200Codes = duration * arrivalRate;
-            should.equal(report.codes['200'], expected200Codes, 'All requests should return 200');
-            console.log(colors.green('Performance test passes!'));
-        } catch (e) {
-            console.log(colors.red.bold('Performance test failed! Please check that runner performance did not regress.'));
-        }
+    it('Runner should send 2 requests in duration of test', async function () {
+        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, runId);
+        should(aggregatedReport.aggregate.scenariosCompleted).equal(2, 'should send 2 requests in 10 seconds');
     });
 });
