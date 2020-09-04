@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/Zooz/predator-runner#readme",
   "dependencies": {
-    "artillery": "https://github.com/Zooz/artillery.git#v2.0.2",
+    "artillery": "https://github.com/Zooz/artillery.git#v2.0.3",
     "artillery-plugin-prometheus": "^1.1.0",
     "bunyan": "^1.8.14",
     "csv-parse": "^4.8.8",
