@@ -296,7 +296,7 @@ describe('Run test', () => {
         tempJobConfig.duration = 5;
         tempJobConfig.maxVusers = 20;
         tempJobConfig.notes = 'Functional test';
-        tempJobConfig.type = 'functional_test';
+        tempJobConfig.jobType = 'functional_test';
 
         let functionalTest = Object.assign({}, consts.VALID_CUSTOM_TEST);
         testFileConnectorStub.resolves(functionalTest);

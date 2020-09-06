@@ -51,7 +51,7 @@ module.exports.createProcessor = async (body) => {
     }
 };
 
-module.exports.createJob = async (testId) => {
+module.exports.createJob = async (testId, type = 'load_test') => {
     const options = {
         url: predatorUrlWithApiVersion + '/jobs',
         method: 'POST',
@@ -59,7 +59,7 @@ module.exports.createJob = async (testId) => {
         headers: {
             'x-runner-id': 'mickey'
         },
-        body: cronJobBody(testId)
+        body: cronJobBody(testId, type)
     };
 
     try {
@@ -104,10 +104,12 @@ module.exports.deleteJob = async (jobId) => {
     await request(options);
 };
 
-const cronJobBody = (testId) => {
+const cronJobBody = (testId, type) => {
     return {
         'test_id': `${testId}`,
+        'type': type,
         'arrival_rate': 10,
+        'arrival_count': 10,
         'duration': 10,
         'notes': 'Job that will not run',
         'environment': 'test',
