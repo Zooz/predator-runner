@@ -109,6 +109,7 @@ const cronJobBody = (testId, type) => {
         'test_id': `${testId}`,
         'type': type,
         'arrival_rate': 10,
+        'arrival_count': 10,
         'duration': 10,
         'notes': 'Job that will not run',
         'environment': 'test',
