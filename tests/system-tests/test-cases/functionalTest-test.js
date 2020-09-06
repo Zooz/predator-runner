@@ -25,7 +25,7 @@ describe('Functional test', function () {
 
             createTestResponse = await predatorApiHelper.createTest(customTestBody);
             testId = createTestResponse.id;
-            createJobResponse = await predatorApiHelper.createJob(testId);
+            createJobResponse = await predatorApiHelper.createJob(testId, 'functional_test');
             jobId = createJobResponse.id;
             done();
         }, 500);
@@ -47,6 +47,7 @@ describe('Functional test', function () {
 
         const jobConfig = {
             predatorUrl: process.env.PREDATOR_URL,
+            jobType: 'functional_test',
             testId,
             duration,
             arrivalCount,
