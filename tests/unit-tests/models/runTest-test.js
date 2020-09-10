@@ -140,32 +140,31 @@ describe('Run test', () => {
     [
         {
             expectedResult: consts.EXPECTED_ARTILLERY_CUSTOM_TEST,
-            test: consts.VALID_CUSTOM_TEST,
+            test: JSON.parse(JSON.stringify(consts.VALID_CUSTOM_TEST)),
             metricsPluginName: 'none'
         },
         {
             expectedResult: consts.EXPECTED_ARTILLERY_CUSTOM_TEST,
-            test: consts.VALID_CUSTOM_TEST,
+            test: JSON.parse(JSON.stringify(consts.VALID_CUSTOM_TEST)),
             metricsPluginName: 'prometheus',
             metricsExportConfig: Buffer.from(JSON.stringify(consts.PROMETHEUS_CONFIGURATION)).toString('base64')
         },
         {
             expectedResult: consts.EXPECTED_ARTILLERY_CUSTOM_TEST,
-            test: consts.VALID_CUSTOM_TEST,
+            test: JSON.parse(JSON.stringify(consts.VALID_CUSTOM_TEST)),
             metricsPluginName: 'influx',
             metricsExportConfig: Buffer.from(JSON.stringify(consts.INFLUX_CONFIGURATION)).toString('base64')
         }
     ]
         .forEach((testConfig) => {
             it(`successfully run test with metrics plugin: ${testConfig.metricsPluginName}`, async () => {
+                testConfig.expectedResult.config.plugins = {};
                 if (testConfig.metricsPluginName === 'influx') {
                     influxdbAdapterStub.returns(consts.INFLUX_CONFIGURATION);
                     testConfig.expectedResult.config.plugins = consts.INFLUX_CONFIGURATION;
                 } else if (testConfig.metricsPluginName === 'prometheus') {
                     prometheusAdapterStub.returns(consts.PROMETHEUS_CONFIGURATION);
                     testConfig.expectedResult.config.plugins = consts.PROMETHEUS_CONFIGURATION;
-                } else {
-                    delete testConfig.expectedResult.config.plugins;
                 }
 
                 let tempJobConfig = Object.assign({}, jobConfig);
@@ -186,7 +185,7 @@ describe('Run test', () => {
                     exception = e;
                 }
                 should.not.exist(exception);
-                JSON.stringify(artilleryStub.args[0][0]).should.eql(JSON.stringify(testConfig.expectedResult));
+                artilleryStub.args[0][0].should.eql(testConfig.expectedResult);
                 testFileConnectorStub.calledOnce.should.eql(true);
 
                 loggerInfoStub.called.should.eql(true);

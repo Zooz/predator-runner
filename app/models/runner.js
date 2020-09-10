@@ -99,8 +99,11 @@ function updateRunningParameters(testFile, jobConfig) {
 }
 
 let updateTestParameters = (jobConfig, testFile, processorJavascript, csvData) => {
+    if (!testFile.config.plugins) {
+        testFile.config.plugins = {};
+    }
     if (jobConfig.metricsExportConfig && jobConfig.metricsPluginName) {
-        injectPlugins(testFile, jobConfig);
+        injectMetricsPlugins(testFile, jobConfig);
     }
     if (processorJavascript) {
         let m = new module.constructor();
@@ -127,12 +130,14 @@ let updateTestParameters = (jobConfig, testFile, processorJavascript, csvData) =
     logger.info({ updated_test_config: testFile.config }, 'Test successfully updated parameters');
 };
 
-function injectPlugins(testFile, jobConfig) {
+function injectMetricsPlugins(testFile, jobConfig) {
     const metricsPluginName = jobConfig.metricsPluginName.toLowerCase();
     const metricsAdapter = require(`../adapters/${metricsPluginName}Adapter`);
     let asciiMetricsExportConfig = (Buffer.from(jobConfig.metricsExportConfig, 'base64').toString('ascii'));
     let parsedMetricsConfig = JSON.parse(asciiMetricsExportConfig);
-    testFile.config.plugins = metricsAdapter.buildMetricsPlugin(parsedMetricsConfig, jobConfig);
+
+    const metricsPlugin = metricsAdapter.buildMetricsPlugin(parsedMetricsConfig, jobConfig);
+    Object.assign(testFile.config.plugins, metricsPlugin);
 }
 
 async function getProcessorJavascript(jobConfig, test) {
@@ -162,7 +167,12 @@ async function getCSVData(jobConfig, test) {
     }
     const fields = csvData.shift();
 
-    logger.info({ csv_file_id: csvFileId, headers: fields, number_of_rows: csvData.length, first_row: csvData[0] }, 'Parsed CSV successfully');
+    logger.info({
+        csv_file_id: csvFileId,
+        headers: fields,
+        number_of_rows: csvData.length,
+        first_row: csvData[0]
+    }, 'Parsed CSV successfully');
     return { fields, data: csvData };
 }
 
