@@ -28,8 +28,8 @@
   },
   "homepage": "https://github.com/Zooz/predator-runner#readme",
   "dependencies": {
-    "artillery": "https://github.com/Zooz/artillery.git#v2.0.5",
-    "artillery-plugin-expect": "^1.3.0",
+    "artillery": "https://github.com/Zooz/artillery.git#assertionreports",
+    "artillery-plugin-expect": "https://github.com/enudler/artillery-plugin-expect.git#support-assertions",
     "artillery-plugin-prometheus": "^1.3.2",
     "bunyan": "^1.8.14",
     "csv-parse": "^4.8.8",
