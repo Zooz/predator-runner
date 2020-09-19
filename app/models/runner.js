@@ -18,7 +18,7 @@ module.exports.runTest = async (jobConfig) => {
     const test = await testFileConnector.getTest(jobConfig);
     let processorJavascript = await getProcessorJavascript(jobConfig, test);
     const csvData = await getCSVData(jobConfig, test);
-    await reporterConnector.createReport(jobConfig, test);
+    await reporterConnector.subscribeToReport(jobConfig, test);
     updateTestParameters(jobConfig, test.artillery_test, processorJavascript, csvData);
     logger.info(`Starting test: ${test.name}, testId: ${test.id}`);
     progressCalculator.calculateTotalNumberOfScenarios(jobConfig);

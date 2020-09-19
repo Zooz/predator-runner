@@ -27,6 +27,7 @@ let config = {
     arrivalCount: parseInt(process.env.ARRIVAL_COUNT) || undefined,
     rampTo: parseInt(process.env.RAMP_TO) || undefined,
     maxVusers: parseInt(process.env.MAX_VIRTUAL_USERS) || undefined,
+    // WHY DO WE NEED EMAILS AND WEBHOOKS?
     emails: process.env.EMAILS ? process.env.EMAILS.split(';') : [],
     webhooks: process.env.WEBHOOKS ? process.env.WEBHOOKS.split(';') : [],
     httpPoolSize: process.env.HTTP_POOL_SIZE || 250,
@@ -35,7 +36,8 @@ let config = {
     metricsExportConfig: process.env.METRICS_EXPORT_CONFIG,
     runId: process.env.RUN_ID,
     proxyUrl: process.env.PROXY_URL,
-    delayRunnerMs: parseInt(process.env.DELAY_RUNNER_MS)
+    delayRunnerMs: parseInt(process.env.DELAY_RUNNER_MS),
+    reportId: process.env.REPORT_ID
 };
 
 module.exports = config;
