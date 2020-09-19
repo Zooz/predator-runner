@@ -99,7 +99,6 @@ function updateRunningParameters(testFile, jobConfig) {
 }
 
 let updateTestParameters = (jobConfig, testFile, processorJavascript, csvData) => {
-
     if (!testFile.config.plugins) {
         testFile.config.plugins = {};
     }
