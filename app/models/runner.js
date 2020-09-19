@@ -102,6 +102,14 @@ let updateTestParameters = (jobConfig, testFile, processorJavascript, csvData) =
     if (!testFile.config.plugins) {
         testFile.config.plugins = {};
     }
+
+    const isUseExpectPlugin = isTestHasExpectations(testFile);
+    if (isUseExpectPlugin) {
+        testFile.config.plugins.expect = {};
+    } else {
+        delete testFile.config.plugins.expect;
+    }
+
     if (jobConfig.metricsExportConfig && jobConfig.metricsPluginName) {
         injectMetricsPlugins(testFile, jobConfig);
     }
@@ -185,3 +193,17 @@ let waitForLiveStatsToFinish = async (callback) => {
         await callback();
     }
 };
+
+function isTestHasExpectations(testFile) {
+    let isTestHasExpectations = false;
+    testFile.scenarios.forEach((scenario) => {
+        const flow = scenario.flow;
+        flow.forEach((request) => {
+            const method = Object.keys(request)[0];
+            if (request[method].expect && request[method].expect.length > 0) {
+                isTestHasExpectations = true;
+            }
+        });
+    });
+    return isTestHasExpectations;
+}
