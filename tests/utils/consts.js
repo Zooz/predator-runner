@@ -54,6 +54,67 @@ module.exports.VALID_CUSTOM_TEST = {
     }
 };
 
+module.exports.VALID_CUSTOM_TEST_WITH_EXPECT = {
+    'id': 'test_id',
+    'name': 'test_name',
+    'description': 'test_description',
+    'type': 'custom',
+    'raw_data': null,
+    'artillery_test': {
+        'config': {
+            'target': '',
+            'http': {
+                'pool': 100
+            },
+            'phases': [
+                {
+                    'duration': 0,
+                    'arrivalRate': 0
+                }
+            ]
+        },
+        'scenarios': [
+            {
+                'flow': [
+                    {
+                        'post': {
+                            'forever': true,
+                            'gateway': 'pci',
+                            'url': '/tokens',
+                            'json': {
+                                'token_type': 'credit_card',
+                                'holder_name': 'MY NAME',
+                                'expiration_date': '11/2020',
+                                'card_number': '5105105105105100',
+                                'identity_document': {
+                                    'number': '5415668464654',
+                                    'type': 'ID'
+                                },
+                                'billing_address': {
+                                    'first_name': 'FN',
+                                    'last_name': 'LN',
+                                    'country': 'ARG',
+                                    'line1': 'Viamonte',
+                                    'line2': '1366',
+                                    'city': 'Plata',
+                                    'phone': '7563126',
+                                    'state': 'Buenos Aires',
+                                    'zip_code': '64000'
+                                }
+                            },
+                            "expect": [
+                                {
+                                    "hasProperty": "id"
+                                }
+                            ],
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+};
+
 module.exports.VALID_POST_BODY_CUSTOM = {
     'name': 'system-tests',
     'description': 'performance-framework-runner system tests',
