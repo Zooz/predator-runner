@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/Zooz/predator-runner/compare/v1.4.1...v1.5.0) (2020-09-20)
+
+
+### Features
+
+* **assertions:** Support assertion using artillery ([#44](https://github.com/Zooz/predator-runner/issues/44)) ([9371968](https://github.com/Zooz/predator-runner/commit/93719684492b32beb8c71e6416d3a89cce01f882))
+* **captures:** support xpath captures ([fef6e54](https://github.com/Zooz/predator-runner/commit/fef6e541220c00f2c2c10c51c8db7ba518df0bc3))
+* **functional-test:** add functional-test support ([#34](https://github.com/Zooz/predator-runner/issues/34)) ([7dab8a1](https://github.com/Zooz/predator-runner/commit/7dab8a1736bb1e803fe29d9227b5e23555f78b5b))
+* **metrics:** support metrics of reuqest phase duration ([#41](https://github.com/Zooz/predator-runner/issues/41)) ([1fcb7b7](https://github.com/Zooz/predator-runner/commit/1fcb7b7d1cf3826c6f97137a7bdd492cb76d59a5))
+* **metrics:** support request name on stats ([292e456](https://github.com/Zooz/predator-runner/commit/292e4569f8d93ea8aba8a2679382e38a1c0dbb8e))
+
+
+### Bug Fixes
+
+* job config ([#43](https://github.com/Zooz/predator-runner/issues/43)) ([0649271](https://github.com/Zooz/predator-runner/commit/0649271082af2a681e7a6acb2bf0ea54dcbf55b3))
+* **assertions:** User expect plugin only when assertions exist in test ([#45](https://github.com/Zooz/predator-runner/issues/45)) ([c67710a](https://github.com/Zooz/predator-runner/commit/c67710a90aa6277a368954b41288b6c45c100b83))
+* **metrics:** Add missing influx plugin ([#47](https://github.com/Zooz/predator-runner/issues/47)) ([8ebc248](https://github.com/Zooz/predator-runner/commit/8ebc248a0ed6c5e840ead330c8b08ab915ae3bad))
+
 ### [1.4.1](https://github.com/Zooz/predator-runner/compare/v1.4.0...v1.4.1) (2020-08-13)
 
 
