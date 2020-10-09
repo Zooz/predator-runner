@@ -16,7 +16,7 @@ let jobId;
 let customTestBody;
 
 describe('Runner performance validations', function () {
-    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
+    const reportId = uuid();
     before(function (done) {
         this.timeout(10000);
 
@@ -51,7 +51,7 @@ describe('Runner performance validations', function () {
             duration,
             arrivalRate,
             httpPoolSize,
-            runId,
+            reportId,
             jobId,
             containerId
         };

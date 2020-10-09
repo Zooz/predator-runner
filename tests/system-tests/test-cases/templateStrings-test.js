@@ -14,7 +14,7 @@ let customTestBody;
 let testReport;
 
 describe('Template strings', function () {
-    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
+    const reportId = uuid();
     let duration, arrivalRate, rampTo;
 
     before(function (done) {
@@ -52,7 +52,7 @@ describe('Template strings', function () {
             arrivalRate,
             rampTo,
             httpPoolSize,
-            runId,
+            reportId,
             jobId,
             containerId
         };

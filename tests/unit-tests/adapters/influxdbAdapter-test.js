@@ -2,7 +2,7 @@ const should = require('should');
 const influxdbAdapter = require('../../../app/adapters/influxAdapter');
 
 const jobConfig = {
-    runId: '123',
+    reportId: '0d9d772d-ce0e-4318-af18-d695561f1320',
     testName: 'MickeysTest',
     cluster: 'Dev'
 };
@@ -19,7 +19,7 @@ const expectedPluginConfiguartion = {
         { testName: 'MickeysTest',
             measurementName: 'artillery_latencies',
             errorMeasurementName: 'artillery_client_errors',
-            testRunId: '123',
+            testRunId: '0d9d772d-ce0e-4318-af18-d695561f1320',
             tags:
                 {
                     environment: 'Dev'

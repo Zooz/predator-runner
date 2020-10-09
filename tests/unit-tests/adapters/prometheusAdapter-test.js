@@ -2,7 +2,7 @@ const should = require('should');
 const prometheusAdapter = require('../../../app/adapters/prometheusAdapter');
 
 const jobConfig = {
-    runId: '123',
+    reportId: '0d9d772d-ce0e-4318-af18-d695561f1320',
     testName: 'MickeysTest',
     cluster: 'Dev'
 };
@@ -17,7 +17,7 @@ const expectedPluginConfiguartion = {
             pushGatewayUrl: 'url',
             labels: {
                 testName: 'MickeysTest',
-                testRunId: '123',
+                testRunId: '0d9d772d-ce0e-4318-af18-d695561f1320',
                 cluster: 'Dev'
             }
         }
@@ -39,7 +39,7 @@ describe('Prometheus adapter test', () => {
             'key1': 'value2',
             'key2': 'value2',
             'testName': 'MickeysTest',
-            'testRunId': '123'
+            'testRunId': '0d9d772d-ce0e-4318-af18-d695561f1320'
         };
         should(pluginConfiguration).eql(expectedPluginConfiguartion);
     });

@@ -13,7 +13,7 @@ let jobId;
 let customTestBody;
 
 describe('Functional test', function () {
-    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
+    const reportId = uuid();
     let duration, arrivalCount, maxVusers;
 
     before(function (done) {
@@ -53,7 +53,7 @@ describe('Functional test', function () {
             arrivalCount,
             maxVusers,
             httpPoolSize,
-            runId,
+            reportId,
             jobId,
             containerId
         };
@@ -63,7 +63,7 @@ describe('Functional test', function () {
     });
 
     it('Runner should send 2 requests in duration of test', async function () {
-        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, runId);
+        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, reportId);
         should(aggregatedReport.aggregate.scenariosCompleted).equal(2, 'should send 2 requests in 10 seconds');
     });
 });

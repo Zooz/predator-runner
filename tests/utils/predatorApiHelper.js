@@ -114,8 +114,6 @@ const cronJobBody = (testId, type) => {
         notes: 'Job that will not run',
         environment: 'test',
         run_immediately: false,
-        cron_expression: '0 0 1 1 *',
-        emails: [],
-        webhooks: []
+        cron_expression: '0 0 1 1 *'
     };
 };

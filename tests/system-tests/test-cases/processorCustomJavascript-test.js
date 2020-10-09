@@ -11,7 +11,7 @@ let createTestResponse, testId, createJobResponse, jobId,
     customTestBody, createProcessorResponse, duration, arrivalRate;
 
 describe('Processor custom javascript', function () {
-    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
+    const reportId = uuid();
 
     before(function (done) {
         this.timeout(10000);
@@ -58,7 +58,7 @@ describe('Processor custom javascript', function () {
             duration,
             arrivalRate,
             httpPoolSize,
-            runId,
+            reportId,
             jobId,
             containerId
         };

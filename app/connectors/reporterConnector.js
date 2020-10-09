@@ -1,11 +1,12 @@
 const requestSender = require('../helpers/requestSender');
 
 let subscribeToReport = async (jobConfig) => {
+    console.table(jobConfig);
     const options = {
-        url: jobConfig.predatorUrl + `/tests/${jobConfig.testId}/reports/${jobConfig.reportId}/subscribe`,
+        url: `${jobConfig.predatorUrl}/tests/${jobConfig.testId}/reports/${jobConfig.reportId}/subscribe`,
         method: 'POST',
         headers: {
-            'x-runner-id': `${jobConfig.containerId}`
+            'x-runner-id': jobConfig.containerId
         },
         body: {}
     };
@@ -21,10 +22,10 @@ let postStats = async (jobConfig, stats) => {
     const requestBody = Object.assign(defaultBody, stats);
 
     let options = {
-        url: jobConfig.predatorUrl + `/tests/${jobConfig.testId}/reports/${jobConfig.reportId}/stats`,
+        url: `${jobConfig.predatorUrl}/tests/${jobConfig.testId}/reports/${jobConfig.reportId}/stats`,
         method: 'POST',
         headers: {
-            'x-runner-id': `${jobConfig.containerId}`
+            'x-runner-id': jobConfig.containerId
         },
         body: requestBody
     };

@@ -4,7 +4,7 @@ const RUNNER_MANDATORY_VARIABLES = [
     'PREDATOR_URL',
     'DURATION',
     'JOB_ID',
-    'RUN_ID'
+    'REPORT_ID'
 ];
 
 const LOAD_TEST_MANDATORY_VARIABLES = [
