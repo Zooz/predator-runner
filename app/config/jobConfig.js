@@ -33,7 +33,8 @@ let config = {
     metricsExportConfig: process.env.METRICS_EXPORT_CONFIG,
     proxyUrl: process.env.PROXY_URL,
     delayRunnerMs: parseInt(process.env.DELAY_RUNNER_MS),
-    reportId: process.env.REPORT_ID
+    reportId: process.env.REPORT_ID,
+    predatorVersion: process.env.PREDATOR_VERSION
 };
 
 module.exports = config;

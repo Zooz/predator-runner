@@ -4,6 +4,7 @@ echo Loading system-tests env variables
 
 export HTTP_POOL_SIZE=100
 export PREDATOR_URL=http://127.0.0.1:80/v1
+export PREDATOR_VERSION=1.5.4
 
 if [[ "$LOCAL_TEST" == true ]]; then
     echo "Running local test"
