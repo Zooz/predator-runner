@@ -95,7 +95,8 @@ let report = {
 let info = { info: 'mickey' };
 describe('Run test', () => {
     let sandbox, artilleryStub, customJSProcessorStub, getFileStub,
-        testFileConnectorStub, loggerInfoStub, reporterConnectorPostStatsStub, reporterConnectorSubscribeToReportStub, eeOnStub, getMetricsSpy, printMetricsSpy, prometheusAdapterStub, influxdbAdapterStub;
+        testFileConnectorStub, loggerInfoStub, reporterConnectorPostStatsStub, reporterConnectorSubscribeToReportStub,
+        eeOnStub, getMetricsSpy, printMetricsSpy, prometheusAdapterStub, influxdbAdapterStub;
 
     let jobConfig = {
         jobId: 'some_job_id',
@@ -289,7 +290,7 @@ describe('Run test', () => {
         ]);
     });
 
-    it('successfully run functional_test', async () => {
+    it('successfully run functional_test without assertions', async () => {
         let tempJobConfig = Object.assign({}, jobConfig);
         tempJobConfig.arrivalCount = 10;
         tempJobConfig.duration = 5;
@@ -319,6 +320,42 @@ describe('Run test', () => {
                 maxVusers: 20
             }
         );
+
+        artilleryArgs[0].config.plugins.should.eql({});
+    });
+
+    it('successfully run functional_test with assertions', async () => {
+        let tempJobConfig = Object.assign({}, jobConfig);
+        tempJobConfig.arrivalCount = 10;
+        tempJobConfig.duration = 5;
+        tempJobConfig.maxVusers = 20;
+        tempJobConfig.notes = 'Functional test';
+        tempJobConfig.jobType = 'functional_test';
+
+        let functionalTest = Object.assign({}, consts.VALID_CUSTOM_TEST_WITH_EXPECT);
+        testFileConnectorStub.resolves(functionalTest);
+        artilleryStub.resolves(ee);
+        reporterConnectorSubscribeToReportStub.resolves();
+        reporterConnectorPostStatsStub.resolves();
+
+        let exception;
+        try {
+            await runner.runTest(tempJobConfig);
+        } catch (e) {
+            exception = e;
+        }
+        should.not.exist(exception);
+
+        let artilleryArgs = artilleryStub.args[0];
+        artilleryArgs[0].config.phases[0].should.eql(
+            {
+                duration: 5,
+                arrivalCount: 10,
+                maxVusers: 20
+            }
+        );
+
+        artilleryArgs[0].config.plugins.should.eql({ expect: {} });
     });
 
     it('fail to run test with processor ->  GET processor error', async () => {

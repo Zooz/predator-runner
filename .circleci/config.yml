@@ -69,6 +69,7 @@ jobs:
           fingerprints:
             - "b4:24:34:b0:e9:25:4b:1e:6f:b3:06:44:4b:a9:9d:f1"
       - run: .circleci/releasePatch.sh
+      - run: .circleci/tag-latest-image.sh
   release-minor:
     docker:
       - image: circleci/node:10
@@ -82,6 +83,7 @@ jobs:
           fingerprints:
             - "b4:24:34:b0:e9:25:4b:1e:6f:b3:06:44:4b:a9:9d:f1"
       - run: .circleci/releaseMinor.sh
+      - run: .circleci/tag-latest-image.sh
   release-major:
     docker:
       - image: circleci/node:10
@@ -95,7 +97,7 @@ jobs:
           fingerprints:
             - "b4:24:34:b0:e9:25:4b:1e:6f:b3:06:44:4b:a9:9d:f1"
       - run: .circleci/releaseMajor.sh
-
+      - run: .circleci/tag-latest-image.sh
 workflows:
   version: 2
   test_build_and_release:
