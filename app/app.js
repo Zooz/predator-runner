@@ -9,7 +9,7 @@ const runner = require('./models/runner'),
     jobConfig = require('./config/jobConfig'),
     reporterConnector = require('./connectors/reporterConnector'),
     errorHandler = require('./handler/errorHandler'),
-    {  version: PREDATOR_RUNNER_VERSION } = require('../package.json');
+    { version: PREDATOR_RUNNER_VERSION } = require('../package.json');
 
 const getContainerId = () => {
     let containerId = uuid();
@@ -23,7 +23,7 @@ const getContainerId = () => {
 async function verifyPredatorVersion() {
     if (semver.major(PREDATOR_RUNNER_VERSION) === semver.major(jobConfig.predatorVersion) &&
         semver.minor(PREDATOR_RUNNER_VERSION) === semver.minor(jobConfig.predatorVersion)) {
-        return;        
+        return;
     }
     logger.error('Predator Runner and Predator must match in major and minor version, please change runner / predator version');
     await reporterConnector.postStats(jobConfig, {
