@@ -1,5 +1,4 @@
 const RUNNER_MANDATORY_VARIABLES = [
-    'ENVIRONMENT',
     'TEST_ID',
     'PREDATOR_URL',
     'DURATION',
