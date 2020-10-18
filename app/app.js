@@ -20,17 +20,13 @@ const getContainerId = () => {
     return containerId;
 };
 
-async function verifyPredatorVersion() {
+function verifyPredatorVersion() {
     if (semver.major(PREDATOR_RUNNER_VERSION) === semver.major(jobConfig.predatorVersion) &&
         semver.minor(PREDATOR_RUNNER_VERSION) === semver.minor(jobConfig.predatorVersion)) {
         return;
     }
     logger.error('Predator Runner and Predator must match in major and minor version, please change runner / predator version');
-    await reporterConnector.postStats(jobConfig, {
-        phase_status: 'aborted',
-        data: JSON.stringify(jobConfig)
-    });
-    process.exit(1);
+    throw new Error('Bad Predator-Runner version');
 }
 
 let start = async () => {
@@ -49,7 +45,7 @@ let start = async () => {
             });
             process.exit(1);
         });
-        await verifyPredatorVersion();
+        verifyPredatorVersion();
         await runner.runTest(jobConfig);
         logger.info('Finished running test successfully');
         process.exit(0);
