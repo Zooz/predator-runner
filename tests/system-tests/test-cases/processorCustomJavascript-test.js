@@ -45,7 +45,7 @@ describe('Processor custom javascript', function () {
                 test_name: customTestBody.name,
                 test_description: customTestBody.description,
                 start_time: Date.now().toString(),
-                runner_id: 'x-mickey'
+                runner_id: `x-mickey-${Date.now().toString()}`
             };
 
             await predatorApiHelper.createReport(testId, reportBody);

@@ -37,7 +37,7 @@ describe('Max virtual users', function () {
                 test_name: customTestBody.name,
                 test_description: customTestBody.description,
                 start_time: Date.now().toString(),
-                runner_id: 'x-mickey'
+                runner_id: `x-mickey-${Date.now().toString()}`
             };
 
             await predatorApiHelper.createReport(testId, reportBody);
@@ -106,7 +106,7 @@ describe('Heavy load test without max virtual users', function () {
                 test_name: customTestBody.name,
                 test_description: customTestBody.description,
                 start_time: Date.now().toString(),
-                runner_id: 'x-mickey'
+                runner_id: `x-mickey-${Date.now().toString()}`
             };
 
             await predatorApiHelper.createReport(testId, reportBody);
