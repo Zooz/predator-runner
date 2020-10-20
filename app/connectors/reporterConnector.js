@@ -1,31 +1,16 @@
 const requestSender = require('../helpers/requestSender');
 
-let createReport = async (jobConfig, test) => {
-    const requestBody = {
-        report_id: jobConfig.runId,
-        revision_id: jobConfig.revisionId,
-        job_id: jobConfig.jobId,
-        test_type: test.type,
-        start_time: Date.now().toString(),
-        notes: jobConfig.notes,
-        webhooks: jobConfig.webhooks,
-        emails: jobConfig.emails,
-        test_name: jobConfig.testName,
-        test_description: jobConfig.description,
-        runner_id: jobConfig.containerId
-    };
-
-    let options = {
-        url: jobConfig.predatorUrl + `/tests/${jobConfig.testId}/reports`,
+let subscribeToReport = async (jobConfig) => {
+    console.table(jobConfig);
+    const options = {
+        url: `${jobConfig.predatorUrl}/tests/${jobConfig.testId}/reports/${jobConfig.reportId}/subscribe`,
         method: 'POST',
         headers: {
-            'x-runner-id': `runner_${jobConfig.runId}`
+            'x-runner-id': jobConfig.containerId
         },
-        body: requestBody
+        body: {}
     };
-
-    const report = await requestSender.sendRequest(options);
-    return report;
+    await requestSender.sendRequest(options);
 };
 
 let postStats = async (jobConfig, stats) => {
@@ -37,10 +22,10 @@ let postStats = async (jobConfig, stats) => {
     const requestBody = Object.assign(defaultBody, stats);
 
     let options = {
-        url: jobConfig.predatorUrl + `/tests/${jobConfig.testId}/reports/${jobConfig.runId}/stats`,
+        url: `${jobConfig.predatorUrl}/tests/${jobConfig.testId}/reports/${jobConfig.reportId}/stats`,
         method: 'POST',
         headers: {
-            'x-runner-id': `runner_${jobConfig.runId}`
+            'x-runner-id': jobConfig.containerId
         },
         body: requestBody
     };
@@ -50,5 +35,5 @@ let postStats = async (jobConfig, stats) => {
 
 module.exports = {
     postStats,
-    createReport
+    subscribeToReport
 };

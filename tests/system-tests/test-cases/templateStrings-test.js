@@ -14,7 +14,7 @@ let customTestBody;
 let testReport;
 
 describe('Template strings', function () {
-    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
+    const reportId = uuid();
     let duration, arrivalRate, rampTo;
 
     before(function (done) {
@@ -27,6 +27,19 @@ describe('Template strings', function () {
             testId = createTestResponse.id;
             createJobResponse = await predatorApiHelper.createJob(testId);
             jobId = createJobResponse.id;
+
+            const reportBody = {
+                report_id: reportId,
+                job_id: jobId,
+                revision_id: createTestResponse.revision_id,
+                test_type: customTestBody.type,
+                test_name: customTestBody.name,
+                test_description: customTestBody.description,
+                start_time: Date.now().toString(),
+                runner_id: `x-mickey-${Date.now().toString()}`
+            };
+
+            await predatorApiHelper.createReport(testId, reportBody);
             done();
         }, 500);
     });
@@ -52,7 +65,7 @@ describe('Template strings', function () {
             arrivalRate,
             rampTo,
             httpPoolSize,
-            runId,
+            reportId,
             jobId,
             containerId
         };

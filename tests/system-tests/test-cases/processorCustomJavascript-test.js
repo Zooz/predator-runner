@@ -11,7 +11,7 @@ let createTestResponse, testId, createJobResponse, jobId,
     customTestBody, createProcessorResponse, duration, arrivalRate;
 
 describe('Processor custom javascript', function () {
-    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
+    const reportId = uuid();
 
     before(function (done) {
         this.timeout(10000);
@@ -36,6 +36,19 @@ describe('Processor custom javascript', function () {
 
             createJobResponse = await predatorApiHelper.createJob(testId);
             jobId = createJobResponse.id;
+
+            const reportBody = {
+                report_id: reportId,
+                job_id: jobId,
+                revision_id: createTestResponse.revision_id,
+                test_type: customTestBody.type,
+                test_name: customTestBody.name,
+                test_description: customTestBody.description,
+                start_time: Date.now().toString(),
+                runner_id: `x-mickey-${Date.now().toString()}`
+            };
+
+            await predatorApiHelper.createReport(testId, reportBody);
             done();
         }, 500);
     });
@@ -58,7 +71,7 @@ describe('Processor custom javascript', function () {
             duration,
             arrivalRate,
             httpPoolSize,
-            runId,
+            reportId,
             jobId,
             containerId
         };

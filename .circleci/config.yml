@@ -35,7 +35,7 @@ jobs:
   system-tests:
     docker:
       - image: circleci/node:10
-      - image: zooz/predator:latest
+      - image: zooz/predator-builds:predator-create-report-in-predator
         environment:
           JOB_PLATFORM: DOCKER
           INTERNAL_ADDRESS: http://127.0.0.1:80/v1

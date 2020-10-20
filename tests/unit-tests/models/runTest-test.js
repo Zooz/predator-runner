@@ -95,7 +95,7 @@ let report = {
 let info = { info: 'mickey' };
 describe('Run test', () => {
     let sandbox, artilleryStub, customJSProcessorStub, getFileStub,
-        testFileConnectorStub, loggerInfoStub, reporterConnectorPostStatsStub, reporterConnectorCreateReportStub,
+        testFileConnectorStub, loggerInfoStub, reporterConnectorPostStatsStub, reporterConnectorSubscribeToReportStub,
         eeOnStub, getMetricsSpy, printMetricsSpy, prometheusAdapterStub, influxdbAdapterStub;
 
     let jobConfig = {
@@ -111,7 +111,7 @@ describe('Run test', () => {
         artilleryStub = sandbox.stub(artillery, 'runner');
         loggerInfoStub = sandbox.stub(logger, 'info');
         reporterConnectorPostStatsStub = sandbox.stub(reporterConnector, 'postStats');
-        reporterConnectorCreateReportStub = sandbox.stub(reporterConnector, 'createReport');
+        reporterConnectorSubscribeToReportStub = sandbox.stub(reporterConnector, 'subscribeToReport');
         testFileConnectorStub = sandbox.stub(testFileConnector, 'getTest');
         customJSProcessorStub = sandbox.stub(customJSConnector, 'getProcessor');
         getFileStub = sandbox.stub(customJSConnector, 'getFile');
@@ -177,7 +177,7 @@ describe('Run test', () => {
 
                 testFileConnectorStub.resolves(testConfig.test);
                 artilleryStub.resolves(ee);
-                reporterConnectorCreateReportStub.resolves();
+                reporterConnectorSubscribeToReportStub.resolves();
                 reporterConnectorPostStatsStub.resolves();
                 let exception;
                 try {
@@ -216,7 +216,7 @@ describe('Run test', () => {
 
         testFileConnectorStub.resolves(testWithProcessorId);
         artilleryStub.resolves(ee);
-        reporterConnectorCreateReportStub.resolves();
+        reporterConnectorSubscribeToReportStub.resolves();
         reporterConnectorPostStatsStub.resolves();
         customJSProcessorStub.resolves({
             name: 'add_processor',
@@ -249,7 +249,7 @@ describe('Run test', () => {
 
         testFileConnectorStub.resolves(testWithCSV);
         artilleryStub.resolves(ee);
-        reporterConnectorCreateReportStub.resolves();
+        reporterConnectorSubscribeToReportStub.resolves();
         reporterConnectorPostStatsStub.resolves();
         getFileStub.resolves('id,name\n' +
             '1,eli\n' +
@@ -301,7 +301,7 @@ describe('Run test', () => {
         let functionalTest = Object.assign({}, consts.VALID_CUSTOM_TEST);
         testFileConnectorStub.resolves(functionalTest);
         artilleryStub.resolves(ee);
-        reporterConnectorCreateReportStub.resolves();
+        reporterConnectorSubscribeToReportStub.resolves();
         reporterConnectorPostStatsStub.resolves();
 
         let exception;
@@ -335,7 +335,7 @@ describe('Run test', () => {
         let functionalTest = Object.assign({}, consts.VALID_CUSTOM_TEST_WITH_EXPECT);
         testFileConnectorStub.resolves(functionalTest);
         artilleryStub.resolves(ee);
-        reporterConnectorCreateReportStub.resolves();
+        reporterConnectorSubscribeToReportStub.resolves();
         reporterConnectorPostStatsStub.resolves();
 
         let exception;
@@ -366,7 +366,7 @@ describe('Run test', () => {
 
         testFileConnectorStub.resolves(testWithProcessorId);
         artilleryStub.resolves(ee);
-        reporterConnectorCreateReportStub.resolves();
+        reporterConnectorSubscribeToReportStub.resolves();
         reporterConnectorPostStatsStub.resolves();
         customJSProcessorStub.rejects(expectedError);
 
@@ -384,7 +384,7 @@ describe('Run test', () => {
         let expectedError = new Error('Failed to retrieve test file');
         testFileConnectorStub.rejects(expectedError);
         artilleryStub.resolves(ee);
-        reporterConnectorCreateReportStub.resolves();
+        reporterConnectorSubscribeToReportStub.resolves();
         reporterConnectorPostStatsStub.resolves();
         let exception;
         try {
@@ -409,7 +409,7 @@ describe('Run test', () => {
 
         testFileConnectorStub.resolves(consts.VALID_CUSTOM_TEST);
         artilleryStub.resolves(ee);
-        reporterConnectorCreateReportStub.resolves();
+        reporterConnectorSubscribeToReportStub.resolves();
         reporterConnectorPostStatsStub.rejects(expectedError);
         let exception;
         try {

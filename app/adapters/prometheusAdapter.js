@@ -1,7 +1,7 @@
 module.exports.buildMetricsPlugin = (metricsConfig, jobConfig) => {
     const labels = Object.assign({
         'testName': jobConfig.testName,
-        'testRunId': jobConfig.runId,
+        'testRunId': jobConfig.reportId,
         'cluster': jobConfig.cluster
 
     }, metricsConfig.labels);

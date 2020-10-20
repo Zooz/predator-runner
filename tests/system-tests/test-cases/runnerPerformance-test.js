@@ -16,7 +16,7 @@ let jobId;
 let customTestBody;
 
 describe('Runner performance validations', function () {
-    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
+    const reportId = uuid();
     before(function (done) {
         this.timeout(10000);
 
@@ -28,6 +28,19 @@ describe('Runner performance validations', function () {
             testId = createTestResponse.id;
             createJobResponse = await predatorApiHelper.createJob(testId);
             jobId = createJobResponse.id;
+
+            const reportBody = {
+                report_id: reportId,
+                job_id: jobId,
+                revision_id: createTestResponse.revision_id,
+                test_type: customTestBody.type,
+                test_name: customTestBody.name,
+                test_description: customTestBody.description,
+                start_time: Date.now().toString(),
+                runner_id: `x-mickey-${Date.now().toString()}`
+            };
+
+            await predatorApiHelper.createReport(testId, reportBody);
             done();
         }, 500);
     });
@@ -51,7 +64,7 @@ describe('Runner performance validations', function () {
             duration,
             arrivalRate,
             httpPoolSize,
-            runId,
+            reportId,
             jobId,
             containerId
         };

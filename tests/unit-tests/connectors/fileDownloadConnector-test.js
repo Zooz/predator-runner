@@ -9,7 +9,7 @@ describe('Get test file', () => {
 
     const jobConfig = {
         testId: 1,
-        runId: 14,
+        reportId: '0d9d772d-ce0e-4318-af18-d695561f1320',
         environment: 'test',
         duration: 5,
         arrival_rate: 5,

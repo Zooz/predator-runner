@@ -4,9 +4,9 @@ const requestSender = require('../helpers/requestSender'),
 let getTest = async (jobConfig) => {
     let options = {
         method: 'GET',
-        url: jobConfig.predatorUrl + `/tests/${jobConfig.testId}`,
+        url: `${jobConfig.predatorUrl}/tests/${jobConfig.testId}`,
         headers: {
-            'x-runner-id': `runner_${jobConfig.runId}`
+            'x-runner-id': jobConfig.containerId
         }
     };
     logger.info(options, 'GET test file');

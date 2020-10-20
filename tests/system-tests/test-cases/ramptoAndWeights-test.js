@@ -13,8 +13,8 @@ let jobId;
 let customTestBody;
 let testReport;
 
-describe('Rampto and scenario weights', function () {
-    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
+describe('Ramp to and scenario weights', function () {
+    const reportId = uuid();
     let duration, arrivalRate, containerId, rampTo;
 
     before(function (done) {
@@ -28,6 +28,19 @@ describe('Rampto and scenario weights', function () {
             testId = createTestResponse.id;
             createJobResponse = await predatorApiHelper.createJob(testId);
             jobId = createJobResponse.id;
+
+            const reportBody = {
+                report_id: reportId,
+                job_id: jobId,
+                revision_id: createTestResponse.revision_id,
+                test_type: customTestBody.type,
+                test_name: customTestBody.name,
+                test_description: customTestBody.description,
+                start_time: Date.now().toString(),
+                runner_id: `x-mickey-${Date.now().toString()}`
+            };
+
+            await predatorApiHelper.createReport(testId, reportBody);
             done();
         }, 500);
     });
@@ -53,7 +66,7 @@ describe('Rampto and scenario weights', function () {
             arrivalRate,
             rampTo,
             httpPoolSize,
-            runId,
+            reportId,
             jobId,
             containerId
         };
@@ -64,13 +77,13 @@ describe('Rampto and scenario weights', function () {
     });
 
     it('Weighted scenarios', async function () {
-        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, runId);
+        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, reportId);
         should(aggregatedReport.aggregate.codes['201']).greaterThan(aggregatedReport.aggregate.codes['200'] * 4,
             'There should be atleast 4 times more 201 response codes than 200 response codes');
     });
 
     it('Rampto', async function () {
-        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, runId);
+        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, reportId);
 
         const maxNumberOfScenarios = duration * rampTo;
         const minNumberOfScenarios = duration * arrivalRate;

@@ -3,22 +3,22 @@ const requestSender = require('../helpers/requestSender'),
 
 let getFile = async (jobConfig, fileId) => {
     const url = jobConfig.predatorUrl + `/files/${fileId}`;
-    const file = await downloadFileResource(url, 'GET', jobConfig.runId);
+    const file = await downloadFileResource(url, 'GET', jobConfig.reportId);
     return file;
 };
 
 let getProcessor = async (jobConfig, processorId) => {
     const url = jobConfig.predatorUrl + `/processors/${processorId}`;
-    const processor = await downloadFileResource(url, 'GET', jobConfig.runId);
+    const processor = await downloadFileResource(url, 'GET', jobConfig.reportId);
     return processor;
 };
 
-const downloadFileResource = async (url, method, runId) => {
+const downloadFileResource = async (url, method, reportId) => {
     const options = {
         method,
         url,
         headers: {
-            'x-zooz-request-id': `runner_${runId}`
+            'x-zooz-request-id': `runner_${reportId}`
         }
     };
 

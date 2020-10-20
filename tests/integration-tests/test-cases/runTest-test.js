@@ -8,31 +8,33 @@ const nock = require('nock'),
 const PREDATOR_URL = process.env.PREDATOR_URL || 'test';
 const duration = 10;
 const arrivalRate = 10;
-const runId = process.env.RUN_ID;
+const containerId = uuid();
 
 describe('integration tests', () => {
     describe('Successfully run a basic test', function () {
         const testId = uuid();
-        let getTest, postReport, postStats;
+        const reportId = uuid();
+        let getTest, subscribeRunnerToReport, postStats;
 
         before(async function () {
             const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test_load.json');
             const customTestBody = require(customTestPath);
 
             customTestBody.artillery_test = customTestBody.artillery_test;
+            console.log(PREDATOR_URL);
 
             getTest = nock(PREDATOR_URL)
                 .get(`/tests/${testId}`)
                 .times(1)
                 .reply(200, customTestBody);
 
-            postReport = nock(PREDATOR_URL)
-                .post(`/tests/${testId}/reports`)
+            subscribeRunnerToReport = nock(PREDATOR_URL)
+                .post(`/tests/${testId}/reports/${reportId}/subscribe`)
                 .times(1)
-                .reply(201, { message: 'OK' });
+                .reply(204, null);
 
             postStats = nock(PREDATOR_URL)
-                .post(`/tests/${testId}/reports/${runId}/stats`)
+                .post(`/tests/${testId}/reports/${reportId}/stats`)
                 .times(4)
                 .reply(201, { message: 'OK' });
         });
@@ -44,21 +46,23 @@ describe('integration tests', () => {
                 testId,
                 duration,
                 arrivalRate,
-                runId
+                reportId,
+                containerId
             };
 
             await runner.runTest(jobConfig);
         });
 
-        it('Test should get test and create report in predator', async function () {
+        it('Test should get test and subscribe to runner in predator', async function () {
             should.equal(getTest.isDone(), true);
-            should.equal(postReport.isDone(), true);
+            should.equal(subscribeRunnerToReport.isDone(), true);
         });
     });
 
     describe('Successfully run a custom js test', function () {
         const testId = uuid();
         const fileId = uuid();
+        const reportId = uuid();
         const write = process.stdout.write;
         let output;
         before(async function () {
@@ -79,12 +83,12 @@ describe('integration tests', () => {
             .times(1)
             .reply(200, customTestBody);
         nock(PREDATOR_URL)
-            .post(`/tests/${testId}/reports`)
+            .post(`/tests/${testId}/reports/${reportId}/subscribe`)
             .times(1)
-            .reply(201, { message: 'OK' });
+            .reply(204, null);
 
         nock(PREDATOR_URL)
-            .post(`/tests/${testId}/reports/${runId}/stats`)
+            .post(`/tests/${testId}/reports/${reportId}/stats`)
             .times(4)
             .reply(201, { message: 'OK' });
         nock(PREDATOR_URL)
@@ -98,7 +102,8 @@ describe('integration tests', () => {
                 testId,
                 duration: 1,
                 arrivalRate: 1,
-                runId
+                reportId,
+                containerId
             };
 
             await runner.runTest(jobConfig);
@@ -111,6 +116,7 @@ describe('integration tests', () => {
 
     describe('Successfully run a test with csv file', function () {
         const testId = uuid();
+        const reportId = uuid();
         const csvFileId = uuid();
 
         const write = process.stdout.write;
@@ -133,11 +139,11 @@ describe('integration tests', () => {
             .times(1)
             .reply(200, testBody);
         nock(PREDATOR_URL)
-            .post(`/tests/${testId}/reports`)
+            .post(`/tests/${testId}/reports/${reportId}/subscribe`)
             .times(1)
-            .reply(201, { message: 'OK' });
+            .reply(204, null);
         nock(PREDATOR_URL)
-            .post(`/tests/${testId}/reports/${runId}/stats`)
+            .post(`/tests/${testId}/reports/${reportId}/stats`)
             .times(4)
             .reply(201, { message: 'OK' });
         nock(PREDATOR_URL)
@@ -157,7 +163,8 @@ describe('integration tests', () => {
                 testId,
                 duration: 2,
                 arrivalRate: 20,
-                runId
+                reportId,
+                containerId
             };
 
             await runner.runTest(jobConfig);
@@ -175,6 +182,7 @@ describe('integration tests', () => {
 
     describe('Fail to run a custom test - report not created', function () {
         const testId = uuid();
+        const reportId = uuid();
 
         before(async function () {
             nock(PREDATOR_URL)
@@ -182,12 +190,12 @@ describe('integration tests', () => {
                 .reply(200, {});
 
             nock(PREDATOR_URL)
-                .post(`/tests/${testId}/reports`)
+                .post(`/tests/${testId}/reports/${reportId}/subscribe`)
                 .times(20)
                 .reply(400, { error: 'ERROR' });
 
             nock(PREDATOR_URL)
-                .post(`/tests/${testId}/reports/${runId}/stats`)
+                .post(`/tests/${testId}/reports/${reportId}/stats`)
                 .times(20)
                 .reply(201, { message: 'OK' });
         });
@@ -202,7 +210,8 @@ describe('integration tests', () => {
                 testId,
                 duration,
                 arrivalRate,
-                runId
+                reportId,
+                containerId
             };
 
             try {
@@ -217,6 +226,7 @@ describe('integration tests', () => {
 
     describe('Fail to run a custom test - fail to send final report stats to reporter', function () {
         const testId = uuid();
+        const reportId = uuid();
 
         before(async function () {
             const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test_load.json');
@@ -229,12 +239,12 @@ describe('integration tests', () => {
                 .reply(200, customTestBody);
 
             nock(PREDATOR_URL)
-                .post(`/tests/${testId}/reports`)
+                .post(`/tests/${testId}/reports/${reportId}/subscribe`)
                 .times(20)
-                .reply(201, { message: 'OK' });
+                .reply(204, null);
 
             nock(PREDATOR_URL)
-                .post(`/tests/${testId}/reports/${runId}/stats`)
+                .post(`/tests/${testId}/reports/${reportId}/stats`)
                 .times(20)
                 .reply(400, { error: 'ERROR' });
         });
@@ -246,7 +256,8 @@ describe('integration tests', () => {
                 testId,
                 duration,
                 arrivalRate,
-                runId
+                reportId,
+                containerId
             };
 
             try {
@@ -261,6 +272,7 @@ describe('integration tests', () => {
 
     describe('Fail to run a custom test - test not found', function () {
         const testId = uuid();
+        const reportId = uuid();
 
         before(async function () {
             nock(PREDATOR_URL)
@@ -268,12 +280,12 @@ describe('integration tests', () => {
                 .reply(404, {});
 
             nock(PREDATOR_URL)
-                .post(`/tests/${testId}/reports`)
+                .post(`/tests/${testId}/reports/${reportId}/subscribe`)
                 .times(20)
-                .reply(201, { message: 'OK' });
+                .reply(204, null);
 
             nock(PREDATOR_URL)
-                .post(`/tests/${testId}/reports/${runId}/stats`)
+                .post(`/tests/${testId}/reports/${reportId}/stats`)
                 .times(20)
                 .reply(201, { message: 'OK' });
         });
@@ -288,7 +300,8 @@ describe('integration tests', () => {
                 testId,
                 duration,
                 arrivalRate,
-                runId
+                reportId,
+                containerId
             };
 
             try {
@@ -304,6 +317,7 @@ describe('integration tests', () => {
     describe('Fail to run a custom test with processor custom javascript - processor not found', function () {
         const testId = uuid();
         const processorId = uuid();
+        const reportId = uuid();
 
         before(async function () {
             nock(PREDATOR_URL)
@@ -317,12 +331,12 @@ describe('integration tests', () => {
                 .reply(404, {});
 
             nock(PREDATOR_URL)
-                .post(`/tests/${testId}/reports`)
+                .post(`/tests/${testId}/reports/${reportId}/subscribe`)
                 .times(20)
-                .reply(201, { message: 'OK' });
+                .reply(204, null);
 
             nock(PREDATOR_URL)
-                .post(`/tests/${testId}/reports/${runId}/stats`)
+                .post(`/tests/${testId}/reports/${reportId}/stats`)
                 .times(20)
                 .reply(201, { message: 'OK' });
         });
@@ -337,7 +351,8 @@ describe('integration tests', () => {
                 testId,
                 duration,
                 arrivalRate,
-                runId
+                reportId,
+                containerId
             };
 
             try {
@@ -353,6 +368,7 @@ describe('integration tests', () => {
     describe('Fail to get file, file not found', function () {
         const fileId = uuid();
         const testId = uuid();
+        const reportId = uuid();
         before(async function () {
             const customTestPath = path.resolve(__dirname, '../../test-scripts/simple_test_load.json');
             const customTestBody = require(customTestPath);
@@ -374,7 +390,8 @@ describe('integration tests', () => {
                 testId,
                 duration,
                 arrivalRate,
-                runId
+                reportId,
+                containerId
             };
 
             try {

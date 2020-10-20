@@ -14,7 +14,7 @@ let customTestBody;
 let testReport;
 
 describe('Max virtual users', function () {
-    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
+    const reportId = uuid();
     let duration, arrivalRate, maxVusers;
 
     before(function (done) {
@@ -28,6 +28,19 @@ describe('Max virtual users', function () {
             testId = createTestResponse.id;
             createJobResponse = await predatorApiHelper.createJob(testId);
             jobId = createJobResponse.id;
+
+            const reportBody = {
+                report_id: reportId,
+                job_id: jobId,
+                revision_id: createTestResponse.revision_id,
+                test_type: customTestBody.type,
+                test_name: customTestBody.name,
+                test_description: customTestBody.description,
+                start_time: Date.now().toString(),
+                runner_id: `x-mickey-${Date.now().toString()}`
+            };
+
+            await predatorApiHelper.createReport(testId, reportBody);
             done();
         }, 500);
     });
@@ -53,7 +66,7 @@ describe('Max virtual users', function () {
             arrivalRate,
             maxVusers,
             httpPoolSize,
-            runId,
+            reportId,
             jobId,
             containerId
         };
@@ -63,13 +76,13 @@ describe('Max virtual users', function () {
     });
 
     it('Runner should avoid scenarios if arrival rate is too high for service to handle', async function () {
-        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, runId);
+        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, reportId);
         should(aggregatedReport.aggregate.scenariosAvoided).above(0, 'Should avoid some scenarios');
     });
 });
 
 describe('Heavy load test without max virtual users', function () {
-    const runId = `system-tester-${Date.now()}-${Math.random() * 14}`;
+    const reportId = uuid();
     let duration, arrivalRate;
 
     before(function (done) {
@@ -84,6 +97,19 @@ describe('Heavy load test without max virtual users', function () {
             testId = createTestResponse.id;
             createJobResponse = await predatorApiHelper.createJob(testId);
             jobId = createJobResponse.id;
+
+            const reportBody = {
+                report_id: reportId,
+                job_id: jobId,
+                revision_id: createTestResponse.revision_id,
+                test_type: customTestBody.type,
+                test_name: customTestBody.name,
+                test_description: customTestBody.description,
+                start_time: Date.now().toString(),
+                runner_id: `x-mickey-${Date.now().toString()}`
+            };
+
+            await predatorApiHelper.createReport(testId, reportBody);
             done();
         }, 500);
     });
@@ -107,7 +133,7 @@ describe('Heavy load test without max virtual users', function () {
             duration,
             arrivalRate,
             httpPoolSize,
-            runId,
+            reportId,
             jobId,
             containerId
 
@@ -118,7 +144,7 @@ describe('Heavy load test without max virtual users', function () {
     });
 
     it('Runner should not avoid scenarios', async function () {
-        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, runId);
+        let aggregatedReport = await predatorApiHelper.getAggregatedReports(testId, reportId);
         should(aggregatedReport.aggregate.scenariosAvoided).eql(0, 'Should not avoid any scenarios');
     });
 });

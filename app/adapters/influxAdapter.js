@@ -4,7 +4,7 @@ module.exports.buildMetricsPlugin = (metricsConfig, jobConfig) => {
             'testName': jobConfig.testName,
             'measurementName': 'artillery_latencies',
             'errorMeasurementName': 'artillery_client_errors',
-            'testRunId': jobConfig.runId,
+            'testRunId': jobConfig.reportId,
             'tags': {
                 'environment': jobConfig.cluster
             },
