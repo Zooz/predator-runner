@@ -4,7 +4,7 @@
 
 Docker image that runs predator tests 
 
-## Tests
+## Tests 
 Running the tests locally:
 
 #### Unit tests
