@@ -1,7 +1,7 @@
 {
   "name": "predator-runner",
   "version": "1.5.3",
-  "description": "Docker image that runs predator tests",
+  "description": "Docker image that runs predator load tests",
   "main": "index.js",
   "scripts": {
     "system-tests": "./tests/run.sh system-tests",
