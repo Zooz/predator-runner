@@ -12,8 +12,8 @@ module.exports.buildMetricsPlugin = (metricsConfig, jobConfig) => {
         }
     };
 
-    if (metricsConfig.bucket_sizes) {
-        prometheusPlugin.prometheus.bucketSizes = metricsConfig.bucket_sizes;
+    if (metricsConfig.buckets_sizes) {
+        prometheusPlugin.prometheus.bucketSizes = metricsConfig.buckets_sizes;
     }
 
     return prometheusPlugin;
