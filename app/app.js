@@ -11,6 +11,8 @@ const runner = require('./models/runner'),
     errorHandler = require('./handler/errorHandler'),
     { version: PREDATOR_RUNNER_VERSION } = require('../package.json');
 
+const RUNNER_TIMEOUT_GRACE_MS = 300;
+
 const getContainerId = () => {
     let containerId = uuid();
     if (process.env.MARATHON_APP_ID) {
@@ -45,7 +47,18 @@ let start = async () => {
             });
             process.exit(1);
         });
+        process.on('SIGUSR1', async function() {
+            logger.info('Runner exceeded test duration, sending DONE status and existing');
+            await reporterConnector.postStats(jobConfig, {
+                phase_status: 'done',
+                data: JSON.stringify({ message: 'Test Finished' })
+            });
+            process.exit(1);
+        });
         verifyPredatorVersion();
+        setTimeout(function() {
+            process.kill(process.pid, 'SIGUSR1');
+        }, (jobConfig.duration * 1000) + jobConfig.delayRunnerMs + RUNNER_TIMEOUT_GRACE_MS);
         await runner.runTest(jobConfig);
         logger.info('Finished running test successfully');
         process.exit(0);
