@@ -1,4 +1,6 @@
 const requestSender = require('../helpers/requestSender');
+const logger = require('../utils/logger');
+
 
 let subscribeToReport = async (jobConfig) => {
     console.table(jobConfig);
@@ -8,9 +10,14 @@ let subscribeToReport = async (jobConfig) => {
         headers: {
             'x-runner-id': jobConfig.containerId
         },
-        body: {}
+        json: {}
     };
-    await requestSender.sendRequest(options);
+    try {
+        const response = await requestSender.sendRequest(options);
+        logger.info(`Request to ${options.url} succeeded with status code ${response.statusCode}`);
+    } catch (error) {
+        logger.error(`Request to ${options.url} failed on the ${error.response.retryCount} attempt with error ${error.response.body.message}`);
+    }
 };
 
 let postStats = async (jobConfig, stats) => {
@@ -27,10 +34,14 @@ let postStats = async (jobConfig, stats) => {
         headers: {
             'x-runner-id': jobConfig.containerId
         },
-        body: requestBody
+        json: requestBody
     };
-
-    await requestSender.sendRequest(options);
+    try {
+        const response = await requestSender.sendRequest(options);
+        logger.info(`Request to ${options.url} succeeded with status code ${response.statusCode}`);
+    } catch (error) {
+        logger.error(`Request to ${options.url} failed on the ${error.response.retryCount} attempt with error ${error.response.body.message}`);
+    }
 };
 
 module.exports = {

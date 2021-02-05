@@ -1,5 +1,5 @@
 const should = require('should'),
-    request = require('requestxn'),
+    got = require('got'),
     URL = require('url').URL;
 
 let predatorUrlObject = new URL(process.env.PREDATOR_URL);
@@ -13,15 +13,15 @@ module.exports.createTest = async (body) => {
     const options = {
         url: predatorUrlWithApiVersion + '/tests',
         method: 'POST',
-        json: true,
+        responseType: 'json',
+        json: body,
         headers: {
             'x-runner-id': 'mickey'
         },
-        body: body
     };
 
     try {
-        let testFile = await request(options);
+        let testFile = await got(options);
         should.exist(testFile);
         return testFile;
     } catch (e) {
@@ -34,15 +34,15 @@ module.exports.createProcessor = async (body) => {
     const options = {
         url: predatorUrlWithApiVersion + '/processors',
         method: 'POST',
-        json: true,
+        responseType: 'json',
+        json: body,
         headers: {
             'x-runner-id': 'mickey'
         },
-        body
     };
 
     try {
-        let processor = await request(options);
+        let processor = await got(options);
         should.exist(processor);
         return processor;
     } catch (e) {
@@ -55,15 +55,15 @@ module.exports.createJob = async (testId, type = 'load_test') => {
     const options = {
         url: predatorUrlWithApiVersion + '/jobs',
         method: 'POST',
-        json: true,
+        responseType: 'json',
+        json: cronJobBody(testId, type),
         headers: {
             'x-runner-id': 'mickey'
         },
-        body: cronJobBody(testId, type)
     };
 
     try {
-        let job = await request(options);
+        let job = await got(options);
         should.exist(job);
         return job;
     } catch (e) {
@@ -76,14 +76,14 @@ module.exports.getAggregatedReports = async (testId, reportId) => {
     const options = {
         url: predatorUrlWithApiVersion + `/tests/${testId}/reports/${reportId}/aggregate`,
         method: 'GET',
-        json: true,
+        responseType: 'json',
         headers: {
             'x-runner-id': 'mickey'
         }
     };
 
     try {
-        let report = await request(options);
+        let report = await got(options);
         should.exist(report);
         return report;
     } catch (e) {
@@ -96,26 +96,27 @@ module.exports.deleteJob = async (jobId) => {
     const options = {
         url: predatorUrlWithApiVersion + `/jobs/${jobId}`,
         method: 'DELETE',
+        responseType: 'json',
         headers: {
             'x-runner-id': 'mickey'
         }
     };
 
-    await request(options);
+    await got(options);
 };
 
 module.exports.createReport = async (testId, body) => {
     const options = {
         url: predatorUrlWithApiVersion + `/tests/${testId}/reports`,
         method: 'POST',
+        responseType: 'json',
         headers: {
             'x-runner-id': 'mickey'
         },
-        body,
-        json: true
+        json: body
     };
 
-    await request(options);
+    await got(options);
 };
 
 const cronJobBody = (testId, type) => {
