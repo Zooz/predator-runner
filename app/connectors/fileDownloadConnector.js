@@ -26,8 +26,8 @@ const downloadFileResource = async (url, method, reportId) => {
     try {
         const resource = await requestSender.sendRequest(options);
         logger.info(`Request to ${options.url} succeeded with status code ${resource.statusCode}`);
-        logger.info({ resource }, 'Retrieved resource file from predator');
-        return resource;
+        logger.info({ resource: resource.body }, 'Retrieved resource file from predator');
+        return resource.body;
     } catch (error) {
         logger.error(`Request to ${options.url} failed on the ${error.response.retryCount} attempt with error ${error.response.body.message}`);
     }

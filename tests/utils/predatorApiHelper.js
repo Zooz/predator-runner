@@ -14,6 +14,7 @@ module.exports.createTest = async (body) => {
         url: predatorUrlWithApiVersion + '/tests',
         method: 'POST',
         responseType: 'json',
+        resolveBodyOnly: true,
         json: body,
         headers: {
             'x-runner-id': 'mickey'
@@ -35,6 +36,7 @@ module.exports.createProcessor = async (body) => {
         url: predatorUrlWithApiVersion + '/processors',
         method: 'POST',
         responseType: 'json',
+        resolveBodyOnly: true,
         json: body,
         headers: {
             'x-runner-id': 'mickey'
@@ -56,6 +58,7 @@ module.exports.createJob = async (testId, type = 'load_test') => {
         url: predatorUrlWithApiVersion + '/jobs',
         method: 'POST',
         responseType: 'json',
+        resolveBodyOnly: true,
         json: cronJobBody(testId, type),
         headers: {
             'x-runner-id': 'mickey'
@@ -77,6 +80,7 @@ module.exports.getAggregatedReports = async (testId, reportId) => {
         url: predatorUrlWithApiVersion + `/tests/${testId}/reports/${reportId}/aggregate`,
         method: 'GET',
         responseType: 'json',
+        resolveBodyOnly: true,
         headers: {
             'x-runner-id': 'mickey'
         }
