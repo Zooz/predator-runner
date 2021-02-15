@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/Zooz/predator-runner/compare/v1.5.3...v2.0.0) (2021-02-15)
+
+
+### Bug Fixes
+
+* remove ENVIRONMENT from mandatory variables ([ae1a387](https://github.com/Zooz/predator-runner/commit/ae1a387c97f2cf418c0db748c55779e5c843f16b))
+* rename bucket_sizes to buckets_sizes ([e16a596](https://github.com/Zooz/predator-runner/commit/e16a596ad87f65681643212233ebd12b978251a2))
+* **runner:** stop runner if test time exceeds the duration given ([#53](https://github.com/Zooz/predator-runner/issues/53)) ([387b552](https://github.com/Zooz/predator-runner/commit/387b5524095254efd215a662f0e98c63a5eeaee4))
+* **scenario:** allow 0 weights - build with new artilliery ([b25efbe](https://github.com/Zooz/predator-runner/commit/b25efbefbf571ee154ab52e18831e93573ed49a5))
+* vulnerabilities ([#55](https://github.com/Zooz/predator-runner/issues/55)) ([f66b592](https://github.com/Zooz/predator-runner/commit/f66b5924c12e8d3b9770566e3fb65587c6b7a44e))
+
 ### [1.5.3](https://github.com/Zooz/predator-runner/compare/v1.5.2...v1.5.3) (2020-09-25)
 
 ### [1.5.2](https://github.com/Zooz/predator-runner/compare/v1.5.0...v1.5.2) (2020-09-23)
