@@ -27,7 +27,7 @@ function verifyPredatorVersion() {
         semver.minor(PREDATOR_RUNNER_VERSION) === semver.minor(jobConfig.predatorVersion)) {
         return;
     }
-    logger.error('Predator Runner and Predator must match in major and minor version, please change runner / predator version');
+    logger.error({ predator_runner_version: PREDATOR_RUNNER_VERSION, predator_version: jobConfig.predatorVersion }, 'Predator Runner and Predator must match in major and minor version, please change runner / predator version');
     throw new Error('Bad Predator-Runner version');
 }
 
