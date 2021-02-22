@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.1](https://github.com/Zooz/predator-runner/compare/v1.6.0...v1.6.1) (2021-02-22)
+
+
+### Bug Fixes
+
+* improve log when bad predator-runner version ([44864f8](https://github.com/Zooz/predator-runner/commit/44864f8eb085e858362d5c29bc79fa802c6e8070))
+
 ## [1.6.0](https://github.com/Zooz/predator-runner/compare/v1.5.3...v1.6.0) (2021-02-15)
 
 
