@@ -1,5 +1,5 @@
 # NODE container which runs this service
-FROM node:8.15.0-alpine
+FROM node:12-alpine
 
 RUN mkdir -p /usr/app
 WORKDIR /usr
