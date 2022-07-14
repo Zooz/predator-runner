@@ -36,6 +36,8 @@ jobs:
       - uses: actions/checkout@v3
       
       - run: semgrep ci
+        env:
+          SEMGREP_RULES: p/r2c-ci
 
       # Upload SARIF file generated in previous step
       - name: Upload SARIF file
