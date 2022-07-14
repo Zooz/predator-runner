@@ -35,7 +35,7 @@ jobs:
       # Checkout project source
       - uses: actions/checkout@v3
       
-      - run: semgrep --sarif -o semgrep.sarif ci
+      - run: semgrep --sarif -o semgrep.sarif --config auto .
         env:
           SEMGREP_RULES: p/r2c-ci
 
