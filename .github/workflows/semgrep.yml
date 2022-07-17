@@ -33,11 +33,8 @@ jobs:
       # Fetch project source with GitHub Actions Checkout.
       - uses: actions/checkout@v3
       
-      - run: semgrep --sarif -o semgrep.sarif --config semgrep_rules/nodejs.yml --metrics=off .
+      - run: semgrep scan --sarif -o semgrep.sarif --config semgrep_rules/nodejs.yml --metrics=off .
       - run: ls -ltrh
-      - run: cat semgrep.sarif
-        # env:
-          # SEMGREP_RULES: p/r2c-ci
 
       # Upload SARIF file generated in previous step
       - name: Upload SARIF file for GitHub Advanced Security Dashboard
