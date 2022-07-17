@@ -33,11 +33,19 @@ jobs:
       # Fetch project source with GitHub Actions Checkout.
       - uses: actions/checkout@v3
       - run: |
+          apk add jq
+
+          length=0
           for ruleFile in `ls semgrep_rules`;do 
             semgrep scan --sarif -o ${ruleFile%.*}.sarif --config semgrep_rules/${ruleFile} --metrics=off .
+            if [$length == 0];then
+              mv ${ruleFile%.*}.sarif semgrep.sarif
+            else
+              jq '.runs[].tool[]' ${ruleFile%.*}.sarif  | jq '. + .runs[].tool[]' semgrep.sarif  > semgrep.sarif
+            fi    
+            ((length++))
           done
-          apk add jq
-          jq -s '.[0].value * .[1].value | {value: .}'  > semgrep.sarif
+          
 
       # Upload SARIF file generated in previous step
       - name: Upload SARIF file for GitHub Advanced Security Dashboard
