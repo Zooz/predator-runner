@@ -45,6 +45,7 @@ jobs:
             fi    
             ((length++))
           done
+        shell: bash
           
 
       # Upload SARIF file generated in previous step
