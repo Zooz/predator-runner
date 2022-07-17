@@ -38,7 +38,7 @@ jobs:
           length=0
           for ruleFile in `ls semgrep_rules`;do 
             semgrep scan --sarif -o ${ruleFile%.*}.sarif --config semgrep_rules/${ruleFile} --metrics=off .
-            if [$length == 0];then
+            if [ $length == 0 ];then
               mv ${ruleFile%.*}.sarif semgrep.sarif
             else
               jq '.runs[].tool[]' ${ruleFile%.*}.sarif  | jq '. + .runs[].tool[]' semgrep.sarif  > semgrep.sarif
