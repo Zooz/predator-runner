@@ -36,6 +36,7 @@ jobs:
           for ruleFile in `ls semgrep_rules`;do 
             semgrep scan --sarif -o ${ruleFile%.*}.sarif --config semgrep_rules/${ruleFile} --metrics=off .
           done
+          apk add jq
           jq -s '.[0].value * .[1].value | {value: .}'  > semgrep.sarif
 
       # Upload SARIF file generated in previous step
