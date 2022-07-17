@@ -33,7 +33,7 @@ jobs:
       # Fetch project source with GitHub Actions Checkout.
       - uses: actions/checkout@v3
       
-      - run: semgrep scan --sarif --output=semgrep.sarif --config auto --config=policy --metrics=off
+      - run: semgrep scan --sarif --output=semgrep.sarif --config auto --metrics=off
         env:
           SEMGREP_RULES: p/r2c-ci
 
