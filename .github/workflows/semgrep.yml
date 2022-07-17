@@ -33,7 +33,7 @@ jobs:
       # Fetch project source with GitHub Actions Checkout.
       - uses: actions/checkout@v3
       
-      - run: semgrep scan --sarif --output=semgrep.sarif --metrics=off .
+      - run: semgrep scan --sarif --output=semgrep.sarif .
       - run: ls -ltrh
       - run: cat semgrep.sarif
         env:
