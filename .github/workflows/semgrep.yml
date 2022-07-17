@@ -16,8 +16,6 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "master" ]
-  schedule:
-    - cron: '32 5 * * 0'
 
 permissions:
   contents: read
@@ -44,4 +42,4 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: semgrep.sarif
-        if: always()
+        # if: always()
