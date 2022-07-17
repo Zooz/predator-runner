@@ -33,7 +33,7 @@ jobs:
       # Fetch project source with GitHub Actions Checkout.
       - uses: actions/checkout@v3
       
-      - run: semgrep --sarif -o semgrep.sarif --config eslint.yml --config bandit.yml --config flawfinder.yml.
+      - run: semgrep --sarif -o semgrep.sarif --config eslint.yml --config bandit.yml --config flawfinder.yml --metrics=off .
       - run: ls -ltrh
       - run: cat semgrep.sarif
         # env:
