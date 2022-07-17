@@ -41,7 +41,8 @@ jobs:
             if [ $length == 0 ];then
               mv ${ruleFile%.*}.sarif semgrep.sarif
             else
-              jq '.runs[].tool[]' ${ruleFile%.*}.sarif  | jq '. + .runs[].tool[]' semgrep.sarif  > semgrep.sarif
+              jq '.runs[].tool[]' ${ruleFile%.*}.sarif  | jq '. + .runs[].tool[]' semgrep.sarif  > semgrep1.sarif
+              mv semgrep1.sarif semgrep.sarif
             fi    
             ((length++))
           done
