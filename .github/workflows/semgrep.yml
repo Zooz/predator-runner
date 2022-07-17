@@ -23,7 +23,9 @@ jobs:
         with:
           python-version: "3.8"
       - name: Generate 1 semgrep config named `semgrepRulles.yml`
-        run: python scripts/config_combiner.py
+        run: |
+          pip install pyyaml
+          python scripts/config_combiner.py
       - name: Run semgrep
         run: semgrep scan --sarif -o semgrep.sarif --config semgrepRulles.yml --metrics=off
         
