@@ -37,7 +37,7 @@ jobs:
       - run: ls -ltrh
       - run: cat semgrep.sarif
         env:
-          SEMGREP_RULES: p/r2c-ci
+          # SEMGREP_RULES: p/r2c-ci
 
       # Upload SARIF file generated in previous step
       - name: Upload SARIF file for GitHub Advanced Security Dashboard
