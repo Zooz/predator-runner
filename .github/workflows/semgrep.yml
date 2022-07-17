@@ -41,12 +41,10 @@ jobs:
             touch semgrep.sarif
             semgrep scan --sarif -o ${ruleFile%.*}.sarif --config semgrep_rules/${ruleFile} --metrics=off .
             if [ $length == 0 ];then
-              # mv ${ruleFile%.*}.sarif semgrep.sarif
-              echo first
+              mv ${ruleFile%.*}.sarif semgrep.sarif
             else
-              # jq '.runs[].tool[]' ${ruleFile%.*}.sarif  #| jq '. + .runs[].tool[]' semgrep.sarif  > semgrep1.sarif
-              # mv semgrep1.sarif semgrep.sarif
-              echo $length
+              jq '.runs[].tool[]' ${ruleFile%.*}.sarif  #| jq '. + .runs[].tool[]' semgrep.sarif  > semgrep1.sarif
+              mv semgrep1.sarif semgrep.sarif
             fi    
             t=$((counter++))
           done          
