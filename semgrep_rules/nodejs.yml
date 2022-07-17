@@ -100,7 +100,7 @@ rules:
                   - pattern: $JOSE.JWT.sign($INPUT,...)
                   - pattern: $JWT.sign($INPUT,...)
 
-  - id: jwt-exposed-credentials
+  - id: jwt-exposed-credentials-1
     languages:
       - javascript
       - typescript
@@ -334,7 +334,7 @@ rules:
           ...
           $T = JWT.sign(Object.assign(...,{$U:{password:...}},...),...);
 
-  - id: hardcoded-jwt-secret
+  - id: hardcoded-jwt-secret-1
     message: "Hardcoded JWT secret or private key is used. This is a Insufficiently
       Protected Credentials weakness:
       https://cwe.mitre.org/data/definitions/522.html Consider using an
@@ -498,7 +498,7 @@ rules:
           ...
           var $T = JWT.verify($P, $KEY, ...);
 
-  - id: jwt-none-alg
+  - id: jwt-none-alg-1
     message: Detected use of the 'none' algorithm in a JWT token. The 'none'
       algorithm assumes the integrity of the token has already been verified.
       This would allow a malicious actor to forge a JWT token that will
