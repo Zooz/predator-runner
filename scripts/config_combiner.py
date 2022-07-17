@@ -42,6 +42,6 @@ for scanConfig in sarifFiles:
     allRules += scanConfigData['rules']
 
 newConfig = {'rules': allRules}
-outFile = open('semgrepRulles.yml', 'w')
+outFile = open('../semgrep_rules/semgrepRulles.yml', 'w')
 outFile.write(yaml.dump(newConfig,Dumper=MyDumper, default_flow_style=False))
 outFile.close()

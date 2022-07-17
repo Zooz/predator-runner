@@ -27,24 +27,7 @@ jobs:
           pip install pyyaml
           python scripts/config_combiner.py
       - name: Run semgrep
-        run: semgrep scan --sarif -o semgrep.sarif --config semgrepRulles.yml --metrics=off
-        
-      # - name: Install jq
-      #   run: apk add jq
-      # - name: Run semgrep
-      #   run: |
-      #     length=0
-      #     for ruleFile in `ls semgrep_rules`;do 
-      #       touch semgrep.sarif
-      #       semgrep scan --sarif -o ${ruleFile%.*}.sarif --config semgrep_rules/${ruleFile} --metrics=off .
-      #       # if [ ${length} == 0 ];then
-      #       #   mv ${ruleFile%.*}.sarif semgrep.sarif
-      #       # else
-      #       #   jq '.runs[].tool[]' ${ruleFile%.*}.sarif  #| jq '. + .runs[].tool[]' semgrep.sarif  > semgrep1.sarif
-      #       #   mv semgrep1.sarif semgrep.sarif
-      #       # fi    
-      #       # tempCounter=$((counter++))
-      #     done 
+        run: semgrep scan --sarif -o semgrep.sarif --config semgrep_rules/semgrepRulles.yml --metrics=off
       - name: Upload SARIF file for GitHub Advanced Security Dashboard
         uses: github/codeql-action/upload-sarif@v2
         with:
