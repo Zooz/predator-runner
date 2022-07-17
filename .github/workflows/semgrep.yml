@@ -33,7 +33,7 @@ jobs:
       # Fetch project source with GitHub Actions Checkout.
       - uses: actions/checkout@v3
       
-      - run: semgrep --sarif -o semgrep.sarif --config semgrep_rules/eslint.yml --config semgrep_rules/bandit.yml --config semgrep_rules/flawfinder.yml --config semgrep_rules/gosec.yml --config semgrep_rules/test_rules.yml --metrics=off .
+      - run: semgrep --sarif -o semgrep.sarif --config semgrep_rules/nodejs.yml --metrics=off .
       - run: ls -ltrh
       - run: cat semgrep.sarif
         # env:
