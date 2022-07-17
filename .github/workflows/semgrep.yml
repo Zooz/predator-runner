@@ -32,19 +32,20 @@ jobs:
     steps:
       # Fetch project source with GitHub Actions Checkout.
       - uses: actions/checkout@v3
-      - run: |
-          apk add jq
-
-          length=0
+      - name: Install jq
+        run: apk add jq
+      - name: Run semgrep
+        run: |
+          # length=0
           for ruleFile in `ls semgrep_rules`;do 
             semgrep scan --sarif -o ${ruleFile%.*}.sarif --config semgrep_rules/${ruleFile} --metrics=off .
-            if [ $length == 0 ];then
-              mv ${ruleFile%.*}.sarif semgrep.sarif
-            else
+            # if [ $length == 0 ];then
+            #   mv ${ruleFile%.*}.sarif semgrep.sarif
+            # else
               jq '.runs[].tool[]' ${ruleFile%.*}.sarif  | jq '. + .runs[].tool[]' semgrep.sarif  > semgrep1.sarif
               mv semgrep1.sarif semgrep.sarif
-            fi    
-            ((length++))
+            # fi    
+            # ((length++))
           done
         shell: bash
           
