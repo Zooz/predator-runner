@@ -26,18 +26,18 @@ jobs:
           for ruleFile in `ls semgrep_rules`;do 
             touch semgrep.sarif
             semgrep scan --sarif -o ${ruleFile%.*}.sarif --config semgrep_rules/${ruleFile} --metrics=off .
-            if [ ${length} == 0 ];then
-              mv ${ruleFile%.*}.sarif semgrep.sarif
-            else
-              jq '.runs[].tool[]' ${ruleFile%.*}.sarif  #| jq '. + .runs[].tool[]' semgrep.sarif  > semgrep1.sarif
-              mv semgrep1.sarif semgrep.sarif
-            fi    
-            tempCounter=$((counter++))
+            # if [ ${length} == 0 ];then
+            #   mv ${ruleFile%.*}.sarif semgrep.sarif
+            # else
+            #   jq '.runs[].tool[]' ${ruleFile%.*}.sarif  #| jq '. + .runs[].tool[]' semgrep.sarif  > semgrep1.sarif
+            #   mv semgrep1.sarif semgrep.sarif
+            # fi    
+            # tempCounter=$((counter++))
           done 
       - name: Print all semgrep reports
         run: ls *.sarif
-      - name: Upload SARIF file for GitHub Advanced Security Dashboard
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: semgrep.sarif
-        if: always()
+      # - name: Upload SARIF file for GitHub Advanced Security Dashboard
+      #   uses: github/codeql-action/upload-sarif@v2
+      #   with:
+      #     sarif_file: semgrep.sarif
+      #   if: always()
