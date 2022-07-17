@@ -34,7 +34,6 @@ jobs:
       - uses: actions/checkout@v3
       
       - run: semgrep scan --sarif -o semgrep.sarif --config semgrep_rules/nodejs.yml --rewrite-rule-ids --metrics=off .
-      - run: ls -ltrh
 
       # Upload SARIF file generated in previous step
       - name: Upload SARIF file for GitHub Advanced Security Dashboard
