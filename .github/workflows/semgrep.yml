@@ -32,7 +32,7 @@ jobs:
     steps:
       # Fetch project source with GitHub Actions Checkout.
       - uses: actions/checkout@v3
-      - run: semgrep scan --sarif -o semgrep.sarif -f semgrep_rules --metrics=off .
+      - run: for ruleFile in `ls semgrep_rules`;do semgrep scan --sarif -o semgrep.sarif --config semgrep_rules/${ruleFile} --metrics=off .
 
       # Upload SARIF file generated in previous step
       - name: Upload SARIF file for GitHub Advanced Security Dashboard
