@@ -48,7 +48,7 @@ jobs:
               # mv semgrep1.sarif semgrep.sarif
               echo $length
             fi    
-            ((length++))
+            ((length+=1))
           done          
 
       # Upload SARIF file generated in previous step
