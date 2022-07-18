@@ -16,10 +16,11 @@ jobs:
       image: returntocorp/semgrep
     if: (github.actor != 'dependabot[bot]') # Skip any PR created by dependabot to avoid permission issues
     steps:
+      - uses: Zooz/code-scanner/.github/workflows/semgrep.yml@main
       # - name: Fetch project source with GitHub Actions Checkout.
       #   uses: actions/checkout@v3
-      - name: Run Semgrep scan
-        uses: Zooz/code-scanner/.github/workflows/semgrep.yml@main
+      # - name: Run Semgrep scan
+      #   uses: Zooz/code-scanner/.github/workflows/semgrep.yml@main
       # - name: Upload SARIF file for GitHub Advanced Security Dashboard
       #   uses: github/codeql-action/upload-sarif@v2
       #   with:
