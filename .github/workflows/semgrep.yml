@@ -7,4 +7,4 @@ on:
 jobs:
   trigger-semgrep:
     name: Scan
-    uses: Zooz/code-scanner/.github/workflows/semgrep.yml@adjust_rulesets
+    uses: Zooz/code-scanner/.github/workflows/semgrep.yml@main
