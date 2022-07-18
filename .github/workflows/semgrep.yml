@@ -1,0 +1,35 @@
+name: Semgrep
+
+on:
+  push:
+    branches: ["*"]
+
+jobs:
+  semgrep:
+    name: Scan
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      actions: read
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+    runs-on: ubuntu-latest
+    container:
+      image: returntocorp/semgrep
+    if: (github.actor != 'dependabot[bot]') # Skip any PR created by dependabot to avoid permission issues
+    steps:
+      - name: Fetch project source with GitHub Actions Checkout.
+        uses: actions/checkout@v3
+      - name: Setup python 3
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Generate 1 semgrep config named `semgrepRulles.yml`
+        run: |
+          pip install pyyaml
+          python scripts/config_combiner.py
+      - name: Run semgrep
+        run: semgrep scan --sarif -o results.sarif --config semgrep_rules/semgrepRulles.yml
+      - name: Upload SARIF file for GitHub Advanced Security Dashboard
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: results.sarif
+        if: always()
