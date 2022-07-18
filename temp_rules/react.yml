@@ -1,0 +1,719 @@
+rules:
+- id: eslint.react-missing-noopener
+  pattern-either:
+  - patterns:
+    - pattern: |
+        <$X target="_blank" />
+    - pattern-not: |
+        <$X target="_blank" rel="..." />
+  - patterns:
+    - pattern-inside: |
+        <$X target="_blank" rel=... />
+    - pattern-regex: rel=["']((?!noopener).)*?["']
+  - patterns:
+    - pattern: |
+        React.createElement($A, {target: '_blank'},...)
+    - pattern-not: |
+        React.createElement($A, {rel: '...'},...)
+  - patterns:
+    - pattern: |
+        React.createElement($A, {target: '_blank', rel: $REL},...)
+    - metavariable-regex:
+        metavariable: $REL
+        regex: "[\"']((?!noopener).)*?['\"]"
+  - patterns:
+    - pattern: |
+        $P = {target: '_blank'};
+        ...
+        React.createElement($A, $P,...);
+    - pattern-not: |
+        $P = {rel: '...'};
+        ...
+        React.createElement($A, $P,...);
+  - patterns:
+    - pattern: |
+        $P = {target: '_blank', rel: $REL};
+        ...
+        React.createElement($A, $P,...);
+    - metavariable-regex:
+        metavariable: $REL
+        regex: "[\"']((?!noopener).)*?['\"]"
+  message: |
+    Missing 'noopener' on an anchor tag where target='_blank'. This could introduce
+    a reverse tabnabbing vulnerability. Include 'noopener' when using target='_blank'.
+  metadata:
+    cwe: 'CWE-200: Exposure of Sensitive Information to an Unauthorized Actor'
+    owasp: 'A3: Sensitive Data Exposure'
+    references:
+    - https://html.spec.whatwg.org/multipage/links.html#link-type-noreferrer
+    - https://web.dev/external-anchors-use-rel-noopener/
+    - https://owasp.org/www-community/attacks/Reverse_Tabnabbing
+  languages:
+  - typescript
+  - javascript
+  severity: WARNING
+
+- id: eslint.react-dangerouslysetinnerhtml
+  pattern-either:
+  - pattern: |
+      <$X dangerouslySetInnerHTML=... />
+  - pattern: |
+      {dangerouslySetInnerHTML: ...}
+  message: |
+    Setting HTML from code is risky because it’s easy to inadvertently expose your users to a cross-site scripting (XSS) attack.
+  metadata:
+    cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+    owasp: 'A7: Cross-site Scripting (XSS)'
+    references:
+    - https://reactjs.org/docs/dom-elements.html#dangerouslysetinnerhtml
+  languages:
+  - typescript
+  - javascript
+  severity: WARNING
+
+
+- id: react-html-element-spreading
+  patterns:
+    - pattern: |
+        <$EL {...$PROPS} />
+    - metavariable-regex:
+        metavariable: $EL
+        regex: "[a-z]([a-zA-Z])*"
+  message: It is a good practice to avoid spreading for JSX attributes. This
+    prevents accidentally passing `dangerouslySetInnerHTML` to an element.
+  metadata:
+    cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation
+      ('Cross-site Scripting')"
+    owasp: "A7: Cross-Site Scripting (XSS)"
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+
+- id: react-http-leak
+  pattern-either:
+    - patterns:
+        - pattern: |
+            <$EL codebase=... />
+        - metavariable-regex:
+            metavariable: $EL
+            regex: applet|object
+        - pattern-not: |
+            <$EL codebase="..." />
+    - patterns:
+        - pattern: |
+            <$EL cite=... />
+        - metavariable-regex:
+            metavariable: $EL
+            regex: blockquote|del|ins|q
+        - pattern-not: |
+            <$EL cite="..." />
+    - patterns:
+        - pattern: |
+            <$EL longdesc=... />
+        - metavariable-regex:
+            metavariable: $EL
+            regex: frame|iframe|img
+        - pattern-not: |
+            <$EL longdesc="..." />
+    - patterns:
+        - pattern: |
+            <$EL src={$INJECT} />
+        - metavariable-regex:
+            metavariable: $EL
+            regex: frame|iframe|img|input|script|audio|source|track|embed|video
+        - pattern-not: |
+            <$EL src="..." />
+        - pattern-not-inside: |
+            import $INJECT from "...";
+            ...
+    - patterns:
+        - pattern: |
+            <$EL usemap=... />
+        - metavariable-regex:
+            metavariable: $EL
+            regex: img|input|object
+        - pattern-not: |
+            <$EL usemap="..." />
+    - patterns:
+        - pattern: |
+            <$EL formaction=... />
+        - metavariable-regex:
+            metavariable: $EL
+            regex: button|input
+        - pattern-not: |
+            <$EL formaction="..." />
+    - patterns:
+        - pattern: |
+            <$EL srcset=... />
+        - metavariable-regex:
+            metavariable: $EL
+            regex: img|source
+        - pattern-not: |
+            <$EL srcset="..." />
+    - patterns:
+        - pattern: |
+            <$EL archive=... />
+        - metavariable-regex:
+            metavariable: $EL
+            regex: object|applet
+        - pattern-not: |
+            <$EL archive="..." />
+    - patterns:
+        - pattern: |
+            <body background=... />
+        - pattern-not: |
+            <body background="..." />
+    - patterns:
+        - pattern: |
+            <form action=... />
+        - pattern-not: |
+            <form action="..." />
+    - patterns:
+        - pattern: |
+            <head profile=... />
+        - pattern-not: |
+            <head profile="..." />
+    - patterns:
+        - pattern: |
+            <object $ATTR=... />
+        - metavariable-regex:
+            metavariable: $ATTR
+            regex: classid|data
+        - pattern-not: |
+            <object $ATTR="..." />
+    - patterns:
+        - pattern: |
+            <video poster=... />
+        - pattern-not: |
+            <video poster="..." />
+    - patterns:
+        - pattern: |
+            <command icon=... />
+        - pattern-not: |
+            <command icon="..." />
+    - patterns:
+        - pattern: |
+            <html manifest=... />
+        - pattern-not: |
+            <html manifest="..." />
+    - patterns:
+        - pattern: |
+            <meta content=... />
+        - pattern-not: |
+            <meta content="..." />
+  message: This HTML element '$EL' and attribute '$ATTR' together may load an
+    external resource. This means that if dynamic content can enter this
+    attribute it may be possible for an attacker to send HTTP requests to
+    unintended locations which may leak data about your users. If this element
+    is reaching out to a known host, consider hardcoding the host (or loading
+    from a configuration) and appending the dynamic path. See
+    https://github.com/cure53/HTTPLeaks for more information.
+  metadata:
+    owasp: "A3: Sensitive Data Exposure"
+    cwe: "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+    references:
+      - https://github.com/cure53/HTTPLeaks
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+
+- id: react-jwt-decoded-property
+  patterns:
+    - pattern-inside: |
+        import jwt_decode from "jwt-decode";
+        ...
+    - pattern-inside: |
+        $DECODED = jwt_decode($TOKEN,...);
+        ...
+    - pattern: $DECODED.$PROPERTY
+  message: Property decoded from JWT token without verifying and cannot be
+    trustworthy.
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+  metadata:
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+
+- id: react-jwt-in-localstorage
+  patterns:
+    - pattern-inside: |
+        import jwt_decode from "jwt-decode";
+        ...
+    - pattern-either:
+        - pattern: |
+            $DECODED = jwt_decode($TOKEN,...);
+            ...
+            localStorage.setItem($NAME, <... $TOKEN ...>);
+        - pattern: |
+            $DECODED = jwt_decode(...);
+            ...
+            localStorage.setItem($NAME, <... $DECODED ...>);
+  message: Storing JWT tokens in localStorage known to be a bad practice, consider
+    moving your tokens from localStorage to a HTTP cookie.
+  metadata:
+    references:
+      - https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+
+- id: react-missing-noopener
+  pattern-either:
+    - patterns:
+        - pattern: |
+            <$X target="_blank" />
+        - pattern-not: |
+            <$X target="_blank" rel="..." />
+    - patterns:
+        - pattern-inside: |
+            <$X target="_blank" rel=... />
+        - pattern-regex: rel=["']((?!noopener).)*?["']
+    - patterns:
+        - pattern: |
+            React.createElement($A, {target: '_blank'},...)
+        - pattern-not: |
+            React.createElement($A, {rel: '...'},...)
+    - patterns:
+        - pattern: |
+            React.createElement($A, {target: '_blank', rel: $REL},...)
+        - metavariable-regex:
+            metavariable: $REL
+            regex: "[\"']((?!noopener).)*?['\"]"
+    - patterns:
+        - pattern: |
+            $P = {target: '_blank'};
+            ...
+            React.createElement($A, $P,...);
+        - pattern-not: |
+            $P = {rel: '...'};
+            ...
+            React.createElement($A, $P,...);
+    - patterns:
+        - pattern: |
+            $P = {target: '_blank', rel: $REL};
+            ...
+            React.createElement($A, $P,...);
+        - metavariable-regex:
+            metavariable: $REL
+            regex: "[\"']((?!noopener).)*?['\"]"
+  message: Missing 'noopener' on an anchor tag where target='_blank'. This could
+    introduce a reverse tabnabbing vulnerability. Include 'noopener' when
+    using target='_blank'.
+  metadata:
+    cwe: "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+    owasp: "A3: Sensitive Data Exposure"
+    references:
+      - https://html.spec.whatwg.org/multipage/links.html#link-type-noreferrer
+      - https://web.dev/external-anchors-use-rel-noopener/
+      - https://owasp.org/www-community/attacks/Reverse_Tabnabbing
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+
+- id: react-missing-noreferrer
+  pattern-either:
+    - patterns:
+        - pattern: |
+            <$X target="_blank" />
+        - pattern-not: |
+            <$X target="_blank" rel="..." />
+        - pattern-not: |
+            <$X href="=~/^\/[^\/]/i" />
+        - pattern-not: |
+            <$X to="=~/^\/[^\/]/i" />
+    - patterns:
+        - pattern-inside: |
+            <$X target="_blank" rel=... />
+        - pattern-not-inside: |
+            <$X href="=~/^\/[^\/]/i" rel=... />
+        - pattern-not-inside: |
+            <$X to="=~/^\/[^\/]/i" rel=... />
+        - pattern-regex: rel=["']((?!noreferrer).)*?["']
+    - patterns:
+        - pattern: |
+            React.createElement($A, {target: '_blank'},...)
+        - pattern-not: |
+            React.createElement($A, {rel: '...'},...)
+        - pattern-not: |
+            React.createElement($A, {href: '=~/^\/[^\/]/i'},...)
+    - patterns:
+        - pattern: |
+            React.createElement($A, {target: '_blank', rel: $REL},...)
+        - pattern-not: |
+            React.createElement($A, {href: '=~/^\/[^\/]/i'},...)
+        - metavariable-regex:
+            metavariable: $REL
+            regex: "[\"']((?!noreferrer).)*?['\"]"
+    - patterns:
+        - pattern: |
+            $P = {target: '_blank'};
+            ...
+            React.createElement($A, $P,...);
+        - pattern-not: |
+            $P = {rel: '...'};
+            ...
+            React.createElement($A, $P,...);
+        - pattern-not: |
+            $P = {href: '=~/^\/[^\/]/i'};
+            ...
+            React.createElement($A, $P,...);
+    - patterns:
+        - pattern: |
+            $P = {target: '_blank', rel: $REL};
+            ...
+            React.createElement($A, $P,...);
+        - pattern-not: |
+            $P = {href: '=~/^\/[^\/]/i'};
+            ...
+            React.createElement($A, $P,...);
+        - metavariable-regex:
+            metavariable: $REL
+            regex: "[\"']((?!noreferrer).)*?['\"]"
+  message: This anchor tag with 'target="_blank"' is missing 'noreferrer'. A page
+    opened with 'target="_blank"' can access the window object of the origin
+    page. This means it can manipulate the 'window.opener' property, which
+    could redirect the origin page to a malicious URL. This is called reverse
+    tabnabbing. To prevent this, include 'rel=noreferrer' on this tag.
+  metadata:
+    cwe: "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+    owasp: "A3: Sensitive Data Exposure"
+    references:
+      - https://web.dev/external-anchors-use-rel-noopener/
+      - https://html.spec.whatwg.org/multipage/links.html#link-type-noreferrer
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+
+- id: react-no-refs
+  pattern-either:
+    - pattern: <$EL ref=... />
+    - pattern: $REACT.createRef(...)
+    - pattern: $REACT.useRef(...)
+    - pattern: createRef(...)
+    - pattern: useRef(...)
+  message: "`ref` usage found. refs give direct DOM access and may create a
+    possibility for XSS,  which could cause sensitive information such as user
+    cookies to be retrieved by an attacker.  Instead, avoid direct DOM
+    manipulation or  use DOMPurify to sanitize HTML before writing it into the
+    page."
+  metadata:
+    cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation
+      ('Cross-site Scripting')"
+    owasp: "A7: Cross-Site Scripting (XSS)"
+    category: security
+    technology:
+      - react
+    references:
+      - https://pragmaticwebsecurity.com/articles/spasecurity/react-xss-part3.html
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+
+- id: react-props-injection
+  patterns:
+    - pattern-either:
+        - pattern-inside: |
+            import $PROPS from "...";
+            ...
+        - pattern-inside: |
+            $PROPS = $METHOD(...);
+            ...
+        - pattern-inside: |
+            function $FUNC(...,$PROPS,...) {
+              ...
+            }
+    - pattern-either:
+        - pattern: |
+            <$EL {...<... $PROPS ...>} />
+        - pattern: |
+            <$EL {...$F(<... $PROPS ...>)} />
+        - pattern: |
+            React.createElement($EL, <... $PROPS ...>)
+        - pattern: |
+            React.createElement($EL, $F(<... $PROPS ...>))
+  message: Inject arbitrary props into the new element. It may introduce an XSS
+    vulnerability.
+  metadata:
+    cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation
+      ('Cross-site Scripting')"
+    owasp: "A7: Cross-Site Scripting (XSS)"
+    references:
+      - https://medium.com/dailyjs/exploiting-script-injection-flaws-in-reactjs-883fb1fe36c1
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+
+- id: react-router-redirect
+  patterns:
+    - pattern-inside: |
+        import "react-router-dom";
+        ...
+    - pattern: |
+        <Redirect to={...} />
+    - pattern-not: |
+        <Redirect to={"..."} />
+    - pattern-not: |
+        <Redirect to={{pathname: "..."}} />
+  message: User controlled data in <Redirect /> can lead to unpredicted redirects.
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+  metadata:
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+
+- id: react-styled-components-injection
+  patterns:
+    - pattern-inside: |
+        import styled from 'styled-components';
+        ...
+    - pattern-not-inside: |
+        import { keyframes } from 'styled-components';
+        ...
+        $STYLE = keyframes(...);
+        ...
+    - pattern-either:
+        - pattern-inside: |
+            $STYLE = $METHOD(...);
+            ...
+        - pattern-inside: |
+            function $FUNC(...,{$STYLE},...) {
+              ...
+            }
+        - pattern-inside: |
+            function $FUNC(...,$STYLE,...) {
+              ...
+            }
+        - pattern-inside: |
+            function $FUNC(...,{$INPUT},...) {
+              ...
+              $STYLE = <... $INPUT ...>;
+              ...
+            }
+        - pattern-inside: |
+            function $FUNC(...,$INPUT,...) {
+              ...
+              $STYLE = <... $INPUT ...>;
+              ...
+            }
+    - pattern: |
+        styled.$EL`...${$STYLE}...`
+  message: User controlled data in a styled component's css is an anti-pattern
+    that can lead to XSS vulnerabilities
+  metadata:
+    cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation
+      ('Cross-site Scripting')"
+    owasp: "A7: Cross-Site Scripting (XSS)"
+    references:
+      - https://styled-components.com/docs/advanced#security
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+
+- id: react-unsanitized-method
+  patterns:
+    - pattern-either:
+        - pattern: $EL.insertAdjacentHTML($P, ...)
+        - pattern: document.write(...)
+        - pattern: document.writeln(...)
+    - pattern-not: $EL.insertAdjacentHTML($P, "...")
+    - pattern-not: document.write("...")
+    - pattern-not: document.writeln("...")
+  message: User controlled data in a insertAdjacentHTML, document.write or
+    document.writeln is an anti-pattern that can lead to XSS vulnerabilities
+  metadata:
+    cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation
+      ('Cross-site Scripting')"
+    owasp: "A7: Cross-Site Scripting (XSS)"
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+
+- id: react-unsanitized-property
+  patterns:
+    - pattern-either:
+        - pattern: |
+            $X.innerHTML = ...;
+        - pattern: |
+            $X.outerHTML = ...;
+    - pattern-not: |
+        $X.innerHTML = "...";
+    - pattern-not: |
+        $X.outerHTML = "...";
+  message: User controlled data in a `$X` is an anti-pattern that can lead to XSS
+    vulnerabilities
+  metadata:
+    cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation
+      ('Cross-site Scripting')"
+    owasp: "A7: Cross-Site Scripting (XSS)"
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+
+- id: react-controlled-component-password
+  pattern-either:
+    - pattern: <$EL type="password" value={this.state.$X} onChange=...  />
+    - pattern: >
+        React.createElement($EL,{type: 'password', value: this.state.$X,
+        onChange:...},...)
+    - pattern: |
+        $PARAMS = {type: 'password', value: this.state.$X, onChange:...};
+        ...
+        React.createElement($EL,$PARAMS,...);
+  message: Password can be leaked if CSS injection exists on the page.
+  metadata:
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
+
+- id: react-insecure-request
+  message: Unencrypted request over HTTP detected.
+  metadata:
+    vulnerability: Insecure Transport
+    owasp: "A3: Sensitive Data Exposure"
+    cwe: "CWE-319: Cleartext Transmission of Sensitive Information"
+    references:
+      - https://www.npmjs.com/package/axios
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: ERROR
+  pattern-either:
+    - patterns:
+        - pattern-either:
+            - pattern-inside: |
+                import $AXIOS from 'axios';
+                ...
+                $AXIOS.$METHOD(...)
+            - pattern-inside: |
+                $AXIOS = require('axios');
+                ...
+                $AXIOS.$METHOD(...)
+        - pattern-either:
+            - pattern: $AXIOS.get("=~/[Hh][Tt][Tt][Pp]:\/\/.*/",...)
+            - pattern: $AXIOS.post("=~/[Hh][Tt][Tt][Pp]:\/\/.*/",...)
+            - pattern: $AXIOS.delete("=~/[Hh][Tt][Tt][Pp]:\/\/.*/",...)
+            - pattern: $AXIOS.head("=~/[Hh][Tt][Tt][Pp]:\/\/.*/",...)
+            - pattern: $AXIOS.patch("=~/[Hh][Tt][Tt][Pp]:\/\/.*/",...)
+            - pattern: $AXIOS.put("=~/[Hh][Tt][Tt][Pp]:\/\/.*/",...)
+            - pattern: $AXIOS.options("=~/[Hh][Tt][Tt][Pp]:\/\/.*/",...)
+    - patterns:
+        - pattern-either:
+            - pattern-inside: |
+                import $AXIOS from 'axios';
+                ...
+                $AXIOS(...)
+            - pattern-inside: |
+                $AXIOS = require('axios');
+                ...
+                $AXIOS(...)
+        - pattern-either:
+            - pattern: '$AXIOS({url: "=~/[Hh][Tt][Tt][Pp]:\/\/.*/"}, ...)'
+            - pattern: |
+                $OPTS = {url: "=~/[Hh][Tt][Tt][Pp]:\/\/.*/"}
+                ...
+                $AXIOS($OPTS, ...)
+    - pattern: fetch("=~/[Hh][Tt][Tt][Pp]:\/\/.*/", ...)
+
+- id: react-markdown-insecure-html
+  patterns:
+    - pattern-either:
+        - pattern-inside: |
+            $X = require('react-markdown/with-html');
+            ...
+        - pattern-inside: |
+            $X = require('react-markdown');
+            ...
+        - pattern-inside: |
+            import 'react-markdown/with-html';
+            ...
+        - pattern-inside: |
+            import 'react-markdown';
+            ...
+    - pattern-either:
+        - pattern: |
+            <$EL allowDangerousHtml />
+        - pattern: |
+            <$EL transformLinkUri=... />
+        - pattern: |
+            <$EL transformImageUri=... />
+  message: Overwriting `transformLinkUri` or `transformImageUri` to something
+    insecure or turning `allowDangerousHtml` on, will open code up to XSS
+    vectors.
+  metadata:
+    cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation
+      ('Cross-site Scripting')"
+    owasp: "A7: Cross-Site Scripting (XSS)"
+    references:
+      - https://www.npmjs.com/package/react-markdown#security
+    category: security
+    technology:
+      - react
+    license: Commons Clause License Condition v1.0[LGPL-2.1-only]
+  languages:
+    - typescript
+    - javascript
+  severity: WARNING
