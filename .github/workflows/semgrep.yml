@@ -19,7 +19,7 @@ jobs:
       - name: Fetch project source with GitHub Actions Checkout.
         uses: actions/checkout@v3
       - name: Run Semgrep scan
-        uses: Zooz/code-scanner@main
+        uses: Zooz/code-scanner/semgrep@main
       # - name: Generate 1 semgrep config named `semgrepRulles.yml`
       #   run: |
       #     pip install pyyaml
