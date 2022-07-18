@@ -9,4 +9,4 @@ jobs:
     name: Scan
     uses: Zooz/code-scanner/.github/workflows/semgrep.yml@main
     with:
-      codeScannerRef: adjust_rulesets
+      codeScannerRef: main
