@@ -26,10 +26,10 @@ jobs:
         run: |
           pip install pyyaml
           python scripts/config_combiner.py
-      - name: Print final rule file
-        run: cat semgrep_rules/semgrepRulles.yml
       - name: Run semgrep
         run: semgrep scan --sarif -o semgrep.sarif --config semgrep_rules/semgrepRulles.yml
+      - name: Print file sizes
+        run: ls -lah
       - name: Upload SARIF file for GitHub Advanced Security Dashboard
         uses: github/codeql-action/upload-sarif@v2
         with:
