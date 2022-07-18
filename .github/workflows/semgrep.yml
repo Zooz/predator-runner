@@ -22,12 +22,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: "3.8"
-      - name: Generate 1 semgrep config named `semgrepRulles.yml`
-        run: |
-          pip install pyyaml
-          python scripts/config_combiner.py
+      # - name: Generate 1 semgrep config named `semgrepRulles.yml`
+      #   run: |
+      #     pip install pyyaml
+      #     python scripts/config_combiner.py
       - name: Run semgrep
-        run: semgrep scan --sarif -o results.sarif --config semgrep_rules/semgrepRulles.yml
+        run: semgrep scan --sarif -o results.sarif --config semgrep_rules/bandit.yml
       - name: Upload SARIF file for GitHub Advanced Security Dashboard
         uses: github/codeql-action/upload-sarif@v2
         with:
