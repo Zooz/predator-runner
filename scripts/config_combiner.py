@@ -9,7 +9,8 @@ class MyDumper(yaml.Dumper):
         return super(MyDumper, self).increase_indent(flow, False)
 
 
-sarifFiles = glob.glob('../semgrep_rules/*')
+sarifFiles = glob.glob('semgrep_rules/*')
+print(sarifFiles)
 allRules = []
 
 for scanConfig in sarifFiles:
