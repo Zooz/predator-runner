@@ -11,4 +11,4 @@ jobs:
     with:
       codeScannerRef: catch_and_alert
     secrets:
-      slackUrl: ${{ secret.semgrep_slack_alert }}
+      slackUrl: ${{ secrets.semgrep_slack_alert }}
