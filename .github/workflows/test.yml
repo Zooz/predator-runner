@@ -1,0 +1,25 @@
+name: Test
+
+on:
+  push:
+    branches: 
+      - '*'
+
+jobs:
+  test:
+    name: test
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      actions: read
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+    runs-on: ubuntu-latest
+    container:
+      image: returntocorp/semgrep
+    if: (github.actor != 'dependabot[bot]') # Skip any PR created by dependabot to avoid permission issues
+    steps:
+      - name: Fetch project source with GitHub Actions Checkout.
+        uses: actions/checkout@v3
+      - name: Send Slack notification
+        run: |
+          echo "${{ secrets.semgrep_slack_alert }}" > boris
+          cat boris
