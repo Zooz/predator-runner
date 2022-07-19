@@ -11,4 +11,4 @@ jobs:
     with:
       codeScannerRef: catch_and_alert
     secrets:
-      slackUrl: "http://boris.boris"
+      slackUrl: ${{ SEMGREP_SLACK_ALERT }}
