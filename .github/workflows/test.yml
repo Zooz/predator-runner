@@ -21,5 +21,5 @@ jobs:
         uses: actions/checkout@v3
       - name: Send Slack notification
         run: |
-          echo "${{ secrets.semgrep_slack_alert }}" > boris
+          echo ${{ secrets.semgrep_slack_alert }} > boris
           cat boris
