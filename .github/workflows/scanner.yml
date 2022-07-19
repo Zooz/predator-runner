@@ -7,6 +7,6 @@ on:
 jobs:
   trigger-semgrep:
     name: Scan
-    uses: Zooz/code-scanner/.github/workflows/semgrep.yml@main
+    uses: Zooz/code-scanner/.github/workflows/semgrep.yml@catch_and_alert
     with:
       codeScannerRef: catch_and_alert
