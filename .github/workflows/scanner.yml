@@ -10,6 +10,5 @@ jobs:
     uses: Zooz/code-scanner/.github/workflows/semgrep.yml@catch_and_alert
     with:
       codeScannerRef: catch_and_alert
-    # secrets: inherit
     secrets:
       slackUrl: ${{ secrets.SEMGREP_SLACK_ALERT }}
