@@ -19,4 +19,4 @@ jobs:
 
   gitleaks:
     name: gitleaks
-    uses: Zooz/code-scanner/.github/workflows/secret_detection.yml@add_secret_detector 
+    uses: Zooz/code-scanner/.github/workflows/secret_detection.yml@add_secret_detector
