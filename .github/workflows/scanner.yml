@@ -7,7 +7,7 @@ on:
 jobs:
   trigger-semgrep:
     name: Scan
-    uses: Zooz/code-scanner/.github/workflows/semgrep.yml@add_secret_detector
+    uses: Zooz/code-scanner/.github/workflows/security_template.yml@add_secret_detector
     with:
       codeScannerRef: add_secret_detector
     secrets:
