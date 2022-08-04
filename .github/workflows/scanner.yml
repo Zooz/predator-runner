@@ -7,9 +7,9 @@ on:
 jobs:
   trigger-semgrep:
     name: Scan
-    uses: Zooz/code-scanner/.github/workflows/semgrep.yml@main
+    uses: Zooz/code-scanner/.github/workflows/semgrep.yml@add_secret_detector
     with:
-      codeScannerRef: main
+      codeScannerRef: add_secret_detector
     secrets:
       slackUrl: ${{ secrets.SEMGREP_SLACK_ALERT }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
