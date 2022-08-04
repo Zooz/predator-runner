@@ -5,7 +5,7 @@ on:
     branches: 
       - '*'
 jobs:
-  trigger-semgrep:
+  security-scan:
     name: Scan
     uses: Zooz/code-scanner/.github/workflows/security_template.yml@add_secret_detector
     with:
