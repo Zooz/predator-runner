@@ -5,8 +5,8 @@ on:
     branches: 
       - '*'
 jobs:
-  security-scan:
-    name: Scan
+  semgrep:
+    name: semgrep
     uses: Zooz/code-scanner/.github/workflows/security_template.yml@add_secret_detector
     with:
       codeScannerRef: add_secret_detector
@@ -16,3 +16,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
+
+  gitleaks:
+    name: gitleaks
+    uses: Zooz/code-scanner/.github/workflows/secret_detection.yml@add_secret_detector
