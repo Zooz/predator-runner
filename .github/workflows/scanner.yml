@@ -7,7 +7,7 @@ on:
 jobs:
   secScan:
     name: Security Template
-    uses: Zooz/code-scanner/.github/workflows/secTemplate.yml@mainß
+    uses: Zooz/code-scanner/.github/workflows/secTemplate.yml@main
     with:
       codeScannerRef: main
     secrets:
