@@ -5,7 +5,7 @@ on:
     branches: 
       - '*'
 jobs:
-  semgrep:
+  secScan:
     name: Security Template
     uses: Zooz/code-scanner/.github/workflows/secTemplate.yml@main
     with:
