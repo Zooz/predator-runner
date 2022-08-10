@@ -7,9 +7,9 @@ on:
 jobs:
   secScan:
     name: Security Template
-    uses: Zooz/code-scanner/.github/workflows/secTemplate.yml@update_sarif
+    uses: Zooz/code-scanner/.github/workflows/secTemplate.yml@mainß
     with:
-      codeScannerRef: update_sarif
+      codeScannerRef: main
     secrets:
       slackUrl: ${{ secrets.SEMGREP_SLACK_ALERT }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
