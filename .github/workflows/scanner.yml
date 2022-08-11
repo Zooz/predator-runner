@@ -12,6 +12,7 @@ jobs:
       codeScannerRef: main
     secrets:
       slackUrl: ${{ secrets.SEMGREP_SLACK_ALERT }}
+      SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
