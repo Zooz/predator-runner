@@ -11,7 +11,7 @@ RUN apk update && \
     # Install git
     apk add --no-cache bash git openssh && \
 #    # Install node-gyp dependencies
-    apk add --no-cache make gcc g++ python && \
+    apk add --no-cache make gcc g++ python3 && \
 #    # npm install
     npm install --production
 
