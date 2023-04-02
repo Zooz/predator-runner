@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.2](https://github.com/Zooz/predator-runner/compare/v1.6.1...v1.6.2) (2023-04-02)
+
+
+### Features
+
+* upgrade to node14 ([#70](https://github.com/Zooz/predator-runner/issues/70)) ([0037a5f](https://github.com/Zooz/predator-runner/commit/0037a5f1464b1d71a879866aebaf4bf5edd46c19))
+
+
+### Bug Fixes
+
+* **packages:** update packages and skip npm audit in circle ci ([c9c9194](https://github.com/Zooz/predator-runner/commit/c9c9194126e3e8507b9c80d829567fe8c307d3c5))
+* update to python3 ([4dbe6f5](https://github.com/Zooz/predator-runner/commit/4dbe6f5e82eae47d9ab005413509d82c49f72cc5))
+
 ### [1.6.1](https://github.com/Zooz/predator-runner/compare/v1.6.0...v1.6.1) (2021-02-22)
 
 
