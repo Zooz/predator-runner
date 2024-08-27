@@ -2,7 +2,7 @@ version: 2
 jobs:
   setup:
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:22.7.0
     steps:
       - checkout
       - restore_cache:
@@ -14,7 +14,7 @@ jobs:
             - node_modules
   unit-tests:
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:22.7.0
     steps:
       - checkout
       - restore_cache:
@@ -26,7 +26,7 @@ jobs:
           path: ./coverage
   integration-tests:
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:22.7.0
     steps:
       - checkout
       - restore_cache:
@@ -34,7 +34,7 @@ jobs:
       - run: npm run integration-tests
   system-tests:
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:22.7.0
       - image: zooz/predator:latest
         environment:
           JOB_PLATFORM: DOCKER
@@ -58,7 +58,7 @@ jobs:
       - run: sh .circleci/dockerBuild.sh
   release-patch:
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:22.7.0
     steps:
       - checkout
       - setup_remote_docker:
@@ -72,7 +72,7 @@ jobs:
       - run: .circleci/tag-latest-image.sh
   release-minor:
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:22.7.0
     steps:
       - checkout
       - setup_remote_docker:
@@ -86,7 +86,7 @@ jobs:
       - run: .circleci/tag-latest-image.sh
   release-major:
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:22.7.0
     steps:
       - checkout
       - setup_remote_docker:

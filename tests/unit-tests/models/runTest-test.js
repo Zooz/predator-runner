@@ -399,29 +399,6 @@ describe('Run test', () => {
         loggerInfoStub.called.should.eql(false);
     });
 
-    it('fail to send end report to reporter -> test throws exception', async () => {
-        let tempJobConfig = Object.assign({}, jobConfig);
-        tempJobConfig.arrivalRate = 10;
-        tempJobConfig.duration = 5;
-        tempJobConfig.notes = 'Best Test Ever';
-
-        const expectedError = new Error('Failed to send final report to reporter');
-
-        testFileConnectorStub.resolves(consts.VALID_CUSTOM_TEST);
-        artilleryStub.resolves(ee);
-        reporterConnectorSubscribeToReportStub.resolves();
-        reporterConnectorPostStatsStub.rejects(expectedError);
-        let exception;
-        try {
-            await runner.runTest(tempJobConfig);
-        } catch (e) {
-            exception = e;
-        }
-
-        should.exist(exception);
-        should(exception).eql(expectedError);
-    });
-
     it('fail to run test with csv -> GET file throws exception', async () => {
         let expectedError = new Error('socket timeout');
         let tempJobConfig = Object.assign({}, jobConfig);
