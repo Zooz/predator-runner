@@ -13,7 +13,7 @@ RUN apk update && \
 #    # Install node-gyp dependencies
     apk add --no-cache make gcc g++ python3 && \
 #    # npm install
-    npm install --production
+     npm ci --production
 
 ## Bundle app source
 COPY /app /usr/app
