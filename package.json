@@ -36,7 +36,7 @@
     "csv-parse": "^4.8.8",
     "pidusage": "^2.0.20",
     "request": "2.87.0",
-    "requestxn": "^3.1.4",
+    "requestxn": "^3.1.5",
     "semver": "^7.3.2",
     "uuid": "^3.3.3"
   },
